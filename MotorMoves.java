@@ -15,6 +15,9 @@ public class MotorMoves {
 		Motor.A.backward();
 		LCD.drawString("BACKWARD", 0, 2);
 		Button.waitForAnyPress();
+		Motor.A.forward();
+		LCD.drawString("FORWARD", 0, 2);
+		Button.waitForAnyPress();
 		Motor.A.stop();
 	}
 }
