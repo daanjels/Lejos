@@ -12,6 +12,7 @@ public class Interrupt {
 		Button.waitForAnyPress();
 		while(Button.readButtons()>0);
 		LCD.clear();
+//		LCD.clear();
 		Motor.A.rotateTo(1440,true);
 		while(Motor.A.isMoving()) {
 			Delay.msDelay(200);
