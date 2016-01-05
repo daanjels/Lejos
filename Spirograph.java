@@ -2,6 +2,7 @@ package be.wimdaniels;
 
 import lejos.nxt.Motor;
 import lejos.nxt.LCD;
+import lejos.util.Delay;
 import lejos.util.TextMenu;
 
 public class Spirograph {
@@ -38,6 +39,7 @@ public class Spirograph {
 				while (Motor.C.getTachoCount() < 3600);
 				Motor.C.stop();
 				Motor.A.stop();
+				Delay.msDelay(200);
 //			    Button.ESCAPE.waitForPressAndRelease();
             } else if (selection == 1) { // Alien
             	LCD.clear();
@@ -51,6 +53,7 @@ public class Spirograph {
 				while (Motor.C.getTachoCount() < 3600);
 				Motor.C.stop();
 				Motor.A.stop();
+				Delay.msDelay(200);
 //			    Button.ESCAPE.waitForPressAndRelease();
             } else if (selection == 2) { // Triskelion
 				LCD.clear();
@@ -61,6 +64,7 @@ public class Spirograph {
 				Motor.B.forward();
 				while (Motor.B.getTachoCount() < 3600);
 				Motor.B.stop();
+				Delay.msDelay(200);
 //			    Button.ESCAPE.waitForPressAndRelease();
             } else if (selection == 3) { // Bakugan
 				LCD.clear();
@@ -74,6 +78,7 @@ public class Spirograph {
 				while (Motor.C.getTachoCount() < 3600);
 				Motor.C.stop();
 				Motor.A.stop();
+				Delay.msDelay(200);
 //			    Button.ESCAPE.waitForPressAndRelease();
             }
         }		
