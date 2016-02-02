@@ -9,7 +9,7 @@ public class Spirograph {
 
 	public static void main(String[] args) {
 		//	define a string array to hold the options
-	    String[] figures = {"Star", "Alien", "Triskelion", "Bakugan", "Exit"};
+	    String[] figures = {"Star", "Alien", "Bakugan", "Triskelion", "Exit"};
 	    //	create and display a menu with the options, with a title above it: "Spyrograph"
 	    TextMenu main = new TextMenu(figures, 1, "Spyrograph");
 	    //	define variables for the selection and the power level
@@ -36,67 +36,51 @@ public class Spirograph {
 
 			if (selection == 0) {
 				//	Star was selected
-				LCD.clear();
-				LCD.drawString("Spyrograph", 3, 1);
-				LCD.drawString("Star", 1, 4);
-				power = 200;
-				Motor.C.setSpeed(power);
-				Motor.A.setSpeed(power*3);
-				Motor.C.forward();
-				Motor.A.forward();
-				while (Motor.C.getTachoCount() < 3600);
-				Motor.C.stop(true);
-				Motor.A.stop(true);
-				//	reset the Tacho count so other figures can still be drawn
-				Motor.C.resetTachoCount();
+            	drawFigure(0, "Star", 200);
             } else if (selection == 1) {
             	//	Alien was selected
-            	LCD.clear();
-            	LCD.drawString("Spyrograph", 3, 1);
-            	LCD.drawString("Alien", 1, 4);
-				power = 300;
-				Motor.C.setSpeed(power);
-				Motor.A.setSpeed(power/2);
-				Motor.C.forward();
-				Motor.A.forward();
-				while (Motor.C.getTachoCount() < 3600);
-				Motor.C.stop(true);
-				Motor.A.stop(true);
-				//	reset the Tacho count so other figures can still be drawn
-				Motor.C.resetTachoCount();
+            	drawFigure(1, "Alien", 300);
             } else if (selection == 2) {
-            	//	Triskelion was selected
-				LCD.clear();
-				LCD.drawString("Spyrograph", 3, 1);
-				LCD.drawString("Triskelion", 1, 4);
-				//	uses a separate methode to draw the treskelion
-				Treskelion();
+           	//	Bakugan was selected
+            	drawFigure(3, "Bakugan", 300);
             } else if (selection == 3) {
-            	//	Bakugan was selected
-				LCD.clear();
-				LCD.drawString("Spyrograph", 3, 1);
-				LCD.drawString("Bakugan", 1, 4);
-				power = 300;
-				Motor.C.setSpeed(power);
-				Motor.A.setSpeed(power*2);
-				Motor.C.forward();
-				Motor.A.forward();
-				while (Motor.C.getTachoCount() < 3600);
-				Motor.C.stop(true);
-				Motor.A.stop(true);
-				//	reset the Tacho count so other figures can still be drawn
-				Motor.C.resetTachoCount();
+            	//	Triskelion was selected
+				Treskelion("Triskelion", 100);
             }
         }		
-
 	}
 	
-	public static void Treskelion() {
-		Motor.B.setSpeed(100);
+	public static void Treskelion(String name, int power) {
+		LCD.clear();
+		LCD.drawString("Spyrograph", 3, 1);
+		LCD.drawString(name, 1, 4);
+		Motor.B.setSpeed(power);
 		Motor.B.forward();
 		while (Motor.B.getTachoCount() < 3600);
 		Motor.B.stop(true);
 		//	reset the Tacho count so other figures can still be drawn
 		Motor.B.resetTachoCount();
+	}
+	
+	public static void drawFigure(int selected, String name, int power) {
+		LCD.clear();
+		LCD.drawString("Spyrograph", 3, 1);
+		LCD.drawString(name, 1, 4);
+		Motor.C.setSpeed(power);
+		switch (selected) {
+			case 0:	Motor.A.setSpeed(power);
+				break;
+			case 1:	Motor.A.setSpeed(power/2);
+				break;
+			case 3: Motor.A.setSpeed(power*2);
+				break;
+		}
+		Motor.C.forward();
+		Motor.A.forward();
+		while (Motor.C.getTachoCount() < 3600);
+		Motor.C.stop(true);
+		Motor.A.stop(true);
+		//	reset the Tacho count so other figures can still be drawn
+		Motor.C.resetTachoCount();
 	}
 }
