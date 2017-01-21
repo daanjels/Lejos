@@ -6,7 +6,7 @@ import lejos.nxt.Motor;
 public class Hal1 {
 
 	public static void main(String[] args) {
-		System.out.println("NXT wakes up!");
+		System.out.println("NXT wordt wakker!");
 		Button.waitForAnyPress();
 		Motor.A.forward();
 		Button.waitForAnyPress();

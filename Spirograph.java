@@ -42,12 +42,12 @@ public class Spirograph {
             } else if (selection == 2) {	//	Bakugan was selected
             	drawFigure(3, "Bakugan", 300);
             } else if (selection == 3) {	//	Triskelion was selected
-				Triskelion("Triskelion", 100);
+				triskelion("Triskelion", 100);
             }
         }		
 	}
 	
-	public static void Triskelion(String name, int power) {
+	public static void triskelion(String name, int power) {
 		LCD.clear();
 		LCD.drawString("Spyrograph", 3, 1);
 		LCD.drawString(name, 1, 4);
