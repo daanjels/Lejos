@@ -4,6 +4,6 @@ Studying *Java* is one thing. Creating projects and working programs is quite an
 ### Directory
 To be defined
 ### Wiki
-To be documented [here] (https://github.com/arqetype/Lejos/wiki)
+To be documented [here](https://github.com/arqetype/Lejos/wiki)
 
 https://guides.github.com/features/mastering-markdown/
