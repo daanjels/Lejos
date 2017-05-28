@@ -1,3 +1,6 @@
 .nxj
 .class
 /bin/
+/.classpath
+/.project
+/HelloEv3.jar
