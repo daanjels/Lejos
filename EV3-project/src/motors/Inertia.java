@@ -19,47 +19,47 @@ import lejos.hardware.port.MotorPort;
 public class Inertia {
 
 	public static void main(String[] args) {
-		EV3LargeRegulatedMotor LEFT_MOTOR = new EV3LargeRegulatedMotor(MotorPort.A);
+		EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.A);
 
 		//	get EV3 brick
-		EV3 ev3brick = (EV3) BrickFinder.getLocal();
+		EV3 wallE = (EV3) BrickFinder.getLocal();
 
-		//	instantiate LCD class for displaying and Keys // class for buttons
-		Keys buttons = ev3brick.getKeys();
+		//	instantiate Keys class for buttons
+		Keys buttons = wallE.getKeys();
 
 		//	block the thread until a button is pressed
 		buttons.waitForAnyPress();
 
 		//	set motor to move 720 degrees per second
-		LEFT_MOTOR.setSpeed(720);
+		leftMotor.setSpeed(720);
 
 		//	start forward movement
-		LEFT_MOTOR.forward();
+		leftMotor.forward();
 
 		//	a counter to count the number of degrees rotated
 		int count = 0;
 		//	continue moving until motor has rotated 720 degrees
 		while (count < 720)
-			count = LEFT_MOTOR.getTachoCount();
+			count = leftMotor.getTachoCount();
 
 		//	stop the motor
-		LEFT_MOTOR.stop();
+		leftMotor.stop();
 
 		//	display the tachometer reading
 		LCD.drawString("Tachograaf: " + count, 0, 0);
 
 		//	wait for motor to actually stop.
-		while (LEFT_MOTOR.getRotationSpeed() > 0);
+		while (leftMotor.getRotationSpeed() > 0);
 
 		//	display tacho count
 		//	this number will be higher than previous due to motor inertia
-		LCD.drawString("Tachograaf: " + LEFT_MOTOR.getTachoCount(), 0, 1);
+		LCD.drawString("Tachograaf: " + leftMotor.getTachoCount(), 0, 1);
 
 		//block the thread until a button is pressed
 		buttons.waitForAnyPress();
 
 		LCD.clear();
-		LEFT_MOTOR.close();
+		leftMotor.close();
 
 	}
 

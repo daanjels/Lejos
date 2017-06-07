@@ -2,7 +2,7 @@ package motors;
 
 /**
  * @author Arqetype
- * A simple motor test using tow EV3 motors
+ * A simple motor test using two EV3 motors
  * The left motor should be connected to port A
  * The right motor should be connected to port C
  * Press a key to make the motors go forward
@@ -15,49 +15,58 @@ import lejos.hardware.Keys;
 import lejos.hardware.ev3.EV3;
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor; import lejos.hardware.port.MotorPort;
+import lejos.utility.Delay;
 
 public class ForwardBack {
 
 	public static void main(String[] args) {
-		EV3LargeRegulatedMotor LEFT_MOTOR = new EV3LargeRegulatedMotor(MotorPort.A);
-		EV3LargeRegulatedMotor RIGHT_MOTOR = new EV3LargeRegulatedMotor(MotorPort.C);
-		
+		EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.C);
+		EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.B);
+
 		// get EV3 brick
-		EV3 ev3brick = (EV3) BrickFinder.getLocal();
-		
+		EV3 wallE = (EV3) BrickFinder.getLocal();
+
 		// instantiated LCD class for displaying and Keys class for buttons
-		Keys buttons = ev3brick.getKeys();
+		Keys buttons = wallE.getKeys();
+		LCD.drawString("Druk op een knop", 0, 1);
+		LCD.drawString("om vooruit te gaan", 0, 2);
 		
 		// block the thread until a button is pressed
 		buttons.waitForAnyPress();
-		
-		// move robot forward and display status on LCD 
-		// change directions when button is pressed 
-		LEFT_MOTOR.forward();
-		RIGHT_MOTOR.forward();
+
+		// move robot forward and display status on LCD change directions when button is pressed 
+		leftMotor.forward();
+		rightMotor.forward();
+		LCD.clear();
 		LCD.drawString("Vooruit!", 0, 0);
-		
+		LCD.drawString("Druk op een knop", 0, 1);
+		LCD.drawString("om achteruit", 0, 2);
+		LCD.drawString("te gaan", 0, 3);
+
 		// block the thread until a button is pressed
 		buttons.waitForAnyPress();
-		
+
 		// move robot backward and display status on LCD 
-		LEFT_MOTOR.backward();
-		RIGHT_MOTOR.backward();
-		
+		leftMotor.backward();
+		rightMotor.backward();
+		LCD.clear();
+		LCD.drawString("Achteruit!", 0, 0);
+		LCD.drawString("Druk op een knop", 0, 1);
+		LCD.drawString("om te stoppen", 0, 2);
+
 		// block the thread until a button is pressed
-		LCD.drawString("Achteruit!", 0, 1);
 		buttons.waitForAnyPress();
-		
+
 		// stop robot and display status on LCD 
-		LEFT_MOTOR.stop();
-		RIGHT_MOTOR.stop();
+		leftMotor.stop();
+		rightMotor.stop();
+		LCD.clear();
 		LCD.drawString("Gestopt!", 0, 2);
+		Delay.msDelay(5000);
 		
-		// exit program after any button pressed
-		buttons.waitForAnyPress();
-		LEFT_MOTOR.close();
-		RIGHT_MOTOR.close();
-
+		// exit program after any button pressed, it is good practice to close the motors
+		leftMotor.close();
+		rightMotor.close();
+		System.exit(0);
 	}
-
 }
