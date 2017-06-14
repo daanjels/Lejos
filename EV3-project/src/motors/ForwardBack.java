@@ -3,8 +3,8 @@ package motors;
 /**
  * @author Arqetype
  * A simple motor test using two EV3 motors
- * The left motor should be connected to port A
- * The right motor should be connected to port C
+ * The left motor should be connected to port C
+ * The right motor should be connected to port B
  * Press a key to make the motors go forward
  * Press a key to make the motors go backward
  * Press a key to make the motors stop
