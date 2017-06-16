@@ -21,4 +21,12 @@ public class City {
 		this.xPos = x;
 		this.yPos = y;
 	}
+	
+	public String toString() {
+		return cityname + " (" + xPos + ", " + yPos + ")";
+	}
+	
+	public String locatie() {
+		return "(" + xPos + ", " + yPos + ")";
+	}
 }

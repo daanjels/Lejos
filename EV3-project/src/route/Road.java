@@ -18,7 +18,7 @@ package route;
 public class Road {
 	City from;
 	City to;
-	double distance;
+	int distance;
 	
 	public Road(City from, City to) {
 		this.from = from;
@@ -26,9 +26,13 @@ public class Road {
 		this.distance = dist(from.xPos, from.yPos, to.xPos, to.yPos);
 	}
 	
-	static double dist(int x1, int y1, int x2, int y2) {
-		double d = 0;
-		d = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+	static int dist(int x1, int y1, int x2, int y2) {
+		int d = 0;
+		d = (int) Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 		return d;
+	}
+	
+	public String toString() {
+		return from.cityname + "-" + to.cityname + " (" + distance + "km)";
 	}
 }
