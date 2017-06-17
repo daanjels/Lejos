@@ -42,17 +42,21 @@ public class Planner {
 		middleEarth.addCity(L);
 		middleEarth.addCity(R);
 		middleEarth.addCity(M);
+		
 		middleEarth.addRoad(HS);
 		middleEarth.addRoad(HB);
 		middleEarth.addRoad(SF);
+		middleEarth.addRoad(LR);
 		middleEarth.addRoad(FT);
 		middleEarth.addRoad(BW);
-		middleEarth.addRoad(WL);
 		middleEarth.addRoad(TO);
-		middleEarth.addRoad(LR);
+		middleEarth.addRoad(WL);
 		middleEarth.addRoad(OM);
 		
 		System.out.println(middleEarth);
+		
+		System.out.println("Find a route using a depth first search...");
+		middleEarth.planDeep(H, R);
 	}
 
 }

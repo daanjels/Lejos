@@ -19,6 +19,7 @@ public class Road {
 	City from;
 	City to;
 	int distance;
+	boolean visited;
 	
 	public Road(City from, City to) {
 		this.from = from;
