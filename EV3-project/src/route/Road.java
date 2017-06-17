@@ -33,6 +33,6 @@ public class Road {
 	}
 	
 	public String toString() {
-		return from.cityname + "-" + to.cityname + " (" + distance + "km)";
+		return from.cityname + " - " + to.cityname + " (" + distance + "km)";
 	}
 }

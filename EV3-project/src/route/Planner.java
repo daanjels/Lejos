@@ -10,28 +10,47 @@ package route;
 public class Planner {
 
 	public static void main(String[] args) {
-		City A = new City("The Shire", 10, 20);
-		City B = new City("Bree", 5, 60);
-		City C = new City("Rivendell", 20, 110);
-		City D = new City("Gondor", 60, 100);
+		City H = new City("Hobbiton", 0, 0);
+		City S = new City("The Shire", 5, 10);
+		City B = new City("Bree", 15, 0);
+		City F = new City("Sarn Ford", 20, 10);
+		City W = new City("Weathertop", 30, -5);
+		City T = new City("Tharbad", 30, 20);
+		City O = new City("Ost-in-edhil", 40, 25);
+		City L = new City("Last Bridge", 45, 0);
+		City R = new City("Rivendell", 60, 5);
+		City M = new City("Moira", 60, 25);
 		
-		System.out.println("Cities and towns of Middle Earth: " + A.cityname + ", " 
-				+ B.cityname + ", " + C.cityname + " and " + D.cityname);
-		System.out.println("The town of the elves is at " + A.locatie());
-		System.out.println(D.cityname + " is situated here: " + C.locatie());
-		
-		Road AB = new Road(A, B);
-		Road BC = new Road(B, C);
-		
-		System.out.println("From " + AB.from.cityname + " to " + AB.to.cityname + " is " + AB.distance + "km.");
-		System.out.println(BC);
+		Road HS = new Road(H, S);
+		Road HB = new Road(H, B);
+		Road SF = new Road(S, F);
+		Road FT = new Road(F, T);
+		Road BW = new Road(B, W);
+		Road WL = new Road(W, L);
+		Road TO = new Road(T, O);
+		Road LR = new Road(L, R);
+		Road OM = new Road(O, M);
 		
 		Map middleEarth = new Map("Middle Earth");
-		middleEarth.addCity(A);
+		middleEarth.addCity(H);
+		middleEarth.addCity(S);
 		middleEarth.addCity(B);
-		middleEarth.addCity(C);
-		middleEarth.addRoad(BC);
-		middleEarth.addRoad(AB);
+		middleEarth.addCity(F);
+		middleEarth.addCity(W);
+		middleEarth.addCity(T);
+		middleEarth.addCity(O);
+		middleEarth.addCity(L);
+		middleEarth.addCity(R);
+		middleEarth.addCity(M);
+		middleEarth.addRoad(HS);
+		middleEarth.addRoad(HB);
+		middleEarth.addRoad(SF);
+		middleEarth.addRoad(FT);
+		middleEarth.addRoad(BW);
+		middleEarth.addRoad(WL);
+		middleEarth.addRoad(TO);
+		middleEarth.addRoad(LR);
+		middleEarth.addRoad(OM);
 		
 		System.out.println(middleEarth);
 	}

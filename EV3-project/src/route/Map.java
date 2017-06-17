@@ -38,7 +38,7 @@ public class Map {
 	public String toString() {
 		String result = new String();
 		
-		result = "Map of " + this.mapname + "\n" + "Cities: \n";
+		result = "Map of " + this.mapname + "\n" + "Cities and towns: \n";
 		for (int i = 0; i < this.cities.size(); i++) {
 			result = result + "- " + this.cities.get(i) + "\n";
 		}
