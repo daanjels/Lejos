@@ -22,18 +22,21 @@ public class OctagonMover {
 //		LCD.drawString("0123456789abcdefgh")
 		LCD.drawString("  Plotting out   ", 0, 0);
 		LCD.drawString("   an octagon    ", 0, 1);
-		buttons.waitForAnyPress();
+//		buttons.waitForAnyPress();
 		LCD.clear();
 		
 		// setup the wheel diameter of left (and right) motor in centimeters, i.e. 2.8 cm
 		// the offset number is the distance between the center of wheel to the center of robot, i.e. half of track width
-		Wheel wheel1 = WheeledChassis.modelWheel(LEFT_MOTOR, 2.8).offset(-7);
-		Wheel wheel2 = WheeledChassis.modelWheel(RIGHT_MOTOR, 2.8).offset(7);
+		Wheel wheel1 = WheeledChassis.modelWheel(LEFT_MOTOR, 3.22).offset(-9.2);
+		Wheel wheel2 = WheeledChassis.modelWheel(RIGHT_MOTOR, 3.22).offset(9.2);
 		
 		// set up the chassis type, i.e. Differential pilot
 		Chassis chassis = new WheeledChassis(new Wheel[] {wheel1, wheel2},WheeledChassis.TYPE_DIFFERENTIAL);
 		MovePilot pilot = new MovePilot(chassis);
 		
+		pilot.setAngularSpeed(20); // degrees per second
+		pilot.setLinearAcceleration(5);
+		pilot.setLinearSpeed(10); // centimeters per second
 		
 		// loop 8 times to trace out a square
 		for (int sides = 1; sides < 9; sides++) {

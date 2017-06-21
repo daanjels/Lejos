@@ -22,12 +22,17 @@ public class HexagonMover {
 		
 		// setup the wheel diameter of left (and right) motor in centimeters, i.e. 2.8 cm
 		// the offset number is the distance between the center of wheel to the center of robot, i.e. half of track width
-		Wheel wheel1 = WheeledChassis.modelWheel(LEFT_MOTOR, 2.8).offset(-7);
-		Wheel wheel2 = WheeledChassis.modelWheel(RIGHT_MOTOR, 2.8).offset(7);
+		Wheel wheel1 = WheeledChassis.modelWheel(LEFT_MOTOR, 3.22).offset(-9.2);
+		Wheel wheel2 = WheeledChassis.modelWheel(RIGHT_MOTOR, 3.22).offset(9.2);
 		
 		// set up the chassis type, i.e. Differential pilot
 		Chassis chassis = new WheeledChassis(new Wheel[] {wheel1, wheel2},WheeledChassis.TYPE_DIFFERENTIAL);
 		MovePilot pilot = new MovePilot(chassis);
+		
+		pilot.setAngularSpeed(20); // degrees per second
+		pilot.setLinearAcceleration(5);
+		pilot.setLinearSpeed(10); // centimeters per second
+
 		int direction = -60;
 		String message = "Counterclockwise";
 		
