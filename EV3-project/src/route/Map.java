@@ -16,6 +16,13 @@ package route;
 
 import java.util.ArrayList;
 import java.util.Stack;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Map {
 	String mapname;
@@ -24,16 +31,66 @@ public class Map {
 	
 	Stack<City> pathStack = new Stack<City>();
 
-	Stack<Road> roadStack = new Stack<Road>();
-	Stack<Road> resetList = new Stack<Road>();
-
 	// the constructor for a Map
 	public Map(String name) {
 		mapname = name;
 		cities = new ArrayList<City>();
 		roads = new ArrayList<Road>();
+		
+		File file = new File(name + ".txt");
+		BufferedReader reader = null;
+		String type = "";
+
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			String text = null;
+			while ((text = reader.readLine()) != null) {
+				if (text.indexOf("Map: ") != -1) {
+					text = text.replaceFirst("Map: ", "");
+					mapname = text;
+				}
+				else if (text.indexOf("Cities") != -1) {
+					type = "city";
+				}
+				else if (text.indexOf("Roads") != -1) {
+					type = "road";
+				}
+				else if (type == "city") {
+					String[] parts = text.split(";");
+					String city = parts[0];
+					int xPos = Integer.parseInt(parts[1]);
+					int yPos = Integer.parseInt(parts[2]);
+					cities.add(new City(city, xPos, yPos));
+				}
+				else if (type == "road") {
+					String[] parts = text.split(";");
+					String cityfrom = parts[0];
+					String cityto = parts[1];
+					City from = null;
+					City to = null;
+					for (int i = 0; i < cities.size(); i++) {
+						if (cities.get(i).cityname.equals(cityfrom))
+							from = cities.get(i);
+						else if (cities.get(i).cityname.equals(cityto))
+							to = cities.get(i);
+					}
+					roads.add(new Road(from, to));
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (reader != null) {
+					reader.close();
+				}
+			} catch (IOException e) {
+			}
+		}
 	}
-	
+
 	// method to add a city to the map
 	public void addCity(City city) {
 		cities.add(city);
@@ -41,6 +98,11 @@ public class Map {
 	
 	// method to add a road to the map
 	public void addRoad(Road road) {
+		roads.add(road);
+	}
+	
+	public void addRoad(City from, City to) {
+		Road road = new Road(from, to);
 		roads.add(road);
 	}
 	
@@ -57,6 +119,27 @@ public class Map {
 			result = result + "- " + this.roads.get(i) + "\n";
 		}
 		return result;
+	}
+	
+	public void save() {
+		String result = new String();
+		
+		result = "Map: " + this.mapname + "\n" + "Cities and towns: \n";
+		for (int i = 0; i < this.cities.size(); i++) {
+			result = result + this.cities.get(i).cityname + ";" + this.cities.get(i).xPos + ";" + this.cities.get(i).yPos + "\n";
+		}
+		result = result + "Roads:\n";
+		for (int i = 0; i < this.roads.size(); i++) {
+			result = result + this.roads.get(i).from.cityname + ";" + roads.get(i).to.cityname + "\n";
+		}
+		try {
+			FileWriter fstream = new FileWriter(mapname + ".txt");
+			BufferedWriter out = new BufferedWriter(fstream);
+			out.write(result);
+			out.close();
+		} catch (Exception e) {
+			System.err.println("Error: " +e.getMessage());
+		}
 	}
 	
 	// method to plot out a route using a depth first search algorithm
