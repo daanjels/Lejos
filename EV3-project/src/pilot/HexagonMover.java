@@ -43,8 +43,6 @@ public class HexagonMover {
 		LCD.drawString("LEFT to choose a", 0, 3);
 		LCD.drawString("turning direction", 0, 4);
 
-//		buttons.waitForAnyPress();
-//		if (buttons.getButtons() == Keys.ID_LEFT) direction = 60;
 		if (buttons.waitForAnyPress() == 16) {
 			direction = 60;
 			message = "Going clockwise";
@@ -56,6 +54,7 @@ public class HexagonMover {
 			pilot.travel(50); // travel 50 centimeter
 			pilot.rotate(direction); // rotate 90 degrees
 		}
+
 		// press the ESCAPE button to stop moving
 		while (pilot.isMoving()) {
 		if (buttons.getButtons() == Keys.ID_ESCAPE)
@@ -66,5 +65,7 @@ public class HexagonMover {
 		LCD.clear();
 		LCD.drawString("Finished!", 0, 4);
 		buttons.waitForAnyPress();
+		LEFT_MOTOR.close();
+		RIGHT_MOTOR.close();
 	}	
 }

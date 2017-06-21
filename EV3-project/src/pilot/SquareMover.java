@@ -21,7 +21,6 @@ public class SquareMover {
 		Keys buttons = wallE.getKeys();
 		LCD.drawString("  Plotting out   ", 0, 0);
 		LCD.drawString("    a square     ", 0, 1);
-//		buttons.waitForAnyPress();
 		
 		// setup the wheel diameter of left (and right) motor in centimeters, i.e. 2.8 cm
 		// the offset number is the distance between the center of wheel to the center of robot, i.e. half of track width
@@ -50,7 +49,9 @@ public class SquareMover {
 		}
 		// block the thread until a button is pressed
 		LCD.clear();
-		LCD.drawString("     Finished    .", 0, 4);
+		LCD.drawString(".    Finished    .", 0, 4);
 		buttons.waitForAnyPress();
+		LEFT_MOTOR.close();
+		RIGHT_MOTOR.close();
 	}
 }

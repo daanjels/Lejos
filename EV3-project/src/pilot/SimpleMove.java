@@ -39,15 +39,14 @@ public class SimpleMove {
 		Chassis chassis = new WheeledChassis(new Wheel[] {wheel1, wheel2},WheeledChassis.TYPE_DIFFERENTIAL);
 		MovePilot pilot = new MovePilot(chassis);
 		
-		pilot.setAngularSpeed(20); // degrees per second
+		pilot.setAngularSpeed(20);		// degrees per second
 		pilot.setLinearAcceleration(5);
-		pilot.setLinearSpeed(10); // centimeters per second
+		pilot.setLinearSpeed(10);		// centimeters per second
 
-		// travel 50 centimeter
-		pilot.travel(50);
-		// rotate 90 degrees
+		pilot.travel(50);		// travel 50 centimeter
 		Delay.msDelay(1000);
-		pilot.rotate(90.0);
+		pilot.rotate(90.0);		// rotate 90 degrees
+
 		// press the ESCAPE button to stop moving
 		while (pilot.isMoving()) {
 		if (buttons.getButtons() == Keys.ID_ESCAPE)
@@ -55,7 +54,9 @@ public class SimpleMove {
 		}
 		// block the thread until a button is pressed
 		LCD.clear();
-		LCD.drawString("     Finished    .", 0, 4);
+		LCD.drawString(".    Finished    .", 0, 4);
 		buttons.waitForAnyPress();
+		LEFT_MOTOR.close();
+		RIGHT_MOTOR.close();
 	}
 }

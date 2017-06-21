@@ -39,10 +39,9 @@ public class TriangleMover {
 		
 		// loop 3 times to trace out a square
 		for (int sides = 0; sides < 3; sides++) {
-		// travel 50 centimeter
-		pilot.travel(50);
-		// rotate 120 degrees
-		pilot.rotate(120);
+		pilot.travel(50);	// travel 50 centimeter
+		pilot.rotate(120);	// rotate 120 degrees
+
 		}
 		// press the ESCAPE button to stop moving
 		while (pilot.isMoving()) {
@@ -55,5 +54,7 @@ public class TriangleMover {
 		LCD.drawString(".    Finished    .", 0, 4);
 		LCD.drawString("..................", 0, 8);
 		buttons.waitForAnyPress();
+		LEFT_MOTOR.close();
+		RIGHT_MOTOR.close();
 	}	
 }

@@ -22,8 +22,6 @@ public class OctagonMover {
 //		LCD.drawString("0123456789abcdefgh")
 		LCD.drawString("  Plotting out   ", 0, 0);
 		LCD.drawString("   an octagon    ", 0, 1);
-//		buttons.waitForAnyPress();
-		LCD.clear();
 		
 		// setup the wheel diameter of left (and right) motor in centimeters, i.e. 2.8 cm
 		// the offset number is the distance between the center of wheel to the center of robot, i.e. half of track width
@@ -57,5 +55,7 @@ public class OctagonMover {
 		LCD.drawString("Plotting finished", 0, 4);
 		
 		buttons.waitForAnyPress();
+		LEFT_MOTOR.close();
+		RIGHT_MOTOR.close();
 	}	
 }
