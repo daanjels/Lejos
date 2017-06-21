@@ -1,0 +1,22 @@
+Map: Middle Earth
+Cities and towns: 
+Hobbiton;0;0
+The Shire;5;10
+Bree;15;0
+Sarn Ford;20;10
+Weathertop;30;-5
+Tharbad;30;20
+Ost-in-edhil;40;25
+Last Bridge;45;0
+Rivendell;60;5
+Moira;60;25
+Roads:
+Hobbiton;The Shire
+Hobbiton;Bree
+The Shire;Sarn Ford
+Last Bridge;Rivendell
+Sarn Ford;Tharbad
+Bree;Weathertop
+Tharbad;Ost-in-edhil
+Weathertop;Last Bridge
+Ost-in-edhil;Moira
