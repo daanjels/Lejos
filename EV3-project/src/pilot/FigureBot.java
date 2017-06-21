@@ -45,7 +45,10 @@ public class FigureBot {
 
 		// define variable for the selection
 		int selection;
-		
+		String figure = "square";
+		int sides = 4;
+		double angle = 90;
+				
 		//	loop indefinitely until the user pushes a button
 		for(;;)
 		{
@@ -66,38 +69,30 @@ public class FigureBot {
 				return;
 			}
 			if (selection == 0) {			//	Triangle was selected
-				LCD.clear();
-				LCD.drawString("Plotting out a", 0, 3);
-				LCD.drawString("triangle.", 0, 4);
-				for (int i = 0; i < 3; i++) { // trace out a square
-					pilot.travel(50); // go forward 50 cm
-					pilot.rotate(120); // rotate 120 degrees
-				}
+				figure = "triangle";
+				sides = 3;
+				angle = 120;
 			} else if (selection == 1) {	//	Square was selected
-				LCD.clear();
-				LCD.drawString("Plotting out a", 0, 3);
-				LCD.drawString("square.", 0, 4);
-				for (int i = 0; i < 4; i++) { // trace out a square
-					pilot.travel(50); // go forward 50 cm
-					pilot.rotate(90); // rotate 90 degrees
-				}
+				figure = "square";
+				sides = 4;
+				angle = 90;
 			} else if (selection == 2) {	//	Hexagon was selected
-				LCD.clear();
-				LCD.drawString("Plotting out a", 0, 3);
-				LCD.drawString("hexagon.", 0, 4);
-				for (int i = 0; i < 6; i++) { // trace out a square
-					pilot.travel(50); // go forward 50 cm
-					pilot.rotate(60); // rotate 60 degrees
-				}
+				figure = "hexagon";
+				sides = 6;
+				angle = 60;
 			} else if (selection == 3) {	//	Octagon was selected
-				LCD.clear();
-				LCD.drawString("Plotting out a", 0, 3);
-				LCD.drawString("octagon.", 0, 4);
-				for (int i = 0; i < 8; i++) { // trace out a square
-					pilot.travel(50); // go forward 50 cm
-					pilot.rotate(45); // rotate 45 degrees
-				}
+				figure = "octagon";
+				sides = 8;
+				angle = 45;
 			}
+			LCD.clear();
+			LCD.drawString("Plotting out a", 0, 3);
+			LCD.drawString(figure + ".", 0, 4);
+			for (int i = 0; i < sides; i++) { // trace out the chosen figure
+				pilot.travel(50); // go forward 50 cm
+				pilot.rotate(angle); // rotate angle degrees
+			}
+
 		}
 	}
 }
