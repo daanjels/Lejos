@@ -57,9 +57,5 @@ public class Planner {
 		
 		System.out.println("Find a route using a depth first search...");
 		middleEarth.planDeep(H, R);
-
-//		System.out.println("Find a route using a breadth first search...");
-//		middleEarth.planWide(H, R);
-}
-
+	}
 }

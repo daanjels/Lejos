@@ -102,51 +102,6 @@ public class Map {
 		}
 	}
 
-	// method to plot out a route using a breadth first search algorithm
-	public void planWide(City start, City finish) {
-		boolean matched = false;
-		City nextCity;
-		
-		System.out.println("Search a route from " + start.cityname);
-		
-		// check if the current start connects to the finish
-		matched = match(start, finish);
-		// if it does we've found a route to the destination
-		if (matched) {
-			// the cities are stored in a stack, let's print them out properly
-			String result = new String("The path goes along these towns:\n");
-			if (roadStack.size() < 1) {
-				result = result + start.cityname + " and " + finish.cityname + ".";
-			}
-			else {
-				result = result + roadStack.get(0).to.cityname;
-				for (int i = 1; i < roadStack.size()-1; i++) {
-					result = result + ", " + roadStack.get(i).to.cityname;
-				}
-				result = result + " and " + roadStack.get(roadStack.size()-1).to.cityname + ".";
-			}
-			System.out.println(result);
-			return;
-		}
-		// if we have not reached the destination... look for the next road
-		while ((nextCity = findNext(start)) != null) {
-			// store it in a resetlist
-			resetList.push(new Road(start, nextCity));
-			// when we find another road...
-			if (matched = match(nextCity, finish)) {
-				System.out.println("match found");
-//				resetList.push(new Road(nextCity, finish));
-				// repeat the search using this new city as starting point
-				return;
-			}
-		}
-		nextCity = findNext(resetList.lastElement().to);
-		if (nextCity != null) {
-			roadStack.add(new Road(start, nextCity));
-			planWide(nextCity, finish);
-		}
-	}
-
 	public boolean match(City start, City finish) {
 		// iterate through the list of roads
 		// start at the end to give deep connectiosn priority
