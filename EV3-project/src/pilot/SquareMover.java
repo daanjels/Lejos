@@ -1,8 +1,5 @@
 package pilot;
 
-import lejos.hardware.BrickFinder;
-import lejos.hardware.Keys;
-import lejos.hardware.ev3.EV3;
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
@@ -18,8 +15,6 @@ public class SquareMover {
 	static EV3LargeRegulatedMotor LEFT_MOTOR = new EV3LargeRegulatedMotor(MotorPort.C);
 	
 	public static void main(String[] args) throws Exception {
-		EV3 wallE = (EV3) BrickFinder.getLocal();
-		Keys buttons = wallE.getKeys();
 		LCD.drawString("   Plotting out   ", 0, 2);
 		LCD.drawString("     a square     ", 0, 3);
 		LCD.drawString("taking right turns", 0, 4);
