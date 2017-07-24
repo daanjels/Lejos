@@ -22,7 +22,7 @@ public class HexagonMover {
 		
 		// setup the wheel diameter of left (and right) motor in centimeters, i.e. 2.8 cm
 		// the offset number is the distance between the center of wheel to the center of robot, i.e. half of track width
-		Wheel wheel1 = WheeledChassis.modelWheel(LEFT_MOTOR, 3.22).offset(-9.2);
+		Wheel wheel1 = WheeledChassis.modelWheel(LEFT_MOTOR, 3.22).offset(-9.2).invert(true);
 		Wheel wheel2 = WheeledChassis.modelWheel(RIGHT_MOTOR, 3.22).offset(9.2);
 		
 		// set up the chassis type, i.e. Differential pilot
@@ -33,8 +33,8 @@ public class HexagonMover {
 		pilot.setLinearAcceleration(5);
 		pilot.setLinearSpeed(10); // centimeters per second
 
-		int direction = -60;
-		String message = "Counterclockwise";
+		int direction = 60;
+		String message = "Going clockwise";
 		
 //		LCD.drawString("0123456789abcdefgh")
 		LCD.drawString("The HexagonBot ", 0, 0);
@@ -43,9 +43,9 @@ public class HexagonMover {
 		LCD.drawString("LEFT to choose a", 0, 3);
 		LCD.drawString("turning direction", 0, 4);
 
-		if (buttons.waitForAnyPress() == 16) {
-			direction = 60;
-			message = "Going clockwise";
+		if (buttons.waitForAnyPress() == Keys.ID_LEFT) {
+			direction = -60;
+			message = "Counterclockwise";
 		}
 		LCD.drawString(message, 0, 6);
 
