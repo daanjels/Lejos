@@ -10,6 +10,7 @@ import lejos.robotics.chassis.Chassis;
 import lejos.robotics.chassis.Wheel;
 import lejos.robotics.chassis.WheeledChassis;
 import lejos.robotics.navigation.*;
+import lejos.utility.Delay;
 
 public class HexagonMover {
 
@@ -64,7 +65,7 @@ public class HexagonMover {
 		// block the thread until a button is pressed
 		LCD.clear();
 		LCD.drawString("Finished!", 0, 4);
-		buttons.waitForAnyPress();
+		Delay.msDelay(2000);
 		LEFT_MOTOR.close();
 		RIGHT_MOTOR.close();
 	}	
