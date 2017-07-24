@@ -20,14 +20,14 @@ import lejos.utility.TextMenu;
 
 public class FigureBot {
 
-	static EV3LargeRegulatedMotor LEFT_MOTOR = new EV3LargeRegulatedMotor(MotorPort.C);
 	static EV3LargeRegulatedMotor RIGHT_MOTOR = new EV3LargeRegulatedMotor(MotorPort.B);
+	static EV3LargeRegulatedMotor LEFT_MOTOR = new EV3LargeRegulatedMotor(MotorPort.C);
 
 	public static void main(String[] args) throws Exception {		
 		// setup the wheel diameter of left (and right) motor in centimeters, i.e. 2.8 cm
 		// the offset number is the distance between the center of wheel to the center of robot, i.e. half of track width
-		Wheel wheel1 = WheeledChassis.modelWheel(LEFT_MOTOR, 3.22).offset(-9.2);
-		Wheel wheel2 = WheeledChassis.modelWheel(RIGHT_MOTOR, 3.22).offset(9.2);
+		Wheel wheel1 = WheeledChassis.modelWheel(RIGHT_MOTOR, 3.22).offset(9.2);
+		Wheel wheel2 = WheeledChassis.modelWheel(LEFT_MOTOR, 3.22).offset(-9.2).invert(true);
 		
 		// set up the chassis type, i.e. Differential pilot
 		Chassis chassis = new WheeledChassis(new Wheel[] {wheel1, wheel2},WheeledChassis.TYPE_DIFFERENTIAL);
@@ -66,6 +66,7 @@ public class FigureBot {
 				LCD.refresh();	
 				LEFT_MOTOR.close();
 				RIGHT_MOTOR.close();
+				System.exit(0);
 				return;
 			}
 			if (selection == 0) {			//	Triangle was selected
