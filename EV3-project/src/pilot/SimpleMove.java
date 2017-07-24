@@ -1,5 +1,13 @@
 package pilot;
 
+/**
+ * This program is good for testing new robots
+ * The robot should move ahead for 50 cm and then make a right turn
+ * Adjusting the settin g for wheel diameter and wheel base will get the right values for your robot
+ * 
+ * @author Argetype
+ */
+
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Keys;
 import lejos.hardware.ev3.EV3;
@@ -14,8 +22,8 @@ import lejos.utility.Delay;
 
 public class SimpleMove {
 
-	static EV3LargeRegulatedMotor LEFT_MOTOR = new EV3LargeRegulatedMotor(MotorPort.C);
 	static EV3LargeRegulatedMotor RIGHT_MOTOR = new EV3LargeRegulatedMotor(MotorPort.B);
+	static EV3LargeRegulatedMotor LEFT_MOTOR = new EV3LargeRegulatedMotor(MotorPort.C);
 	
 	public static void main(String[] args) throws Exception {
 		EV3 wallE = (EV3) BrickFinder.getLocal();
@@ -26,14 +34,14 @@ public class SimpleMove {
 		LCD.drawString("centimeter vooruit", 0, 2);
 		LCD.drawString("en draait een", 0, 3);
 		LCD.drawString("kwartslag naar", 0, 4);
-		LCD.drawString("links.", 0, 5);
+		LCD.drawString("rechts.", 0, 5);
 		
 		buttons.waitForAnyPress();
 		
 		// setup the wheel diameter of left (and right) motor in centimeters, i.e. 2.8 cm
 		// the offset number is the distance between the center of wheel to the center of robot, i.e. half of track width
-		Wheel wheel1 = WheeledChassis.modelWheel(LEFT_MOTOR, 3.24).offset(-9.2);
-		Wheel wheel2 = WheeledChassis.modelWheel(RIGHT_MOTOR, 3.24).offset(9.2);
+		Wheel wheel1 = WheeledChassis.modelWheel(RIGHT_MOTOR, 3.24).offset(9.2);
+		Wheel wheel2 = WheeledChassis.modelWheel(LEFT_MOTOR, 3.24).offset(-9.2).invert(true);
 		
 		// set up the chassis type, i.e. Differential pilot
 		Chassis chassis = new WheeledChassis(new Wheel[] {wheel1, wheel2},WheeledChassis.TYPE_DIFFERENTIAL);
@@ -55,7 +63,7 @@ public class SimpleMove {
 		// block the thread until a button is pressed
 		LCD.clear();
 		LCD.drawString(".    Finished    .", 0, 4);
-		buttons.waitForAnyPress();
+		Delay.msDelay(3000);
 		LEFT_MOTOR.close();
 		RIGHT_MOTOR.close();
 	}
