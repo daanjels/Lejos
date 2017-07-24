@@ -57,18 +57,6 @@ public class FigureBot {
 			selection = main.select();
 			
 			//	depending on the selection perform an action
-			if (selection == -1 || selection == 4)
-			{
-			//if 'Exit' or the back-button was selected, display 'Finished' and exit the program
-				LCD.clear();
-				LCD.drawString("Finished",3,4);
-				Delay.msDelay(1000);
-				LCD.refresh();	
-				LEFT_MOTOR.close();
-				RIGHT_MOTOR.close();
-				System.exit(0);
-				return;
-			}
 			if (selection == 0) {			//	Triangle was selected
 				figure = "triangle";
 				sides = 3;
@@ -85,6 +73,16 @@ public class FigureBot {
 				figure = "octagon";
 				sides = 8;
 				angle = 45;
+			} else if (selection == -1 || selection == 4) {
+			//if 'Exit' or the back-button was selected, display 'Finished' and exit the program
+				LCD.clear();
+				LCD.drawString("Finished",3,4);
+				Delay.msDelay(1000);
+				LCD.refresh();	
+				LEFT_MOTOR.close();
+				RIGHT_MOTOR.close();
+				System.exit(0);
+				return;
 			}
 			LCD.clear();
 			LCD.drawString("Plotting out a", 0, 3);
@@ -93,7 +91,6 @@ public class FigureBot {
 				pilot.travel(50); // go forward 50 cm
 				pilot.rotate(angle); // rotate angle degrees
 			}
-
 		}
 	}
 }
