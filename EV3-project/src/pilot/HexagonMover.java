@@ -57,15 +57,14 @@ public class HexagonMover {
 		}
 
 		// press the ESCAPE button to stop moving
+		// This doesn't work !!
 		while (pilot.isMoving()) {
-		if (buttons.getButtons() == Keys.ID_ESCAPE)
-		pilot.stop();
+			if (buttons.getButtons() == Keys.ID_ESCAPE) pilot.stop();
 		}
 
-		// block the thread until a button is pressed
 		LCD.clear();
 		LCD.drawString("Finished!", 0, 4);
-		Delay.msDelay(2000);
+		Delay.msDelay(3000);
 		LEFT_MOTOR.close();
 		RIGHT_MOTOR.close();
 	}	
