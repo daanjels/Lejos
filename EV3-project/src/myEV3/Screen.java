@@ -1,9 +1,15 @@
 package myEV3;
  /**
-  * An empty class to add a method that extends the LCD functionality
+  * An 'empty' class to add a method that extends the LCD functionality
   * The 'flow' method will take a string (with or without new-line characters) and flow them on the screen
+  * Text will break on spaces
+  * New-line characters are kept, making paragraphs possible
+  * Words also break on dashes
+  * Words longer than 18 characters will flow to the next line
+  * Text that flow on more than 8 lines will be scrolled through, using the down button
   * 
-  * author: Arqetype
+  * @author Arqetype
+  * @version 1.0
   */
 
 import lejos.hardware.BrickFinder;
@@ -44,6 +50,10 @@ public class Screen {
 						message = message.substring(i+1);								// remove the first part of the string
 						i = 0;															// stop searching
 					}
+					if (i == 1) {
+						chopString = chopString + message.substring(0, 18) + "\n";
+						message = message.substring(18);
+					}
 				}
 			}
 			if (message.length() > 0) {
@@ -58,9 +68,10 @@ public class Screen {
 				LCD.drawString("" + chops[i], 0, 7);	// show the last line on the EV3 display
 				Delay.msDelay(500);
 			} else if (i > 6) {							// if the text is longer than 7 lines
-				LCD.drawString("        \\/     ", 0, 7);	// display an arrow at the bottom
+				LCD.drawString("\\/     ", 7, 7);	// display an arrow at the bottom
 				while (BrickFinder.getLocal().getKeys().getButtons() != Keys.ID_DOWN);	// wait for the user to press the down button
 				LCD.scroll();							// scroll the screen up
+				LCD.drawString("  ", 7, 6);
 				LCD.drawString("" + chops[i], 0, 6);	// show the next string on line 7
 				Delay.msDelay(250);						// wait to prevent the key press be used again
 			}

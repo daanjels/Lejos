@@ -6,11 +6,9 @@ import myEV3.Screen;
 public class DisplayScreen {
 
 	public static void main(String[] args) {
-		Screen.flow("De zin die nu volgt is weer wat anders. En nu sym-controle op koppel-tekens.");
+		Screen.flow("This paragraph shows that new-line characters and dashes are supported.\n   this piece\n   shows that\n   spaces are kept\nAnd by now you've surely noticed the scroll-functionality. Califragialisticexpialodouscious is a long word that can't break, so it simply flow to the next line.");
 		Button.waitForAnyPress();
-		Screen.flow("Laten we nog eens proberen met een lange zin.\n\nEventueel met meerderde paragrafen gemaakt door end-of-line-markers. En dan eens zien of deze aangepaste Display class goed werkt.");
-		Button.waitForAnyPress();
-		Screen.flow("This string is far too long to fit on the LCD-display. So pressing the down button will scroll the text up and add a line at the bottom. This way strings of any length are supported. Of course the question is if it is good practice to have users press the button all the time.");
+		Screen.flow("This string is far too long to fit on the LCD-display. So pressing the down button will scroll the text up and add a line at the bottom. Whether it is good practice to have users press the button all the time is another question.");
 		Button.waitForAnyPress();
 	}
 }
