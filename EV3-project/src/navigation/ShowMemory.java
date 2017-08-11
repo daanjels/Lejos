@@ -18,6 +18,7 @@ public class ShowMemory {
 	// displaying free memory on the LCD screen
 	lcddisplay.drawInt((int) Runtime.getRuntime().freeMemory(), 0, 2);
 	// exit program after any button pressed
+	lcddisplay.drawString("Battery :" + String.valueOf(wallE.getPower().getVoltage()), 0, 4);
 	buttons.waitForAnyPress();
 	}
 }
