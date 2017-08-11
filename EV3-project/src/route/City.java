@@ -14,9 +14,9 @@ package route;
 
 public class City {
 	String cityname;
-	int xPos, yPos;
+	double xPos, yPos;
 	
-	public City(String name, int x, int y) {
+	public City(String name, double x, double y) {
 		this.cityname = name;
 		this.xPos = x;
 		this.yPos = y;
