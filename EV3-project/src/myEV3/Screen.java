@@ -71,7 +71,7 @@ public class Screen {
 				LCD.drawString("\\/     ", 7, 7);	// display an arrow at the bottom
 				while (BrickFinder.getLocal().getKeys().getButtons() != Keys.ID_DOWN);	// wait for the user to press the down button
 				LCD.scroll();							// scroll the screen up
-				LCD.drawString("  ", 7, 6);
+				LCD.drawString("  ", 7, 6);				// remove the arrow that moved up
 				LCD.drawString("" + chops[i], 0, 6);	// show the next string on line 7
 				Delay.msDelay(250);						// wait to prevent the key press be used again
 			}
