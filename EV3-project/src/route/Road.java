@@ -18,7 +18,7 @@ package route;
 public class Road {
 	City from;
 	City to;
-	int distance;
+	double distance;
 	boolean visited;
 	
 	public Road(City from, City to) {
@@ -27,9 +27,9 @@ public class Road {
 		this.distance = dist(from.xPos, from.yPos, to.xPos, to.yPos);
 	}
 	
-	static int dist(int x1, int y1, int x2, int y2) {
-		int d = 0;
-		d = (int) Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+	static double dist(double x1, double y1, double x2, double y2) {
+		double d = 0;
+		d = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 		return d;
 	}
 	
