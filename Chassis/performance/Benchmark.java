@@ -240,6 +240,7 @@ public class Benchmark {
 				System.out.println(car.getPoseProvider().getPose());	// print calculated position to the log
 				Delay.msDelay(500);
 				
+				// TODO can we avoid this double message?
 				LCD.clear();	// reprint the line test message
 				LCD.drawString("Line test",0,0);
 				LCD.drawString("Make your choice",0,1);
