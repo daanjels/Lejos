@@ -85,16 +85,20 @@ public class Benchmark {
 			if (selection == 0) { //Straight line
 				line();
 			} else if (selection == 1) { // Turnaround
+				Delay.msDelay(200);
 				turnaround();
 			} else if (selection == 2) { // Square
+				Delay.msDelay(200);
 				square();
 			} else if (selection == 3) { // Yin-Yang
+				Delay.msDelay(200);
 				curve();
 			} else if (selection == 4) { // Settings
+				Delay.msDelay(200);
 				settings();
 			} else if (selection == -1) { // Escape quits
 				LCD.clear();
-				LCD.drawString("Closing down", 0, 4);
+				LCD.drawString("Closing down", 0, 3);
 				Delay.msDelay(1000);
 				layer.close(); // close the outputstream
 				System.exit(0);
@@ -139,21 +143,34 @@ public class Benchmark {
 				System.out.println(car.getPoseProvider().getPose());	// print calculated position to the log
 			} else if (buttons.getButtons() == Keys.ID_ENTER) {
 				System.out.println("Perform 10 turns.");
+				LCD.clear();
+				LCD.drawString("Performing", 0, 0);
+				LCD.drawString("10 turns", 0, 1);
 				for (int i = 1; i < 10; i++) {
+					LCD.drawInt(i, 2, 7, 3);
 					car.rotate(turn);
 					car.waitComplete();
 					Delay.msDelay(100);
 					System.out.println(car.getPoseProvider().getPose());	// print calculated position to the log
 				}
+				LCD.clear();
+				LCD.drawString("Press ENTER to", 0, 0);
+				LCD.drawString("make 10 turns of ", 0, 1);
+				LCD.drawString("180 degrees.", 0, 2);
+				LCD.drawString("LEFT or RIGHT to", 0, 3);
+				LCD.drawString("change direction", 0, 4);
+				LCD.drawString("ESCAPE for menu", 0, 7);
+				if (turn > 0) LCD.drawString("RIGHT", 8, 3, true);	// highlight the 'RIGHT' option
+				else LCD.drawString("LEFT", 0, 3, true);
 			}
-			Delay.msDelay(150);	// wait before checking the next key pressed to avoid 'double presses'
+			Delay.msDelay(200);	// wait before checking the next key pressed to avoid 'double presses'
 		}
-		Delay.msDelay(150);	// wait before checking the next key pressed to avoid 'double presses'
+		Delay.msDelay(200);	// wait before checking the next key pressed to avoid 'double presses'
 		return;
 	}
 
 	private static void line() {
-		double turn = -180.0;
+		double turn = 180.0;
 		int dist = 100;
 		LCD.clear();
 		LCD.drawString("Line test",0,0);
@@ -168,31 +185,31 @@ public class Benchmark {
 			if (buttons.getButtons() == Keys.ID_RIGHT) {
 				LCD.drawString("> Clockwise       ", 0, 2);
 				turn = 180.0;
-				Delay.msDelay(150);	// wait before checking the next key pressed to avoid 'double presses'
+				Delay.msDelay(200);	// wait before checking the next key pressed to avoid 'double presses'
 			} else if (buttons.getButtons() == Keys.ID_LEFT) {
 				LCD.drawString("< Counterclockwise", 0, 2);	// change arrow and text on the display
 				turn = -180.0;
-				Delay.msDelay(150);	// wait before checking the next key pressed to avoid 'double presses'
+				Delay.msDelay(200);	// wait before checking the next key pressed to avoid 'double presses'
 			} else if (buttons.getButtons() == Keys.ID_UP) {
 				dist = dist + 10;	// increase distance to travel in 10 cm increments
-				LCD.drawInt(dist, 4, 10, 3);
-				Delay.msDelay(150);	// wait before checking the next key pressed to avoid 'double presses'
+				LCD.drawInt(dist, 4, 11, 3);
+				Delay.msDelay(200);	// wait before checking the next key pressed to avoid 'double presses'
 			} else if (buttons.getButtons() == Keys.ID_DOWN) {
 				dist = dist - 10;	// decrease distance to travel in 10 cm increments
 				if (dist < 10) dist = 10;	// bottom limit is 10
-				LCD.drawInt(dist, 4, 10, 3);
-				Delay.msDelay(150);	// wait before checking the next key pressed to avoid 'double presses'
+				LCD.drawInt(dist, 4, 11, 3);
+				Delay.msDelay(200);	// wait before checking the next key pressed to avoid 'double presses'
 			} else if (buttons.getButtons() == Keys.ID_ENTER) {
 				if (turn == 180) {
 					LCD.clear();
 					LCD.drawString("Wall-E will run a ", 0, 0);
 					LCD.drawString("straight line and ", 0, 1);
-					LCD.clear();
 					LCD.drawString("turn 180 degrees ", 0, 2);
 					LCD.drawString("in clockwise ", 0, 3);
 					LCD.drawString("direction to test ", 0, 4);
 					LCD.drawString("its accuracy.", 0, 5);
 				} else {
+					LCD.clear();
 					LCD.drawString("Wall-E will run a ", 0, 0);
 					LCD.drawString("straight line and ", 0, 1);
 					LCD.drawString("turn 180 degrees ", 0, 2);
@@ -212,7 +229,7 @@ public class Benchmark {
 				System.out.println(car.getPoseProvider().getPose());	// print calculated position to the log
 				Delay.msDelay(500);
 				LCD.clear();
-				LCD.drawString("Measure the .", 0, 0);
+				LCD.drawString("Measure the", 0, 0);
 				LCD.drawString("distance.", 0, 1);
 				LCD.drawString("ENTER to continue...", 0, 3);
 				while (buttons.getButtons() != Keys.ID_ENTER) {
@@ -221,16 +238,18 @@ public class Benchmark {
 						car.waitComplete();
 						System.out.println("Extra right turn");
 						System.out.println(car.getPoseProvider().getPose());	// print calculated position to the log
-						Delay.msDelay(150);
+						Delay.msDelay(200);
 					}if (buttons.getButtons() == Keys.ID_LEFT) {
 						car.rotate(-180);
 						car.waitComplete();
 						System.out.println("Extra left turn");
 						System.out.println(car.getPoseProvider().getPose());	// print calculated position to the log
-						Delay.msDelay(150);
+						Delay.msDelay(200);
 					} else 
-					Delay.msDelay(150);
+					Delay.msDelay(200);
 				}
+				LCD.clear();
+				LCD.drawString("Going back home...", 0, 2);
 				car.travel(dist);
 				car.waitComplete();
 				Delay.msDelay(500);
@@ -251,17 +270,17 @@ public class Benchmark {
 				LCD.drawString("ESC: back to menu", 0, 7);
 			}
 		}
-		Delay.msDelay(150);
+		Delay.msDelay(200);
 		return;
 	}
 
 	private static void square() {
-		double turn = -90.0;
+		double turn = 90.0;
 		LCD.clear();
 		LCD.drawString("Square test",0,0);
 		LCD.drawString("Make your choice",0,1);
 		LCD.drawString("> Clockwise", 0, 2);
-		LCD.drawString("> Start the test", 0, 4);
+		LCD.drawString("ENTER: start test", 0, 6);
 		LCD.drawString("ESC: back to menu", 0, 7);
 		System.out.println("Square test _____________________");	// print to the log
 		
@@ -269,20 +288,20 @@ public class Benchmark {
 			if (buttons.getButtons() == Keys.ID_RIGHT) {
 				LCD.drawString("> Clockwise       ", 0, 2);
 				turn = 90.0;
-				Delay.msDelay(150);
+				Delay.msDelay(200);
 			} else if (buttons.getButtons() == Keys.ID_LEFT) {
 				LCD.drawString("< Counterclockwise", 0, 2);
 				turn = -90.0;
-				Delay.msDelay(150);
+				Delay.msDelay(200);
 			} else if (buttons.getButtons() == Keys.ID_DOWN) {	// option to change settings from within the square method...
 				settings();
-				Delay.msDelay(150);
+				Delay.msDelay(200);
 				LCD.clear();
 				LCD.drawString("Square test",0,0);
 				LCD.drawString("Make your choice",0,1);
 				if (turn == 90.0) LCD.drawString("> Clockwise", 0, 2);
 				else LCD.drawString("< Counterclockwise", 0, 2);
-				LCD.drawString("> Start the test", 0, 4);
+				LCD.drawString("ENTER: start test", 0, 6);
 				LCD.drawString("ESC: back to menu", 0, 7);
 			} else if (buttons.getButtons() == Keys.ID_ENTER) {
 				if (turn == 90.0) {
@@ -295,19 +314,26 @@ public class Benchmark {
 					LCD.clear();
 					LCD.drawString("Wall-E will run a ", 0, 0);
 					LCD.drawString("square in counter-", 0, 1);
-					LCD.drawString("clockwise direction", 0, 2);
-					LCD.drawString("to test its ", 0, 3);
-					LCD.drawString("accuracy.", 0, 4);
+					LCD.drawString("clockwise ", 0, 2);
+					LCD.drawString("direction to test ", 0, 3);
+					LCD.drawString("its accuracy.", 0, 4);
 				}
 				
 				Chassis car = buildCar();
 				System.out.println(car.getPoseProvider().getPose());	// print calculated position to the log
+				LCD.clear();
+				LCD.drawString("Running a square", 0, 1);
 				Delay.msDelay(500);
-				for (int i = 0; i < 4; i++) {
+				for (int i = 1; i < 5; i++) {
+					LCD.clear(2);
+					LCD.clear(3);
+					LCD.drawString("Side " + i, 0, 2);
 					car.travel(50.0);
 					car.waitComplete();
 					System.out.println(car.getPoseProvider().getPose());	// print calculated position to the log
+					LCD.drawString("Side " + i + " done.", 0, 2);
 					Delay.msDelay(500);
+					LCD.drawString("Turning", 0, 3);
 					car.rotate(turn);
 					car.waitComplete();
 					System.out.println(car.getPoseProvider().getPose());	// print calculated position to the log
@@ -319,43 +345,44 @@ public class Benchmark {
 				LCD.drawString("Make your choice",0,1);
 				if (turn == 90.0) LCD.drawString("> Clockwise", 0, 2);
 				else LCD.drawString("< Counterclockwise", 0, 2);
-				LCD.drawString("> Start the test", 0, 4);
+				LCD.drawString("ENTER: start test", 0, 6);
 				LCD.drawString("ESC: back to menu", 0, 7);
 			}
 		}
-		Delay.msDelay(150);
+		Delay.msDelay(200);
 		return;
 	}
 	
 	private static void curve() {
-		double turn = 20.0;	// with arcs a positive radius is clockwise
+		double turn = 1;	// with arcs a positive radius is clockwise
 		int radius = 20;
 		LCD.clear();
 		LCD.drawString("Yin Yang test    ", 0, 0);
 		LCD.drawString("Make your choice ", 0, 1);
 		LCD.drawString("> Clockwise      ", 0, 2);
 		LCD.drawString("- Radius: " + radius, 0, 3);
-		LCD.drawString("* Start the test ", 0, 4);
+		LCD.drawString("ENTER: start test", 0, 6);
 		LCD.drawString("ESC: back to menu", 0, 7);
 		System.out.println("Yin - Yang test _________________");	// print to the log
 		
 		while(buttons.getButtons() != Keys.ID_ESCAPE) {
 			if (buttons.getButtons() == Keys.ID_RIGHT) {
 				LCD.drawString("> Clockwise       ", 0, 2);
-				turn = (double)radius;
+				turn = 1;
 				Delay.msDelay(250);
 			} else if (buttons.getButtons() == Keys.ID_LEFT) {
 				LCD.drawString("< Counterclockwise", 0, 2);
-				turn = -(double)radius;
+				turn = -1;
 				Delay.msDelay(250);
 			} else if (buttons.getButtons() == Keys.ID_UP) {
 				radius = radius + 5;
-				LCD.drawInt(radius, 4, 10, 3);
+				if (radius > 150) radius = 150;
+				LCD.drawInt(radius, 3, 10, 3);
 				Delay.msDelay(250);
 			} else if (buttons.getButtons() == Keys.ID_DOWN) {
 				radius = radius - 5;
 				if (radius < 10) radius = 10;
-				LCD.drawInt(radius, 4, 10, 3);
+				LCD.drawInt(radius, 3, 10, 3);
 				Delay.msDelay(250);
 			} else if (buttons.getButtons() == Keys.ID_ENTER) {
 				Chassis car = buildCar();
@@ -378,16 +405,16 @@ public class Benchmark {
 				car.setAngularSpeed(props[4]/4);	// set angular speed to a quarter of the rotation speed
 				// TODO figure out a formula to calculate the optimal angular speed for an arc in relation to its radius
 				Delay.msDelay(1000);
-				car.arc(turn, 180);
+				car.arc(turn * radius, 180);
 				car.waitComplete();
 				System.out.println(car.getPoseProvider().getPose());	// print calculated position to the log
 				Delay.msDelay(500);
-				car.arc(-turn, 180);
+				car.arc(-turn * radius, 180);
 				car.waitComplete();
 				System.out.println(car.getPoseProvider().getPose());	// print calculated position to the log
 				Delay.msDelay(500);
 				car.setAngularSpeed(props[4]/8);	// set angular speed to an eighth for the larger arc
-				car.arc(-turn*2, 180);
+				car.arc(-turn*2*radius, 180);
 				car.waitComplete();
 				System.out.println(car.getPoseProvider().getPose());	// print calculated position to the log
 				Delay.msDelay(500);
@@ -402,19 +429,19 @@ public class Benchmark {
 				LCD.drawString("Make your choice",0,1);
 				if (turn > 0) LCD.drawString("> Clockwise", 0, 2);
 				else LCD.drawString("< Counterclockwise", 0, 2);
-				LCD.drawString("^ Radius: " + radius, 0, 3);
-				LCD.drawString("- Start the test", 0, 4);
+				LCD.drawString("- Radius: " + radius, 0, 3);
+				LCD.drawString("ENTER: start test", 0, 6);
 				LCD.drawString("ESC: back to menu", 0, 7);
 			}
 		}
-		Delay.msDelay(250);
+		Delay.msDelay(200);
 		return;
 	}
 
 	private static void settings() {
 		int option = 0;
 		// props: wheelradius / wheel offset form center / drift / linearspeed / angular speed / acceleration 
-		int[] sets = {(int) (props[0] * 100), (int) (props[1] * 100), (int) (props[5] * 1000), (int) (props[2] * 10), (int) (props[3] * 1), (int) (props[4] * 100)};
+		int[] sets = {(int) (props[0] * 100), (int) (props[1] * 100), (int) (props[2] * 1000), (int) (props[3] * 10), (int) (props[4] * 1), (int) (props[5] * 100)};
 		int[] increments =	{1,		1,		1,		5,		5,		5,};
 		int[] min = 		{100,	300,	950,	10,		10,		50};
 		int[] max =			{1000,	1000,	1050,	200,	360,	700};
