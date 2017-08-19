@@ -23,7 +23,7 @@ public class City {
 	}
 	
 	public String toString() {
-		return cityname + " (" + xPos + ", " + yPos + ")";
+		return cityname + locatie();
 	}
 	
 	public String locatie() {

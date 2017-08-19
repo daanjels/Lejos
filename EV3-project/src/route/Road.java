@@ -23,13 +23,16 @@ public class Road {
 	
 	public Road(City from, City to) {
 		this.from = from;
-		this.to= to;
-		this.distance = dist(from.xPos, from.yPos, to.xPos, to.yPos);
+		this.to = to;
+		this.distance = afstand(from, to);
 	}
 	
-	static double dist(double x1, double y1, double x2, double y2) {
-		double d = 0;
-		d = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+	private double afstand(City from2, City to2) {
+		double x1 = from.xPos;
+		double y1 = from.yPos;
+		double x2 = to.xPos;
+		double y2 = to.yPos;
+		double d = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 		return d;
 	}
 	
