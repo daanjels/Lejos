@@ -1,4 +1,4 @@
-package startup;
+package trials;
 
 // import EV3 hardware packages for EV brick finding, activating keys and LCD
 import lejos.hardware.ev3.EV3;

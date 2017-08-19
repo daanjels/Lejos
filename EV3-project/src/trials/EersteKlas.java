@@ -1,4 +1,4 @@
-package startup;
+package trials;
 
 import lejos.hardware.lcd.LCD;
 import lejos.utility.Delay;
