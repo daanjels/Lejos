@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -43,60 +44,64 @@ public class LCD extends JPanel implements ActionListener {
 		clear();
 		drawString("this is not in capitals", 0, 2, true);
 //		double value = takeInput(10, 2, 70.00, 5);
-		double value = takeInput(5, 2, 70.00, 5);
-		drawString(Double.toString(value), 0, 6);
+		String value = takeInput(3, 2, 70.00, 2, 5);
+		drawString(value, 0, 6);
 	}
 	
 	/** takeInput from the EV3 brick.
-	* @param digits The number of integer digits (before the decimal point).
-	* @param floats The number of decimal figures (after the decimal point).
+	* @param digits The number of integer digits (before the decimal point): Maximum 6
+	* @param floats The number of decimal figures (after the decimal point): Maximum 4
 	* @param value The default value that the user can start from.
-	* @param row The row to display the value
+	* @param col The col to display the value.
+	* @param row The row to display the value.
 	*/
 	
-	private static double takeInput(int digits, int floats, double value, int row) {
-		double[] increments = {100000, 10000, 1000, 100, 10, 1, 0.0, 0.1, 0.01, 0.001, 0.0001};
-		double[] increment = Arrays.copyOfRange(increments, 6-digits, 10);
+	private static String takeInput(int digits, int floats, double value, int pos, int row) {
+		double[] increments = {100000, 10000, 1000, 100, 10, 1, 0.0, 0.1, 0.01, 0.001, 0.0001, 0.00001};
+		double[] increment = Arrays.copyOfRange(increments, 6-digits, 11);
 		int limit = digits + 1 + floats; // total number of position for the double format
-		int col = digits - 1; // position of the 'cursor' (before de decimal point
+		int col = pos + digits - 1; // position of the 'cursor' (before de decimal point
 		String decimalValue = String.format("%1." + floats + "f", value); // double value with correct format
-		System.out.println(decimalValue);
 		int lead = limit - decimalValue.length(); // leading space
 
-		drawString(String.format("%1$" + limit + "." + floats + "f", value), 0, row);
+		drawString(String.format(Locale.CANADA, "%1$," + limit + "." + floats + "f", value), pos, row);
 		decimalValue = decimalValue.substring(col - lead, col - lead + 1);
-		System.out.println("dec: " + decimalValue);
 		drawString(decimalValue, col, row-1);
 		while (buttons.getButtons() != Keys.ID_ENTER) {
 			if (buttons.getButtons() == Keys.ID_UP) {
 				value = value + increment[col];
 			} else if (buttons.getButtons() == Keys.ID_DOWN) {
 				value = value - increment[col];
+				if (value < 0) value = value + increment[col];
 			} else if (buttons.getButtons() == Keys.ID_RIGHT) {
-				drawString(" ", col, row-1);
+				drawString(" ", col + pos, row-1);
 				col = col + 1;
 				System.out.println("col: " + col + " / limit: " + limit);
 				if (col == limit) col = lead;
 				if (col == digits) col = digits + 1;
 			} else if (buttons.getButtons() == Keys.ID_LEFT) {
-				drawString(" ", col, row-1);
+				drawString(" ", col + pos, row-1);
 				col = col - 1;
 				if (col == digits) col = digits - 1; // skip the decimal point
 				if (decimalValue == "_" || col < 0) col = limit - 1; // if at the start, go to the end
 			}
-			drawString(String.format("%1$" + limit + "." + floats + "f", value), 0, row);
 			decimalValue = String.format("%1." + floats + "f", value);
+			if (decimalValue.length() > limit) {
+				value = value - increment[col];
+				decimalValue = String.format("%1." + floats + "f", value);
+			}
 			lead = limit - decimalValue.length();
+			drawString(String.format(Locale.CANADA, "%1$" + limit + "." + floats + "f", value), pos, row);
 			if (col - lead < 0) {
 				decimalValue = "_";
 			} else {
 				decimalValue = decimalValue.substring(col - lead, col - lead + 1);
 			}
-			drawString(decimalValue, col, row-1);
+			drawString(decimalValue, col + pos, row-1);
 			Delay.msDelay(200);
 		}
 		buttons.waitForAnyPress();
-		return value;
+		return String.format(Locale.CANADA, "%1$" + limit + "." + floats + "f", value);
 	}
 
 //	private static int takeInput(int decimals, int floats, double value, int row) {
