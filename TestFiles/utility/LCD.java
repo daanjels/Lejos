@@ -48,11 +48,11 @@ public class LCD extends JPanel implements ActionListener {
 		drawString(value, 0, 6);
 	}
 	
-	/** takeInput from the EV3 brick.
+	/** Take double value input from the EV3 brick.
 	* @param digits The number of integer digits (before the decimal point): Maximum 6
 	* @param floats The number of decimal figures (after the decimal point): Maximum 4
-	* @param value The default value that the user can start from.
-	* @param col The col to display the value.
+	* @param value The default value (double) that the user can start from.
+	* @param pos The starting position to display the value.
 	* @param row The row to display the value.
 	*/
 	
