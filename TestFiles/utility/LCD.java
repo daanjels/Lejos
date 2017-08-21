@@ -43,8 +43,7 @@ public class LCD extends JPanel implements ActionListener {
 		drawString("col six", 6, 2);
 		clear();
 		drawString("this is not in capitals", 0, 2, true);
-//		double value = takeInput(10, 2, 70.00, 5);
-		String value = takeInput(3, 2, 70.00, 2, 5);
+		String value = inputNumber(3, 2, 70.00, 2, 5);
 		drawString(value, 0, 6);
 	}
 	
@@ -56,7 +55,7 @@ public class LCD extends JPanel implements ActionListener {
 	* @param row The row to display the value.
 	*/
 	
-	private static String takeInput(int digits, int floats, double value, int pos, int row) {
+	private static String inputNumber(int digits, int floats, double value, int pos, int row) {
 		double[] increments = {100000, 10000, 1000, 100, 10, 1, 0.0, 0.1, 0.01, 0.001, 0.0001, 0.00001};
 		double[] increment = Arrays.copyOfRange(increments, 6-digits, 11);
 		int limit = digits + 1 + floats; // total number of position for the double format
@@ -104,32 +103,6 @@ public class LCD extends JPanel implements ActionListener {
 		return String.format(Locale.CANADA, "%1$" + limit + "." + floats + "f", value);
 	}
 
-//	private static int takeInput(int decimals, int floats, double value, int row) {
-//	int limit = decimals + 1 + floats;
-//	String oldValue = String.format("%1$" + limit + "." + floats + "f", value);
-//	System.out.println("123456789");
-//	System.out.println(oldValue);
-//	String digit;
-//	int s1, s2, i = limit, dig;
-//	int[] newValue = {};
-//	while (oldValue.length() > 1) {
-//		s1 = oldValue.length()-1;
-//		s2 = oldValue.length();
-//		System.out.println(s1 + ":" + s2);
-//		digit = oldValue.substring(s1, s2);
-//		System.out.println("digit: " + digit);
-//		if (digit != ",") {
-//			newValue[i] = Integer.parseInt(digit);
-//			oldValue = oldValue.substring(0, oldValue.length() -1);
-//			System.out.println("old: " + oldValue);// + " ; new: " + newValue[i]);
-//		} else {
-//			newValue[i] = 0;
-//		}
-//		i--;
-//	}
-//	return row;
-//}
-
 	public static void drawString(String message, int col, int row) {
 		int max = message.length();
 		String oldMsg = displayText[row];
@@ -176,14 +149,14 @@ public class LCD extends JPanel implements ActionListener {
 		LCD.drawString("Give your robot", 0, 2);
 		LCD.drawString("a name:", 0, 3);
 		while (buttons.getButtons() != Keys.ID_ENTER) {
-			inName = takeInput(true, "EV3", 4);
+			inName = inputString(true, "EV3", 4);
 		}
 		LCD.drawString("> " + inName, 0, 5);
 		Delay.msDelay(200);
 		return inName;
 	}
 
-	private static String takeInput(boolean type, String name, int row) {
+	private static String inputString(boolean type, String name, int row) {
 		String alpha = " ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-0123456789";
 		if (type == false) alpha = "0123456789.";
 		int chr = 0;
@@ -228,7 +201,6 @@ public class LCD extends JPanel implements ActionListener {
 		Delay.msDelay(200);
 		for (int i = 0; i < in.length; i++) {
 			input = input+in[i];
-//			System.out.println(input);
 		}
 		return input;
 	}
@@ -253,16 +225,6 @@ public class LCD extends JPanel implements ActionListener {
 		venster.setContentPane(inhoud);
 		venster.setVisible(true);
 	}
-
-//	private static JPanel creatPanel() {
-//		JPanel inhoud = new JPanel();
-//		inhoud.setBorder(BorderFactory.createEmptyBorder(60, 80, 0, 80)); // top, left, bottom, right
-//		JPanel scherm = createScreen();
-//		inhoud.add(scherm );
-//		JPanel buttons = createButtons();
-//		inhoud.add(buttons);
-//		return inhoud;
-//	}
 
 	private static JPanel createScreen() {
 		JPanel scherm = new JPanel();
