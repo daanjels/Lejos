@@ -8,7 +8,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Keys;
@@ -30,6 +32,7 @@ public class Calibration {
 	static Keys buttons = BrickFinder.getDefault().getKeys();
 	static Robot bot = new Robot();
 	static String title = "EV3 calibration";
+	static String[] botNames = {"New Robot"};
 	
 	public static void main(String[] args) {
 		// make sure outputstream is not displayed on the LCD
@@ -38,7 +41,7 @@ public class Calibration {
 		layer.setVisible(false);
 		
 		startUp(); // show a startup dialog
-		chooseBot(); // select an exisiting bot or create a new one
+		selectBot(); // select an exisiting bot or create a new one
 		showMenu(); // show the calibration menu
 		shutDown();
 	}
@@ -83,34 +86,6 @@ public class Calibration {
 		return;
 	}
 
-	private static void testMove() {
-		Chassis car = buildCar();
-		LCD.clear();
-		LCD.drawString("Wheels calibration", 0, 1);
-		System.out.println(car.getPoseProvider().getPose());
-		RIGHT_MOTOR.resetTachoCount();
-		LEFT_MOTOR.resetTachoCount();
-		RIGHT_MOTOR.setSpeed(180);
-		LEFT_MOTOR.setSpeed(180);
-		while (RIGHT_MOTOR.getTachoCount() < 1800) {
-			LEFT_MOTOR.forward();
-			RIGHT_MOTOR.forward();
-		}
-		RIGHT_MOTOR.stop();
-		LEFT_MOTOR.stop();
-		String input = takeInput(false, "100.0", 2);
-		double distance = Double.parseDouble(input);
-//		double distance = 100.0;
-		double diameter = (distance / 5 / 3.14159);
-		LCD.clear();
-		LCD.drawString("The diameter is:", 0, 0);
-		LCD.drawString("" + diameter, 0, 1);
-		LCD.drawString("All Done!", 0, 3);
-		buttons.waitForAnyPress();
-		Delay.msDelay(2000);
-		return;
-	}
-
 	private static void testTravel() {
 		Chassis car = buildCar();
 		LCD.clear();
@@ -122,7 +97,7 @@ public class Calibration {
 		car.waitComplete();
 		Delay.msDelay(500);
 		LCD.drawString("Insert the distance:", 0, 4);
-		String input = takeInput(false, "70.0", 5);
+		String input= inputNumber(3, 2, 70.0, 0, 5);
 		double distance = Double.parseDouble(input);
 		double rotations = 70.0 / bot.getWheelDiameter();// * 3.14159;
 		double diameter = (distance / rotations);// / 3.14159);
@@ -130,14 +105,15 @@ public class Calibration {
 		LCD.drawString("wiel: " + bot.getWheelDiameter(), 0, 0);
 		LCD.drawString("rondes: " + rotations, 0, 1);
 		LCD.drawString("The diameter is:", 0, 2);
-		LCD.drawString(String.format("%1$,.2f", diameter), 0, 3);
-//		LCD.drawString(String.format("%4$", diameter * 100), 0, 4);
+//		LCD.drawString(String.format("%1$,.2f", diameter), 0, 3);
+//		String input = String.valueOf((int)(diameter * 100));
+		input = String.format(Locale.CANADA, "%1$,.2f", diameter);
+		LCD.drawString(input, 0, 4);
 		LCD.drawString("Press ENTER to save", 0, 5);
 		buttons.waitForAnyPress();
-//		if (buttons.getButtons() == Keys.ID_ENTER) {
-//			input = String.format("%4$", diameter * 100);
+		if (buttons.getButtons() == Keys.ID_ENTER) {
 //			bot.setWheelDiameter(input);
-//		}
+		}
 		Delay.msDelay(200);
 		return;
 	}
@@ -159,54 +135,6 @@ public class Calibration {
 	}
 
 
-	private static void chooseBot() {
-		boolean exist = false;
-		LCD.clear();
-		LCD.drawString(title, 0, 0);
-		LCD.drawString("Make your choice", 0, 2);
-		LCD.drawString("> a new robot", 0, 3);
-		LCD.drawString("  an existing robot", 0, 4);
-		LCD.drawString("ENTER to continue", 0, 7);
-		while (buttons.getButtons() != Keys.ID_ESCAPE) {
-			if (buttons.getButtons() == Keys.ID_DOWN) {
-				exist = true;
-				LCD.drawString(" ", 0, 3);
-				LCD.drawString(">", 0, 4);
-			} else if (buttons.getButtons() == Keys.ID_UP) {
-				exist = false;
-				LCD.drawString(">", 0, 3);
-				LCD.drawString(" ", 0, 4);
-			} else if (buttons.getButtons() == Keys.ID_ENTER) {
-				if (exist == false) {
-					LCD.drawString("creating a bot", 0, 0);
-					Delay.msDelay(200);
-					createBot();
-					LCD.clear();
-				}
-				else {
-					Delay.msDelay(200);
-					selectBot();
-				}
-				return;
-			}
-			Delay.msDelay(200);
-		}
-		if (exist == false) {
-			LCD.clear();
-			LCD.drawString(title, 0, 0);
-			LCD.drawString("Press ENTER to", 0, 2);
-			LCD.drawString("create a new robot", 0, 3);
-			buttons.waitForAnyPress();
-			if (buttons.getButtons() == Keys.ID_ENTER) createBot();
-		} else {
-			LCD.clear();
-			LCD.drawString(title, 0, 0);
-			LCD.drawString("No robot selected", 0, 2);
-			Delay.msDelay(2000);
-		}
-		Delay.msDelay(200);
-		return;
-	}
 
 	private static void selectBot() {
 		String[] botNames = {"New robot"};
@@ -220,14 +148,18 @@ public class Calibration {
 		}
 		TextMenu bots = new TextMenu(botNames, 1, "Choose a robot");
 		option = bots.select(1);
-		try {
-			bot.loadSettings(botNames[option]);
-		} catch (FileNotFoundException e) {
-			LCD.drawString("No settings found", 0, 1);
-			LCD.drawString("for " + botNames[option], 0, 2);
-			buttons.waitForAnyPress();
-			return;
+		if (option > 0) {
+			try {
+				bot.loadSettings(botNames[option]);
+				return;
+			} catch (FileNotFoundException e) {
+				LCD.drawString("No settings found", 0, 1);
+				LCD.drawString("for " + botNames[option], 0, 2);
+				buttons.waitForAnyPress();
+				return;
+			}
 		}
+		createBot();
 		return;
 	}
 
@@ -247,6 +179,7 @@ public class Calibration {
 		FileReader fileReader = new FileReader(new File("/home/lejos/programs/robotbase"));
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		List<String> lines = new ArrayList<String>();
+		lines.add("New robot");
 		String line = null;
 		while ((line = bufferedReader.readLine()) != null) {
 			lines.add(line);
@@ -295,14 +228,70 @@ public class Calibration {
 		LCD.drawString("Give your robot", 0, 2);
 		LCD.drawString("a name:", 0, 3);
 		while (buttons.getButtons() != Keys.ID_ENTER) {
-			inName = takeInput(true, inName, 4);
+			inName = inputString(true, inName, 4);
 		}
 		LCD.drawString("> " + inName, 0, 5);
 		Delay.msDelay(200);
 		return inName;
 	}
 
-	private static String takeInput(boolean type, String name, int row) {
+	/** Take double value input from the EV3 brick.
+	* @param digits The number of integer digits (before the decimal point): Maximum 6
+	* @param floats The number of decimal figures (after the decimal point): Maximum 4
+	* @param value The default value (double) that the user can start from.
+	* @param pos The starting position to display the value.
+	* @param row The row to display the value.
+	*/
+	
+	private static String inputNumber(int digits, int floats, double value, int pos, int row) {
+		double[] increments = {100000, 10000, 1000, 100, 10, 1, 0.0, 0.1, 0.01, 0.001, 0.0001, 0.00001};
+		double[] increment = Arrays.copyOfRange(increments, 6-digits, 11);
+		int limit = digits + 1 + floats; // total number of position for the double format
+		int col = pos + digits - 1; // position of the 'cursor' (before de decimal point
+		String decimalValue = String.format("%1." + floats + "f", value); // double value with correct format
+		int lead = limit - decimalValue.length(); // leading space
+
+		LCD.drawString(String.format(Locale.CANADA, "%1$," + limit + "." + floats + "f", value), pos, row);
+		decimalValue = decimalValue.substring(col - lead, col - lead + 1);
+		LCD.drawString(decimalValue, col, row, true);
+		while (buttons.getButtons() != Keys.ID_ENTER) {
+			if (buttons.getButtons() == Keys.ID_UP) {
+				value = value + increment[col];
+			} else if (buttons.getButtons() == Keys.ID_DOWN) {
+				value = value - increment[col];
+				if (value < 0) value = value + increment[col];
+			} else if (buttons.getButtons() == Keys.ID_RIGHT) {
+				LCD.drawString(" ", col + pos, row-1);
+				col = col + 1;
+				System.out.println("col: " + col + " / limit: " + limit);
+				if (col == limit) col = lead;
+				if (col == digits) col = digits + 1;
+			} else if (buttons.getButtons() == Keys.ID_LEFT) {
+				LCD.drawString(" ", col + pos, row-1);
+				col = col - 1;
+				if (col == digits) col = digits - 1; // skip the decimal point
+				if (decimalValue == "_" || col < 0) col = limit - 1; // if at the start, go to the end
+			}
+			decimalValue = String.format("%1." + floats + "f", value);
+			if (decimalValue.length() > limit) {
+				value = value - increment[col];
+				decimalValue = String.format("%1." + floats + "f", value);
+			}
+			lead = limit - decimalValue.length();
+			LCD.drawString(String.format(Locale.CANADA, "%1$" + limit + "." + floats + "f", value), pos, row);
+			if (col - lead < 0) {
+				decimalValue = "_";
+			} else {
+				decimalValue = decimalValue.substring(col - lead, col - lead + 1);
+			}
+			LCD.drawString(decimalValue, col + pos, row, true);
+			Delay.msDelay(200);
+		}
+		buttons.waitForAnyPress();
+		return String.format(Locale.CANADA, "%1$" + limit + "." + floats + "f", value);
+	}
+	
+	private static String inputString(boolean type, String name, int row) {
 		String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-0123456789";
 		if (type == false) alpha = "0123456789.";
 		int chr = 0;
@@ -353,7 +342,6 @@ public class Calibration {
 	}
 
 	private static void startUp() {
-		String[] botNames;
 		LCD.clear();
 		LCD.drawString(title, 0, 0);
 		LCD.drawString("Loading catalog", 0, 3);
