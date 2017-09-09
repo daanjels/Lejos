@@ -1,5 +1,6 @@
 package utility;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -247,10 +248,12 @@ public class LCD extends JPanel implements ActionListener {
 		JPanel buttons = new JPanel();
 		buttons.setPreferredSize(new Dimension(178, 128));
 		buttons.setBackground(new Color(255, 200, 150));
+
 		JButton escBtn = new JButton("=");
 		escBtn.setActionCommand("keyEscape");
 		escBtn.setToolTipText("ESCAPE button");
 		escBtn.addActionListener(this);
+		escBtn.setPreferredSize(new Dimension(55, 20));
 		JButton upBtn = new JButton("^");
 		upBtn.setActionCommand("keyUp");
 		upBtn.setToolTipText("UP button");
@@ -259,23 +262,40 @@ public class LCD extends JPanel implements ActionListener {
 		leftBtn.setActionCommand("keyLeft");
 		leftBtn.setToolTipText("LEFT button");
 		leftBtn.addActionListener(this);
+		leftBtn.setPreferredSize(new Dimension(55, 20));
 		JButton enterBtn = new JButton("+");
 		enterBtn.setActionCommand("keyEnter");
 		enterBtn.setToolTipText("ENTER button");
 		enterBtn.addActionListener(this);
+		enterBtn.setPreferredSize(new Dimension(40, 20));
 		JButton rightBtn = new JButton(">");
 		rightBtn.setActionCommand("keyRight");
 		rightBtn.setToolTipText("RIGHT button");
 		rightBtn.addActionListener(this);
+		rightBtn.setPreferredSize(new Dimension(55, 20));
 		JButton downBtn = new JButton("v");
 		downBtn.setActionCommand("keyDown");
 		downBtn.setToolTipText("DOWN button");
 		downBtn.addActionListener(this);
-		buttons.add(escBtn);
+		
+		JPanel escape = new JPanel(new BorderLayout(10, 10));
+		escape.setPreferredSize(new Dimension(178, 25));
+		escape.setBackground(new Color(255, 190, 150));
+		escape.add(escBtn, BorderLayout.WEST);
+		JPanel up = new JPanel(new BorderLayout(10, 10));
+		up.setPreferredSize(new Dimension(178, 25));
+		up.setBackground(new Color(255, 180, 150));
+		up.add(upBtn, BorderLayout.CENTER);
+		JPanel center = new JPanel(new BorderLayout(10, 10));
+		center.setPreferredSize(new Dimension(178, 25));
+		center.setBackground(new Color(255, 180, 150));
+		center.add(leftBtn, BorderLayout.WEST);
+		center.add(enterBtn);
+		center.add(rightBtn, BorderLayout.EAST);
+
+		buttons.add(escape);
 		buttons.add(upBtn);
-		buttons.add(leftBtn);
-		buttons.add(enterBtn);
-		buttons.add(rightBtn);
+		buttons.add(center);
 		buttons.add(downBtn);
 		return buttons;
 	}
