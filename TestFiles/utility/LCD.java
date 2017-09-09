@@ -1,24 +1,18 @@
 package utility;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import utility.Keys;
 
-public class LCD extends JPanel implements ActionListener {
-	/**
-	 * 
-	 */
+public class LCD extends JPanel {
 	public static int keyPressed = 0;
 	
 	private static final long serialVersionUID = -313427542397485480L;
@@ -31,7 +25,7 @@ public class LCD extends JPanel implements ActionListener {
 		inhoud.setBorder(BorderFactory.createEmptyBorder(60, 80, 0, 80)); // top, left, bottom, right
 		JPanel scherm = createScreen();
 		inhoud.add(scherm );
-		JPanel buttons = createButtons();
+//		Keys buttons = new Keys();
 		inhoud.add(buttons);
 	}
 	
@@ -42,10 +36,17 @@ public class LCD extends JPanel implements ActionListener {
 		drawString("123456789012345678", 0, 6);
 		drawString("12345", 6, 6);
 		drawString("col six", 6, 2);
+		Delay.msDelay(1000);
 		clear();
 		drawString("this is not in capitals", 0, 2, true);
 		String value = inputNumber(3, 2, 70.00, 2, 5);
+		drawString("                  ", 0, 6);
 		drawString(value, 0, 6);
+		Delay.msDelay(200);
+		while (buttons.getBttns() == 0) {};
+		clear();
+		drawString("Goodbye", 0, 4);
+		Delay.msDelay(2000);
 	}
 	
 	/** Take double value input from the EV3 brick.
@@ -67,19 +68,19 @@ public class LCD extends JPanel implements ActionListener {
 		drawString(String.format(Locale.CANADA, "%1$," + limit + "." + floats + "f", value), pos, row);
 		decimalValue = decimalValue.substring(col - lead, col - lead + 1);
 		drawString(decimalValue, col, row-1);
-		while (buttons.getButtons() != Keys.ID_ENTER) {
-			if (buttons.getButtons() == Keys.ID_UP) {
+		while (buttons.getBttns() != Keys.ID_ENTER) {
+			if (buttons.getBttns() == Keys.ID_UP) {
 				value = value + increment[col];
-			} else if (buttons.getButtons() == Keys.ID_DOWN) {
+			} else if (buttons.getBttns() == Keys.ID_DOWN) {
 				value = value - increment[col];
 				if (value < 0) value = value + increment[col];
-			} else if (buttons.getButtons() == Keys.ID_RIGHT) {
+			} else if (buttons.getBttns() == Keys.ID_RIGHT) {
 				drawString(" ", col + pos, row-1);
 				col = col + 1;
 				System.out.println("col: " + col + " / limit: " + limit);
 				if (col == limit) col = lead;
 				if (col == digits) col = digits + 1;
-			} else if (buttons.getButtons() == Keys.ID_LEFT) {
+			} else if (buttons.getBttns() == Keys.ID_LEFT) {
 				drawString(" ", col + pos, row-1);
 				col = col - 1;
 				if (col == digits) col = digits - 1; // skip the decimal point
@@ -244,136 +245,10 @@ public class LCD extends JPanel implements ActionListener {
 		return scherm;
 	}
 
-	private JPanel createButtons() {
-		JPanel buttons = new JPanel();
-		buttons.setPreferredSize(new Dimension(178, 128));
-		buttons.setBackground(new Color(255, 200, 150));
-
-		JButton escBtn = new JButton("=");
-		escBtn.setActionCommand("keyEscape");
-		escBtn.setToolTipText("ESCAPE button");
-		escBtn.addActionListener(this);
-		escBtn.setPreferredSize(new Dimension(55, 20));
-		JButton upBtn = new JButton("^");
-		upBtn.setActionCommand("keyUp");
-		upBtn.setToolTipText("UP button");
-		upBtn.addActionListener(this);
-		JButton leftBtn = new JButton("<");
-		leftBtn.setActionCommand("keyLeft");
-		leftBtn.setToolTipText("LEFT button");
-		leftBtn.addActionListener(this);
-		leftBtn.setPreferredSize(new Dimension(55, 20));
-		JButton enterBtn = new JButton("+");
-		enterBtn.setActionCommand("keyEnter");
-		enterBtn.setToolTipText("ENTER button");
-		enterBtn.addActionListener(this);
-		enterBtn.setPreferredSize(new Dimension(40, 20));
-		JButton rightBtn = new JButton(">");
-		rightBtn.setActionCommand("keyRight");
-		rightBtn.setToolTipText("RIGHT button");
-		rightBtn.addActionListener(this);
-		rightBtn.setPreferredSize(new Dimension(55, 20));
-		JButton downBtn = new JButton("v");
-		downBtn.setActionCommand("keyDown");
-		downBtn.setToolTipText("DOWN button");
-		downBtn.addActionListener(this);
-		
-		JPanel escape = new JPanel(new BorderLayout(10, 10));
-		escape.setPreferredSize(new Dimension(178, 25));
-		escape.setBackground(new Color(255, 190, 150));
-		escape.add(escBtn, BorderLayout.WEST);
-		JPanel up = new JPanel(new BorderLayout(10, 10));
-		up.setPreferredSize(new Dimension(178, 25));
-		up.setBackground(new Color(255, 180, 150));
-		up.add(upBtn, BorderLayout.CENTER);
-		JPanel center = new JPanel(new BorderLayout(10, 10));
-		center.setPreferredSize(new Dimension(178, 25));
-		center.setBackground(new Color(255, 180, 150));
-		center.add(leftBtn, BorderLayout.WEST);
-		center.add(enterBtn);
-		center.add(rightBtn, BorderLayout.EAST);
-
-		buttons.add(escape);
-		buttons.add(upBtn);
-		buttons.add(center);
-		buttons.add(downBtn);
-		return buttons;
-	}
-
 	public static void clear() {
 		for (int i = 0; i < 8; i++) {
 			displayText[i] = "                  \n";
 		}
 		refreshLCD();
-	}
-	public static final int ID_UP = 0x1;
-	public static final int ID_ENTER = 0x2;
-	public static final int ID_DOWN = 0x4;
-	public static final int ID_RIGHT = 0x8;
-	public static final int ID_LEFT = 0x10;
-	public static final int ID_ESCAPE = 0x20;
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if ("keyUp".equals(e.getActionCommand())) {
-			System.out.print("UP - ");
-			keyPressed = 0x1;
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException ex) {
-				ex.printStackTrace();
-			}
-			keyPressed = 0;
-		}
-		if ("keyDown".equals(e.getActionCommand())) {
-			System.out.print("DOWN - ");
-			keyPressed = 0x4;
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException ex) {
-				ex.printStackTrace();
-			}
-			keyPressed = 0;
-		}
-		if ("keyLeft".equals(e.getActionCommand())) {
-			System.out.print("LEFT - ");
-			keyPressed = 0x10;
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException ex) {
-				ex.printStackTrace();
-			}
-			keyPressed = 0;
-		}
-		if ("keyRight".equals(e.getActionCommand())) {
-			System.out.print("RIGHT - ");
-			keyPressed = 0x8;
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException ex) {
-				ex.printStackTrace();
-			}
-			keyPressed = 0;
-		}
-		if ("keyEnter".equals(e.getActionCommand())) {
-			System.out.print("ENTER - ");
-			keyPressed = 0x2;
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException ex) {
-				ex.printStackTrace();
-			}
-			keyPressed = 0;
-		}
-		if ("keyEscape".equals(e.getActionCommand())) {
-			System.out.print("ESCAPE - ");
-			keyPressed = 0x20;
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException ex) {
-				ex.printStackTrace();
-			}
-			keyPressed = 0;
-		}
 	}
 }
