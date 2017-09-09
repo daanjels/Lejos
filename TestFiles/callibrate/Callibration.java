@@ -3,6 +3,7 @@ package callibrate;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lejos.utility.Delay;
+//import lejos.utility.TextMenu;
 import utility.Keys;
 import utility.LCD;
 
@@ -25,7 +27,7 @@ public class Callibration {
 
 		LCD.showGUI();
 		startUp(); // show a startup dialog
-//		chooseBot(); // select an exisiting bot or create a new one
+		selectBot(); // select an exisiting bot or create a new one
 //		showMenu(); // show the calibration menu
 		shutDown();
 	}
@@ -80,7 +82,10 @@ public class Callibration {
 		FileWriter fileWriter = null;
 		try {
 			File file = new File("robotbase");
-			if (!file.exists()) file.createNewFile();
+			if (!file.exists()) {
+				file.createNewFile();
+				robotName = "New robot\n" + robotName;
+			}
 			fileWriter = new FileWriter(file, true);
 			writer = new BufferedWriter(fileWriter);
 			writer.write(robotName + "\n");
@@ -106,6 +111,37 @@ public class Callibration {
 		}
 		bufferedReader.close();
 		return lines.toArray(new String[lines.size()]);
+	}
+
+	private static void selectBot() {
+		String[] botNames = {"New robot"};
+		int option = 1;
+		LCD.clear();
+		LCD.drawString("List: " + botNames[0], 0, 0);
+		try {
+			botNames = loadBots();
+		} catch (IOException e) {
+			noDatabase();
+			return;
+		}
+//		TextMenu bots = new TextMenu(botNames, 1, "Choose a robot");
+//		option = bots.select(1);
+		option = 1;
+		LCD.drawString("selected " + botNames[option], 0, 1);
+		buttons.waitForAnyPress();
+		if (option > 0) {
+			try {
+				bot.loadSettings(botNames[option]);
+				return;
+			} catch (FileNotFoundException e) {
+				LCD.drawString("No settings found", 0, 1);
+				LCD.drawString("for " + botNames[option], 0, 2);
+				buttons.waitForAnyPress();
+				return;
+			}
+		}
+		createBot();
+		return;
 	}
 
 }

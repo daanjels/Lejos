@@ -92,10 +92,12 @@ public class Calibration {
 		LCD.drawString("Wheels calibration", 0, 1);
 		LCD.drawString("Position the robot", 0, 2);
 		LCD.drawString("Press ENTER to start", 0, 3);
+		buttons.waitForAnyPress();
 		System.out.println(car.getPoseProvider().getPose());
 		car.travel(70.0);
 		car.waitComplete();
 		Delay.msDelay(500);
+		LCD.clear();
 		LCD.drawString("Insert the distance:", 0, 4);
 		String input= inputNumber(3, 2, 70.0, 0, 5);
 		double distance = Double.parseDouble(input);
@@ -135,33 +137,6 @@ public class Calibration {
 	}
 
 
-
-	private static void selectBot() {
-		String[] botNames = {"New robot"};
-		int option = 1;
-		LCD.clear();
-		try {
-			botNames = loadBots();
-		} catch (IOException e) {
-			noDatabase();
-			return;
-		}
-		TextMenu bots = new TextMenu(botNames, 1, "Choose a robot");
-		option = bots.select(1);
-		if (option > 0) {
-			try {
-				bot.loadSettings(botNames[option]);
-				return;
-			} catch (FileNotFoundException e) {
-				LCD.drawString("No settings found", 0, 1);
-				LCD.drawString("for " + botNames[option], 0, 2);
-				buttons.waitForAnyPress();
-				return;
-			}
-		}
-		createBot();
-		return;
-	}
 
 	private static void noDatabase() {
 		LCD.clear();
@@ -205,7 +180,10 @@ public class Calibration {
 		FileWriter fileWriter = null;
 		try {
 			File file = new File("/home/lejos/programs/robotbase");
-			if (!file.exists()) file.createNewFile();
+			if (!file.exists()) {
+				file.createNewFile();
+				robotName = "New robot\n" + robotName;
+			}
 			fileWriter = new FileWriter(file, true);
 			writer = new BufferedWriter(fileWriter);
 			writer.write(robotName + "\n");
@@ -247,7 +225,7 @@ public class Calibration {
 		double[] increments = {100000, 10000, 1000, 100, 10, 1, 0.0, 0.1, 0.01, 0.001, 0.0001, 0.00001};
 		double[] increment = Arrays.copyOfRange(increments, 6-digits, 11);
 		int limit = digits + 1 + floats; // total number of position for the double format
-		int col = pos + digits - 1; // position of the 'cursor' (before de decimal point
+		int col = pos + digits - 1; // position of the 'cursor' (before the decimal point)
 		String decimalValue = String.format("%1." + floats + "f", value); // double value with correct format
 		int lead = limit - decimalValue.length(); // leading space
 
@@ -261,13 +239,15 @@ public class Calibration {
 				value = value - increment[col];
 				if (value < 0) value = value + increment[col];
 			} else if (buttons.getButtons() == Keys.ID_RIGHT) {
-				LCD.drawString(" ", col + pos, row-1);
+//				LCD.drawString(" ", col + pos, row-1);
+				LCD.drawString(" ", col + pos, row);
 				col = col + 1;
 				System.out.println("col: " + col + " / limit: " + limit);
 				if (col == limit) col = lead;
 				if (col == digits) col = digits + 1;
 			} else if (buttons.getButtons() == Keys.ID_LEFT) {
-				LCD.drawString(" ", col + pos, row-1);
+//				LCD.drawString(" ", col + pos, row-1);
+				LCD.drawString(" ", col + pos, row);
 				col = col - 1;
 				if (col == digits) col = digits - 1; // skip the decimal point
 				if (decimalValue == "_" || col < 0) col = limit - 1; // if at the start, go to the end
@@ -378,6 +358,33 @@ public class Calibration {
 		car.setAngularSpeed(bot.getAngularSpeed());
 		car.setAcceleration(bot.getAcceleration(), bot.getAcceleration()*5);
 		return car;
+	}
+
+	private static void selectBot() {
+		String[] botNames = {"New robot"};
+		int option = 1;
+		LCD.clear();
+		try {
+			botNames = loadBots();
+		} catch (IOException e) {
+			noDatabase();
+			return;
+		}
+		TextMenu bots = new TextMenu(botNames, 1, "Choose a robot");
+		option = bots.select(1);
+		if (option > 0) {
+			try {
+				bot.loadSettings(botNames[option]);
+				return;
+			} catch (FileNotFoundException e) {
+				LCD.drawString("No settings found", 0, 1);
+				LCD.drawString("for " + botNames[option], 0, 2);
+				buttons.waitForAnyPress();
+				return;
+			}
+		}
+		createBot();
+		return;
 	}
 
 }
