@@ -165,7 +165,7 @@ public class TextMenu {
 //		if (_length<_size) _size = _length;
 		_quit = false;
 		resetTimeout();
-//		LCD.clear();
+		TextLCD.clear();
 		if (_topIndex > selectedIndex)
 			_topIndex = selectedIndex;
 		if (_topIndex > _length - _height)
