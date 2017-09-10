@@ -34,11 +34,10 @@ public class Brick extends JFrame {
 		TextLCD.clear();
 		TextLCD.drawString("Bye bye!", 0, 0);
 		Delay.msDelay(1000);
+		buttons.waitForAnyPress();
 		
 		String[] figures = {"Triangle", "Square", "Hexagon", "Octagon", "Exit"};
-		// create and display a menu with the options, with a title above it: "FirureBot"
 		TextMenu menu = new TextMenu(figures, 1, "FigureBot");
-		// define variable for the selection
 		int selection;
 		selection = menu.select(3);
 		TextLCD.clear();
@@ -46,14 +45,14 @@ public class Brick extends JFrame {
 		
 //		String name = TextLCD.inputName();
 //		TextLCD.drawString("name is " + name, 0, 2);
+		buttons.waitForAnyPress();
+		System.exit(0);
 	}
 	
 	private void createBrick() {
 		JPanel inhoud = new JPanel();
 		inhoud.setBorder(BorderFactory.createEmptyBorder(60, 80, 0, 80)); // top, left, bottom, right
-//		TextLCD scherm = new TextLCD();
 		inhoud.add(scherm);
-//		buttons = new Keys();
 		inhoud.add(buttons);
 		setContentPane(inhoud);
 	}
