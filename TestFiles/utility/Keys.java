@@ -1,8 +1,9 @@
 package utility;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -28,55 +29,117 @@ public class Keys extends JPanel implements ActionListener {
 	public Keys() {
 		setPreferredSize(new Dimension(178, 128));
 		setBackground(new Color(255, 220, 175));
+		setLayout(new GridBagLayout());
+		GridBagConstraints lc = new GridBagConstraints();
+		JButton button;
+		lc.fill = GridBagConstraints.NONE;
 
-		JButton escBtn = new JButton("=");
-		escBtn.setActionCommand("keyEscape");
-		escBtn.setToolTipText("ESCAPE button");
-		escBtn.addActionListener(this);
-		escBtn.setPreferredSize(new Dimension(55, 20));
-		JButton upBtn = new JButton("^");
-		upBtn.setActionCommand("keyUp");
-		upBtn.setToolTipText("UP button");
-		upBtn.addActionListener(this);
-		JButton leftBtn = new JButton("<");
-		leftBtn.setActionCommand("keyLeft");
-		leftBtn.setToolTipText("LEFT button");
-		leftBtn.addActionListener(this);
-		leftBtn.setPreferredSize(new Dimension(55, 20));
-		JButton enterBtn = new JButton("+");
-		enterBtn.setActionCommand("keyEnter");
-		enterBtn.setToolTipText("ENTER button");
-		enterBtn.addActionListener(this);
-		enterBtn.setPreferredSize(new Dimension(40, 20));
-		JButton rightBtn = new JButton(">");
-		rightBtn.setActionCommand("keyRight");
-		rightBtn.setToolTipText("RIGHT button");
-		rightBtn.addActionListener(this);
-		rightBtn.setPreferredSize(new Dimension(55, 20));
-		JButton downBtn = new JButton("v");
-		downBtn.setActionCommand("keyDown");
-		downBtn.setToolTipText("DOWN button");
-		downBtn.addActionListener(this);
+		button = new JButton("/");
+		lc.anchor = GridBagConstraints.FIRST_LINE_START;
+		lc.weightx = 1;
+		lc.weighty = 0.5;
+		lc.gridx = 0;
+		lc.gridy = 0;
+		button.setActionCommand("keyEscape");
+		button.setToolTipText("Escape");
+		button.addActionListener(this);
+		add(button, lc);
 		
-		JPanel escape = new JPanel(new BorderLayout(10, 10));
-		escape.setPreferredSize(new Dimension(178, 25));
-		escape.setBackground(new Color(255, 220, 175));
-		escape.add(escBtn, BorderLayout.WEST);
-		JPanel up = new JPanel(new BorderLayout(10, 10));
-		up.setPreferredSize(new Dimension(178, 25));
-		up.setBackground(new Color(255, 180, 150));
-		up.add(upBtn, BorderLayout.CENTER);
-		JPanel center = new JPanel(new BorderLayout(10, 10));
-		center.setPreferredSize(new Dimension(178, 25));
-		center.setBackground(new Color(255, 220, 175));
-		center.add(leftBtn, BorderLayout.WEST);
-		center.add(enterBtn);
-		center.add(rightBtn, BorderLayout.EAST);
-
-		add(escape);
-		add(upBtn);
-		add(center);
-		add(downBtn);
+		button = new JButton("^");
+		lc.anchor = GridBagConstraints.CENTER;
+		lc.weighty = 1;
+		lc.gridx = 1;
+		lc.gridy = 1;
+		button.setActionCommand("keyUp");
+		button.setToolTipText("Up");
+		button.addActionListener(this);
+		add(button, lc);
+		
+		button = new JButton("<");
+		lc.anchor = GridBagConstraints.FIRST_LINE_START;
+		lc.gridx = 0;
+		lc.gridy = 2;
+		button.setActionCommand("keyLeft");
+		button.setToolTipText("Left");
+		button.addActionListener(this);
+		add(button, lc);
+		
+		button = new JButton("+");
+		lc.anchor = GridBagConstraints.FIRST_LINE_START;
+		lc.gridx = 1;
+		lc.gridy = 2;
+		button.setActionCommand("keyEnter");
+		button.setToolTipText("Enter");
+		button.addActionListener(this);
+		add(button, lc);
+		
+		button = new JButton(">");
+		lc.anchor = GridBagConstraints.FIRST_LINE_START;
+		lc.gridx = 2;
+		lc.gridy = 2;
+		button.setActionCommand("keyRight");
+		button.setToolTipText("Right");
+		button.addActionListener(this);
+		add(button, lc);
+		
+		button = new JButton("v");
+		lc.anchor = GridBagConstraints.FIRST_LINE_START;
+		lc.gridx = 1;
+		lc.gridy = 3;
+		button.setActionCommand("keyDown");
+		button.setToolTipText("Down");
+		button.addActionListener(this);
+		add(button, lc);
+		
+		
+//		JButton escBtn = new JButton("=");
+//		escBtn.setActionCommand("keyEscape");
+//		escBtn.setToolTipText("ESCAPE button");
+//		escBtn.addActionListener(this);
+//		escBtn.setPreferredSize(new Dimension(55, 20));
+//		JButton upBtn = new JButton("^");
+//		upBtn.setActionCommand("keyUp");
+//		upBtn.setToolTipText("UP button");
+//		upBtn.addActionListener(this);
+//		JButton leftBtn = new JButton("<");
+//		leftBtn.setActionCommand("keyLeft");
+//		leftBtn.setToolTipText("LEFT button");
+//		leftBtn.addActionListener(this);
+//		leftBtn.setPreferredSize(new Dimension(55, 20));
+//		JButton enterBtn = new JButton("+");
+//		enterBtn.setActionCommand("keyEnter");
+//		enterBtn.setToolTipText("ENTER button");
+//		enterBtn.addActionListener(this);
+//		enterBtn.setPreferredSize(new Dimension(40, 20));
+//		JButton rightBtn = new JButton(">");
+//		rightBtn.setActionCommand("keyRight");
+//		rightBtn.setToolTipText("RIGHT button");
+//		rightBtn.addActionListener(this);
+//		rightBtn.setPreferredSize(new Dimension(55, 20));
+//		JButton downBtn = new JButton("v");
+//		downBtn.setActionCommand("keyDown");
+//		downBtn.setToolTipText("DOWN button");
+//		downBtn.addActionListener(this);
+//		
+//		JPanel escape = new JPanel(new BorderLayout(10, 10));
+//		escape.setPreferredSize(new Dimension(178, 25));
+//		escape.setBackground(new Color(255, 220, 175));
+//		escape.add(escBtn, BorderLayout.WEST);
+//		JPanel up = new JPanel(new BorderLayout(10, 10));
+//		up.setPreferredSize(new Dimension(178, 25));
+//		up.setBackground(new Color(255, 180, 150));
+//		up.add(upBtn, BorderLayout.CENTER);
+//		JPanel center = new JPanel(new BorderLayout(10, 10));
+//		center.setPreferredSize(new Dimension(178, 25));
+//		center.setBackground(new Color(255, 220, 175));
+//		center.add(leftBtn, BorderLayout.WEST);
+//		center.add(enterBtn);
+//		center.add(rightBtn, BorderLayout.EAST);
+//
+//		add(escape);
+//		add(upBtn);
+//		add(center);
+//		add(downBtn);
 	}
 	
 	public int readButtons() {
