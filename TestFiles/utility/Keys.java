@@ -1,13 +1,11 @@
 package utility;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 public class Keys extends JPanel implements ActionListener
@@ -29,70 +27,46 @@ public class Keys extends JPanel implements ActionListener
 
 	public Keys() 
 	{
-		setPreferredSize(new Dimension(178, 128));
-		setBackground(new Color(255, 230, 205));
-		setLayout(new GridBagLayout());
-		GridBagConstraints lc = new GridBagConstraints();
-		JButton button;
-		lc.fill = GridBagConstraints.NONE;
+//		setPreferredSize(new Dimension(178, 128));
+//		setBackground(new Color(255, 230, 205));
+		this.setOpaque(false);
+		setBounds(45, 245, 250, 165);
 
-		button = new JButton("/");
-		lc.anchor = GridBagConstraints.FIRST_LINE_START;
-		lc.weightx = 1;
-		lc.weighty = 0.5;
-		lc.gridx = 0;
-		lc.gridy = 0;
+		JButton button;
+		JLayeredPane layer = new JLayeredPane();
+		layer.setPreferredSize(new Dimension(250, 200));
+
+		button = new ButtonEscape();
 		button.setActionCommand("keyEscape");
-		button.setToolTipText("Escape");
 		button.addActionListener(this);
-		add(button, lc);
+		layer.add(button, new Integer(10));
 		
-		button = new JButton("^");
-		lc.anchor = GridBagConstraints.CENTER;
-		lc.weighty = 1;
-		lc.gridx = 1;
-		lc.gridy = 1;
+		button = new ButtonUp();
 		button.setActionCommand("keyUp");
-		button.setToolTipText("Up");
 		button.addActionListener(this);
-		add(button, lc);
+		layer.add(button, new Integer(11));
 		
-		button = new JButton("<");
-		lc.anchor = GridBagConstraints.FIRST_LINE_START;
-		lc.gridx = 0;
-		lc.gridy = 2;
+		button = new ButtonLeft();
 		button.setActionCommand("keyLeft");
-		button.setToolTipText("Left");
 		button.addActionListener(this);
-		add(button, lc);
+		layer.add(button, new Integer(13));
 		
-		button = new JButton("+");
-		lc.anchor = GridBagConstraints.FIRST_LINE_START;
-		lc.gridx = 1;
-		lc.gridy = 2;
+		button = new ButtonEnter();
 		button.setActionCommand("keyEnter");
-		button.setToolTipText("Enter");
 		button.addActionListener(this);
-		add(button, lc);
+		layer.add(button, new Integer(15));
 		
-		button = new JButton(">");
-		lc.anchor = GridBagConstraints.FIRST_LINE_START;
-		lc.gridx = 2;
-		lc.gridy = 2;
+		button = new ButtonRight();
 		button.setActionCommand("keyRight");
-		button.setToolTipText("Right");
 		button.addActionListener(this);
-		add(button, lc);
+		layer.add(button, new Integer(14));
 		
-		button = new JButton("v");
-		lc.anchor = GridBagConstraints.FIRST_LINE_START;
-		lc.gridx = 1;
-		lc.gridy = 3;
+		button = new ButtonDown();
 		button.setActionCommand("keyDown");
-		button.setToolTipText("Down");
 		button.addActionListener(this);
-		add(button, lc);
+		layer.add(button, new Integer(12));
 		
+		add(layer);
 	}
 	
 	public int readButtons() 
@@ -121,7 +95,7 @@ public class Keys extends JPanel implements ActionListener
 		int key = 0;
 		while (keyPressed == 0)
 		{
-			TextLCD.drawString("", 0, 6);
+			System.out.print("");
 		}
 		key = keyPressed;
 		Delay.msDelay(interval);
@@ -180,6 +154,7 @@ public class Keys extends JPanel implements ActionListener
 		if ("keyUp".equals(e.getActionCommand()))
 		{
 			keyPressed = 0x1;
+			System.out.println("UP");
 			try
 			{
 				Thread.sleep(10);
@@ -192,6 +167,7 @@ public class Keys extends JPanel implements ActionListener
 		if ("keyDown".equals(e.getActionCommand()))
 		{
 			keyPressed = 0x4;
+			System.out.println("DOWN");
 			try
 			{
 				Thread.sleep(10);
@@ -204,6 +180,7 @@ public class Keys extends JPanel implements ActionListener
 		if ("keyLeft".equals(e.getActionCommand()))
 		{
 			keyPressed = 0x10;
+			System.out.println("LEFT");
 			try
 			{
 				Thread.sleep(10);
@@ -216,6 +193,7 @@ public class Keys extends JPanel implements ActionListener
 		if ("keyRight".equals(e.getActionCommand()))
 		{
 			keyPressed = 0x8;
+			System.out.println("RIGHT");
 			try
 			{
 				Thread.sleep(10);
@@ -228,6 +206,7 @@ public class Keys extends JPanel implements ActionListener
 		if ("keyEnter".equals(e.getActionCommand()))
 		{
 			keyPressed = 0x2;
+			System.out.println("ENTER");
 			try
 			{
 				Thread.sleep(10);
@@ -240,6 +219,7 @@ public class Keys extends JPanel implements ActionListener
 		if ("keyEscape".equals(e.getActionCommand()))
 		{
 			keyPressed = 0x20;
+			System.out.println("ESCAPE");
 			try
 			{
 				Thread.sleep(10);
