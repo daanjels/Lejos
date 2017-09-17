@@ -61,6 +61,7 @@ public class TextMenu {
 	
 	protected TextLCD lcd =  Brick.getTextLCD();
 	protected Keys btns = Brick.getKeys();
+	// TODO need to figure out how the keys and lcd can be properly used by different classes
 
 	/**
 	 * This constructor sets location of the top row of the item list to row 0 of the display.
