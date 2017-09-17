@@ -18,15 +18,15 @@ public class TextLCD extends JPanel {
 	private static Keys buttons;
 
 	public TextLCD() {
-		setPreferredSize(new Dimension(178, 158));
-		setBackground(new Color(235, 238, 232));
-		setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+		setPreferredSize(new Dimension(178, 128));
+		setBackground(new Color(190, 210, 170));
+		setBounds(80, 60, 178, 128);
 		
 		lcd = new JTextArea(10, 19);
-		lcd.setBackground(new Color(240, 243, 237));
+		lcd.setBackground(new Color(190, 210, 170));
 		lcd.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 0));
 		lcd.setLineWrap(true);
-		lcd.setFont(new Font("Monaco", 0, 14));
+		lcd.setFont(new Font("Courier", 0, 15));
 		lcd.setEditable(false);
 		clear();
 		add(lcd);
@@ -216,14 +216,6 @@ public class TextLCD extends JPanel {
 	public static void drawChar(char c, int x, int y) {
 		String oldMsg = displayText[y];
 		String newMsg = oldMsg.substring(0,x) + c + oldMsg.substring(x+1);
-//		String newMsg = "";
-//		for (int i = 0; i < 18; i++) {
-//			if (i != x) {
-//				newMsg = newMsg + c;
-//			} else {
-//				newMsg = newMsg + oldMsg.substring(i, i+1);
-//			}
-//		}
 		displayText[y] = newMsg + "\n";
 		refreshLCD();
 	}
