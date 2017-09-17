@@ -51,6 +51,7 @@ public class Callibration {
 		TextLCD.screenWait(1000, 4);
 		try {
 			botNames = loadBots();
+			System.out.println("Bots loaded");
 		} catch (IOException e) {
 			noDatabase();
 			return;
@@ -118,10 +119,12 @@ public class Callibration {
 	}
 
 	private static void selectBot() {
-		String[] botNames = {"New robot"};
 		int option = 1;
+		// TODO prevent reloading of database
+		String[] botNames = {"New robot"};
 		try {
 			botNames = loadBots();
+			System.out.println("Bots loaded again");
 		} catch (IOException e) {
 			noDatabase();
 			return;
