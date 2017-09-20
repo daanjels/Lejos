@@ -22,7 +22,8 @@ public class Callibration {
 	
 	public static final String DIR = "/";
 	static Robbot bot = new Robbot();
-	static String[] botNames= {};
+	static int option = 1, choice = 0;
+	static List<String> botNames = new ArrayList<String>();
 	static Keys buttons = new Keys();
 
 	public static void main(String[] args) {
@@ -31,14 +32,13 @@ public class Callibration {
 		
 		startUp(); // show a startup dialog
 		selectBot(); // select an exisiting bot or create a new one
-		showMenu(); // show the calibration menu
 		shutDown();
 	}
 
 	private static void shutDown() {
 		TextLCD.clear();
 		TextLCD.drawString("Shutting down", 0, 1);
-		TextLCD.drawString("Calibration util.", 0, 2);
+		TextLCD.drawString("Calibration.", 0, 2);
 		TextLCD.screenWait(1000, 4);
 		buttons.waitForAnyPress(2000);
 		System.exit(0);
@@ -47,7 +47,7 @@ public class Callibration {
 	private static void startUp() {
 		TextLCD.clear();
 		TextLCD.drawString("Starting up", 0, 1);
-		TextLCD.drawString("Calibration util.", 0, 2);
+		TextLCD.drawString("Calibration.", 0, 2);
 		TextLCD.screenWait(1000, 4);
 		try {
 			botNames = loadBots();
@@ -64,25 +64,41 @@ public class Callibration {
 		TextLCD.drawString("the database.", 0, 1);
 		TextLCD.drawString("A new database", 0, 2);
 		TextLCD.drawString("will be created.", 0, 3);
+		botNames.add("New robot");
 		buttons.waitForAnyPress(5000);
 		createBot();
+		showMenu();
 		return;
 	}
 
 	private static void createBot() {
 		String robotName = TextLCD.inputName();
+		if (robotName == null) return;
+		while (botNames.contains(robotName)) {
+			TextLCD.clear();
+			TextLCD.drawString("This name already", 0, 1);
+			TextLCD.drawString("exists. Please ", 0, 2);
+			TextLCD.drawString("pick another one.", 0, 3);
+			buttons.waitForAnyPress(3000);
+			robotName = TextLCD.inputName();
+		}
+		if (robotName == null) return;
 		TextLCD.clear();
-		// TODO check if this name is already used
+		TextLCD.drawString("Building robot", 0, 1);
+		TextLCD.drawString("with default", 0, 2);
+		TextLCD.drawString("settings.", 0, 3);
+		bot = new Robbot();
 		bot.setName(robotName);
 		addBot(robotName);
 		bot.storeSettings();
-		bot.showProperties();
-		TextLCD.drawString("Robot created.", 0, 7);
-		buttons.waitForAnyPress();
+//		bot.showProperties();
+		buttons.waitForAnyPress(2000); // a problem here
+		bot.editProperties();
 		return;
 	}
 
 	private static void addBot(String robotName) {
+		botNames.add(robotName);
 		BufferedWriter writer = null;
 		FileWriter fileWriter = null;
 		try {
@@ -106,7 +122,7 @@ public class Callibration {
 		}
 	}
 
-	private static String[] loadBots() throws IOException {
+	private static List<String> loadBots() throws IOException {
 		FileReader fileReader = new FileReader(new File("robotbase"));
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		List<String> lines = new ArrayList<String>();
@@ -115,50 +131,51 @@ public class Callibration {
 			lines.add(line);
 		}
 		bufferedReader.close();
-		return lines.toArray(new String[lines.size()]);
+		return lines;
 	}
 
 	private static void selectBot() {
-		int option = 1;
-		// TODO prevent reloading of database
-		String[] botNames = {"New robot"};
-		try {
-			botNames = loadBots();
-			System.out.println("Bots loaded again");
-		} catch (IOException e) {
-			noDatabase();
-			return;
+//		int option = 1;
+		String[] names = new String[botNames.size()];
+		for (int i = 0; i < botNames.size(); i++)
+		{
+			names[i] = String.valueOf(botNames.get(i));
 		}
-		TextMenu bots = new TextMenu(botNames, 1, "Choose a robot");
-		option = bots.select(1);
+		TextMenu bots = new TextMenu(names, 1, "Choose a robot");
+		option = bots.select(option);
 		TextLCD.clear();
-		TextLCD.drawString("selected " + botNames[option], 0, 1);
 		Delay.msDelay(1000);
-		if (option > 0) {
+		if (option > 0) 
+		{
 			try {
-				bot.loadSettings(botNames[option]);
+				bot.loadSettings(names[option]);
+				showMenu();
 				return;
 			} catch (FileNotFoundException e) {
 				TextLCD.clear();
 				TextLCD.drawString("No settings found", 0, 1);
-				TextLCD.drawString("for " + botNames[option] + ".", 0, 2);
+				TextLCD.drawString("for " + names[option] + ".", 0, 2);
 				TextLCD.drawString("Using default", 0, 3);
 				TextLCD.drawString("settings.", 0, 4);
 				buttons.waitForAnyPress(5000);
 				return;
 			}
 		}
+		if (option < 0) 
+		{
+			return;
+		}
 		createBot();
+		showMenu();
 		return;
 	}
 
 	private static void showMenu() {
-		String[] mainOptions = {"Calibrate wheels", "Calibrate base", "Calibrate drift", "Edit settings", "Store settings"};
+		String[] mainOptions = {"Calibrate wheels", "Calibrate base", "Calibrate drift", "Edit settings", "Store settings", "Main menu"};
 		TextMenu mainMenu = new TextMenu(mainOptions, 1, "*EV3 calibration*");
-		int choice;
 		
 		while (true) {
-			choice = mainMenu.select();
+			choice = mainMenu.select(choice);
 			switch (choice) {
 				case 0:
 					testTravel();
@@ -183,7 +200,11 @@ public class Callibration {
 					TextLCD.screenWait(200, 4);
 					Delay.msDelay(500);
 					break;
+				case 5:
+					selectBot();
+					return;
 				case -1:
+					selectBot();
 					return;
 			}
 			Delay.msDelay(50);
@@ -194,28 +215,37 @@ public class Callibration {
 			TextLCD.clear();
 			TextLCD.drawString("Wheels calibration", 0, 1);
 			TextLCD.drawString("Position the robot", 0, 2);
-			TextLCD.drawString("Press ENTER to start", 0, 3);
+			TextLCD.drawString("Press ENTER", 0, 3);
+			TextLCD.drawString("to start", 0, 4);
 			buttons.waitForAnyPress();
 			TextLCD.clear();
 			TextLCD.drawString("Insert the distance:", 0, 4);
-//			String input = inputNumber(3, 2, 70.0, 0, 5);
-			String input = "69.95";
+			String input = TextLCD.inputNumber(3, 2, 70.0, 0, 5);
 			double distance = Double.parseDouble(input);
-			double rotations = 70.0 / bot.getWheelDiameter();// * 3.14159;
-			double diameter = (distance / rotations);// / 3.14159);
-			Delay.msDelay(1000);
+			double rotations = 70.0 / bot.getWheelDiameter();
+			double diameter = (distance / rotations);
+			Delay.msDelay(300);
 			TextLCD.clear();
-			TextLCD.drawString("wiel: " + bot.getWheelDiameter(), 0, 0);
-			TextLCD.drawString("rondes: " + rotations, 0, 1);
-			TextLCD.drawString("The diameter is:", 0, 2);
-			TextLCD.drawString(String.format("%1$,.2f", diameter), 0, 3);
+//			TextLCD.drawString("wiel: " + bot.getWheelDiameter(), 0, 0);
+//			TextLCD.drawString("rondes: " + rotations, 0, 1);
+			TextLCD.drawString("The new diameter:", 0, 2);
+//			TextLCD.drawString(String.format("%1$,.2f", diameter), 0, 3);
 //			String input = String.valueOf((int)(diameter * 100));
 			input = String.format(Locale.CANADA, "%1$,.2f", diameter);
-			TextLCD.drawString(input, 0, 4);
-			TextLCD.drawString("Press ENTER to save", 0, 5);
-			int button = buttons.waitForAnyPress();
-			if (button == Keys.ID_ENTER) {
-//			bot.setWheelDiameter(input);
+			TextLCD.drawString(input, 0, 3);
+			TextLCD.drawString("Press ENTER to", 0, 5);
+			TextLCD.drawString("apply changes", 0, 6);
+			
+			int button = buttons.getButtons();
+			if (button == Keys.ID_ENTER) 
+			{
+				bot.setWheelDiameter("" + (int)(diameter * 100));
+				System.out.println("Saved");
+				Delay.msDelay(300);
+			}
+			else 
+			{
+				System.out.println("Not saved");
 			}
 			Delay.msDelay(200);
 			return;
