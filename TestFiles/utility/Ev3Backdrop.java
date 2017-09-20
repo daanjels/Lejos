@@ -25,7 +25,8 @@ public class Ev3Backdrop extends JPanel
 
 	public Ev3Backdrop()
 	{
-		setBackground(new Color(245, 210, 0));
+//		setBackground(new Color(245, 210, 0));
+		setOpaque(false);
 		setBounds(0, 0, 340 + 178*4, 512);	// we need the bounds to position the panel
 	}
 	
