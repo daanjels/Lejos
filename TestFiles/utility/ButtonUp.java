@@ -1,24 +1,32 @@
 package utility;
+/**
+ * Subclass of JButton for the UP key
+ */
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.GeneralPath;
 import javax.swing.JButton;
 
-public class ButtonUp extends JButton
+public class ButtonUp extends JButton implements MouseListener
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private boolean mouseEntered = false;
+	private boolean mousePressed = false;
 
 	public ButtonUp()
 	{
-		this.setBounds(83, 22, 84, 48);
+		this.setBounds(83, 22, 84, 49);
 		this.setToolTipText("Up key (press ctrl+alt+U)");
 		this.setMnemonic(KeyEvent.VK_U);
+		addMouseListener(this);
 	}
 	public void paint(Graphics g)
 	{
@@ -35,5 +43,40 @@ public class ButtonUp extends JButton
 		};
 		shapeUp.closePath();
 		g2d.fill(shapeUp);
+		if (mouseEntered)
+		{
+			g.setColor(new Color(150, 160, 170));
+			g2d.draw(shapeUp);
+		}
+		if (mousePressed)
+		{
+			g.setColor(new Color(60, 65, 70));
+			g2d.draw(shapeUp);
+		}
+	}
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+		mousePressed = true;
+		repaint();
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		mousePressed = false;
+		repaint();
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		mouseEntered = true;
+		repaint();
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
+		mouseEntered = false;
+		repaint();
 	}
 }
