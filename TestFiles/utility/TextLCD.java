@@ -20,11 +20,11 @@ public class TextLCD extends JPanel {
 	public TextLCD() {
 		setPreferredSize(new Dimension(178, 128));
 		setBackground(new Color(190, 210, 170));
-		setBounds(80, 60, 178, 128);
+		setBounds(80, 57, 178, 135);
 		
 		lcd = new JTextArea(10, 19);
 		lcd.setBackground(new Color(190, 210, 170));
-		lcd.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 0));
+		lcd.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		lcd.setLineWrap(true);
 		lcd.setFont(new Font("Courier", 0, 15));
 		lcd.setEditable(false);
@@ -39,11 +39,12 @@ public class TextLCD extends JPanel {
 		drawString("EV3 calibration", 0, 0);
 		drawString("Give your robot", 0, 2);
 		drawString("a name:", 0, 3);
-		while (buttons.getButtons() != Keys.ID_ENTER) {
 			inName = inputString(true, "EV3", 4);
+		if (inName != null)
+		{
+			drawString("> " + inName, 0, 5);
+			Delay.msDelay(2000);
 		}
-		drawString("> " + inName, 0, 5);
-		Delay.msDelay(200);
 		return inName;
 	}
 
@@ -60,40 +61,57 @@ public class TextLCD extends JPanel {
 		}
 		chr = alpha.indexOf(in[0]);
 		Delay.msDelay(150);
-//		while(buttons.getButtons() != Keys.ID_ENTER) {
-//			if (buttons.getButtons() == Keys.ID_UP) {
-//				chr = chr + 1;
-//				if (chr>=alpha.length()) chr = 0;
-//				drawString(alpha.substring(chr, chr+1), pos, row, true);
-//				in[pos] = alpha.substring(chr, chr+1);
-//			} else if (buttons.getButtons() == Keys.ID_DOWN) {
-//				chr = chr - 1;
-//				if (chr<0) chr = alpha.length()-1;
-//				drawString(alpha.substring(chr, chr+1), pos, row, true);
-//				in[pos] = alpha.substring(chr, chr+1);
-//			} else if (buttons.getButtons() == Keys.ID_RIGHT) {
-//				in[pos] = alpha.substring(chr, chr+1);
-//				drawString(alpha.substring(chr, chr+1), pos, row, false);
-//				pos = pos + 1;
-//				if (pos > 13) pos = 0;
-//				if (in[pos] != "") chr = alpha.indexOf(in[pos]);
-//				drawString(alpha.substring(chr, chr+1), pos, row, true);
-//			} else if (buttons.getButtons() == Keys.ID_LEFT) {
-//				in[pos] = alpha.substring(chr, chr+1);
-//				drawString(alpha.substring(chr, chr+1), pos, row, false);
-//				pos = pos - 1;
-//				if (pos < 0) pos = 13;
-//				if (in[pos] != "") chr = alpha.indexOf(in[pos]);
-//				LCD.drawString(alpha.substring(chr, chr+1), pos, row, true);
-//			}
-//			Delay.msDelay(150);
-//		}
-		in[pos] = alpha.substring(chr, chr+1);
-		Delay.msDelay(200);
-		for (int i = 0; i < in.length; i++) {
-			input = input+in[i];
+		while(true)
+		{
+			int button;
+			do
+			{
+				button = buttons.getButtons(10);
+			}
+			
+			while (button == 0);
+			if (button == Keys.ID_UP) 
+			{
+				chr = chr + 1;
+				if (chr>=alpha.length()) chr = 0;
+				drawString(alpha.substring(chr, chr+1), pos, row, true);
+				in[pos] = alpha.substring(chr, chr+1);
+			}
+			if (button == Keys.ID_DOWN) 
+			{
+				chr = chr - 1;
+				if (chr<0) chr = alpha.length()-1;
+				drawString(alpha.substring(chr, chr+1), pos, row, true);
+				in[pos] = alpha.substring(chr, chr+1);
+			}
+			if (button == Keys.ID_RIGHT) 
+			{
+				in[pos] = alpha.substring(chr, chr+1);
+				drawString(alpha.substring(chr, chr+1), pos, row, false);
+				pos = pos + 1;
+				if (pos > 13) pos = 0;
+				if (in[pos] != "") chr = alpha.indexOf(in[pos]);
+				drawString(alpha.substring(chr, chr+1), pos, row, true);
+			}
+			if (button == Keys.ID_LEFT) 
+			{
+				in[pos] = alpha.substring(chr, chr+1);
+				drawString(alpha.substring(chr, chr+1), pos, row, false);
+				pos = pos - 1;
+				if (pos < 0) pos = 13;
+				if (in[pos] != "") chr = alpha.indexOf(in[pos]);
+				LCD.drawString(alpha.substring(chr, chr+1), pos, row, true);
+			}
+			if (button == Keys.ID_ENTER) 
+			{
+				in[pos] = alpha.substring(chr, chr+1);
+				for (int i = 0; i < in.length; i++) {
+					input = input+in[i];
+				}
+				return input;
+			}
+			if (button == Keys.ID_ESCAPE) return null;
 		}
-		return input;
 	}
 
 	public static void drawString(String message, int col, int row) {
@@ -143,7 +161,7 @@ public class TextLCD extends JPanel {
 	* @param row The row to display the value.
 	*/
 	
-	private static String inputNumber(int digits, int floats, double value, int pos, int row) {
+	public static String inputNumber(int digits, int floats, double value, int pos, int row) {
 		double[] increments = {100000, 10000, 1000, 100, 10, 1, 0.0, 0.1, 0.01, 0.001, 0.0001, 0.00001};
 		double[] increment = Arrays.copyOfRange(increments, 6-digits, 11);
 		int limit = digits + 1 + floats; // total number of position for the double format
@@ -154,19 +172,34 @@ public class TextLCD extends JPanel {
 		drawString(String.format(Locale.CANADA, "%1$," + limit + "." + floats + "f", value), pos, row);
 		decimalValue = decimalValue.substring(col - lead, col - lead + 1);
 		drawString(decimalValue, col, row-1);
-		while (buttons.getButtons() != Keys.ID_ENTER) {
-			if (buttons.getButtons() == Keys.ID_UP) {
+		while(true)
+		{
+			int button;
+			do
+			{
+				button = buttons.getButtons(10);
+			}
+			
+			while (button == 0);
+			if (button == Keys.ID_UP) 
+			{
 				value = value + increment[col];
-			} else if (buttons.getButtons() == Keys.ID_DOWN) {
+			} 
+			if (button == Keys.ID_DOWN) 
+			{
 				value = value - increment[col];
 				if (value < 0) value = value + increment[col];
-			} else if (buttons.getButtons() == Keys.ID_RIGHT) {
+			} 
+			if (button == Keys.ID_RIGHT) 
+			{
 				drawString(" ", col + pos, row-1);
 				col = col + 1;
 				System.out.println("col: " + col + " / limit: " + limit);
 				if (col == limit) col = lead;
 				if (col == digits) col = digits + 1;
-			} else if (buttons.getButtons() == Keys.ID_LEFT) {
+			} 
+			if (button == Keys.ID_LEFT) 
+			{
 				drawString(" ", col + pos, row-1);
 				col = col - 1;
 				if (col == digits) col = digits - 1; // skip the decimal point
@@ -179,16 +212,20 @@ public class TextLCD extends JPanel {
 			}
 			lead = limit - decimalValue.length();
 			drawString(String.format(Locale.CANADA, "%1$" + limit + "." + floats + "f", value), pos, row);
-			if (col - lead < 0) {
+			if (col - lead < 0) 
+			{
 				decimalValue = "_";
-			} else {
+			} else 
+			{
 				decimalValue = decimalValue.substring(col - lead, col - lead + 1);
 			}
 			drawString(decimalValue, col + pos, row-1);
 			Delay.msDelay(200);
+			if (button == Keys.ID_ENTER) 
+			{
+				return String.format(Locale.CANADA, "%1$" + limit + "." + floats + "f", value);
+			}
 		}
-		buttons.waitForAnyPress();
-		return String.format(Locale.CANADA, "%1$" + limit + "." + floats + "f", value);
 	}
 
 	public static void drawString(String message, int col, int row, boolean b) {
