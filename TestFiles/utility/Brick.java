@@ -1,5 +1,6 @@
 package utility;
 
+import java.awt.Color;
 //import java.awt.Color;
 import java.awt.Dimension;
 
@@ -22,10 +23,11 @@ public class Brick extends JFrame {
 	
 	public Brick() {
 		setTitle("EV3 - Virtual Brick");
-//		setSize(300, 480);
+		setSize(new Dimension(340, 512)); // this way the frame will be centered on the screen
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		setBackground(new Color(245, 245, 250));
-		setLocationRelativeTo(null);
+		setBackground(new Color(225, 150, 45));
+//		setBackground(new Color(245, 210, 0));
+		setLocationRelativeTo(null); // centers the frame on the screen, if the size is given.
 		createBrick();
 		this.pack();
 		this.setVisible(true);
