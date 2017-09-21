@@ -24,7 +24,7 @@ public class ButtonUp extends JButton implements MouseListener
 	public ButtonUp()
 	{
 		this.setBounds(83, 22, 84, 49);
-		this.setToolTipText("Up key (press ctrl+alt+U)");
+		this.setToolTipText("Up key (press alt+U)");
 		this.setMnemonic(KeyEvent.VK_U);
 		addMouseListener(this);
 	}

@@ -24,7 +24,7 @@ public class ButtonRight extends JButton implements MouseListener
 	public ButtonRight()
 	{
 		this.setBounds(163, 58, 42, 31);
-		this.setToolTipText("Right key (press ctrl+alt+R)");
+		this.setToolTipText("Right key (press alt+R)");
 		this.setMnemonic(KeyEvent.VK_R);
 		addMouseListener(this);
 	}
