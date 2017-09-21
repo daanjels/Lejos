@@ -64,8 +64,11 @@ public class Callibration {
 		TextLCD.drawString("the database.", 0, 1);
 		TextLCD.drawString("A new database", 0, 2);
 		TextLCD.drawString("will be created.", 0, 3);
+		TextLCD.drawString("ENTER > continue...", 0, 5);
+		TextLCD.drawString("ESCAPE > quit", 0, 6);
+		int button = buttons.getButtons();
+		if (button == Keys.ID_ESCAPE) shutDown();
 		botNames.add("New robot");
-		buttons.waitForAnyPress(5000);
 		createBot();
 		showMenu();
 		return;
