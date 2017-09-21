@@ -23,7 +23,7 @@ public class ButtonDown extends JButton implements MouseListener
 	public ButtonDown()
 	{
 		this.setBounds(83, 75, 84, 49);
-		this.setToolTipText("Down key (press ctrl+alt+D)");
+		this.setToolTipText("Down key (press alt+D)");
 		this.setMnemonic(KeyEvent.VK_D);
 		addMouseListener(this);
 	}

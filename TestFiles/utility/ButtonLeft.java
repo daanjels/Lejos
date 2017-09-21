@@ -24,7 +24,7 @@ public class ButtonLeft extends JButton implements MouseListener
 	public ButtonLeft()
 	{
 		this.setBounds(45, 58, 42, 31);
-		this.setToolTipText("Left key (press ctrl+alt+L)");
+		this.setToolTipText("Left key (press alt+L)");
 		this.setMnemonic(KeyEvent.VK_L);
 		addMouseListener(this);
 	}

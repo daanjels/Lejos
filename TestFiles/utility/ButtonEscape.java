@@ -24,7 +24,7 @@ public class ButtonEscape extends JButton implements MouseListener
 	public ButtonEscape()
 	{
 		this.setBounds(15, 0, 61, 30);
-		this.setToolTipText("Escape (press ctrl+alt+Q)");
+		this.setToolTipText("Escape (press alt+Q)");
 		this.setMnemonic(KeyEvent.VK_Q);
 		addMouseListener(this);
 	}
