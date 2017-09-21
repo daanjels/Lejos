@@ -23,7 +23,7 @@ public class ButtonEnter extends JButton implements MouseListener
 	public ButtonEnter()
 	{
 		this.setBounds(109, 56, 33, 33);
-		this.setToolTipText("Enter key (press ctrl+alt+E)");
+		this.setToolTipText("Enter key (press alt+E)");
 		this.setMnemonic(KeyEvent.VK_E);
 		addMouseListener(this);
 	}
