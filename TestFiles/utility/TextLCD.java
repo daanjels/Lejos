@@ -225,6 +225,7 @@ public class TextLCD extends JPanel {
 			{
 				return String.format(Locale.CANADA, "%1$" + limit + "." + floats + "f", value);
 			}
+			if (button == Keys.ID_ESCAPE) return null;
 		}
 	}
 
