@@ -374,7 +374,7 @@ public class Robot
 		int base = Integer.parseInt(string);
 		this.wheelBase = base;
 	}
-	private void setWheelDrift(String string) {
+	void setWheelDrift(String string) {
 		int drift = Integer.parseInt(string);
 		this.wheelDrift = drift;
 	}
