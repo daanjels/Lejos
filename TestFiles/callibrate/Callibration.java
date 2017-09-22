@@ -94,8 +94,7 @@ public class Callibration {
 		bot.setName(robotName);
 		addBot(robotName);
 		bot.storeSettings();
-//		bot.showProperties();
-		buttons.waitForAnyPress(2000); // a problem here
+		buttons.waitForAnyPress(2000);
 		bot.editProperties();
 		return;
 	}
