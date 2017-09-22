@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
 import java.util.Scanner;
 
 import utility.Delay;
@@ -106,33 +107,27 @@ public class Robbot
 	}
 	private String showWheelDiameter()
 	{
-		String diameter = "" + getWheelDiameter() + " mm";
-		return diameter;
+		return String.format(Locale.CANADA, "%1$,.2f mm", getWheelDiameter());
 	}
 	private String showWheelBase()
 	{
-		String diameter = "" + getWheelBase() + " mm";
-		return diameter;
+		return String.format(Locale.CANADA, "%1$,.2f mm", getWheelBase());
 	}
 	private String showWheelDrift()
 	{
-		String diameter = "" + getWheelDrift() + "";
-		return diameter;
+		return String.format(Locale.CANADA, "%1$,.3f", getWheelDrift());
 	}
 	private String showLinearSpeed()
 	{
-		String diameter = "" + getLinearSpeed() + " cm/s";
-		return diameter;
+		return String.format(Locale.CANADA, "%1$,.1f cm/s", getLinearSpeed());
 	}
 	private String showAngularSpeed()
 	{
-		String diameter = "" + getAngularSpeed() + " d/s";
-		return diameter;
+		return String.format(Locale.CANADA, "%1$,.1f d/s", getAngularSpeed());
 	}
 	private String showAcceleration()
 	{
-		String diameter = "" + getAcceleration() + " cm/s/s";
-		return diameter;
+		return String.format(Locale.CANADA, "%1$,.1f cm/s/s", getAcceleration());
 	}
 
 	public void showProperties()
@@ -208,8 +203,9 @@ public class Robbot
 		this.acceleration = props[5];
 	}
 
-	public void editProperties()
+	public boolean editProperties()
 	{
+		boolean isDirty = false;
 		int choice = 0;
 		int[] oldProps = getProperties();
 		int[] properties = getProperties();
@@ -245,12 +241,14 @@ public class Robbot
 			}
 			if (button == Keys.ID_LEFT)
 			{
+				isDirty = true;
 				properties[choice] = properties[choice] - increments[choice];
 				setProperties(properties);
 				showProperty(choice);
 			}
 			if (button == Keys.ID_RIGHT)
 			{
+				isDirty = true;
 				properties[choice] = properties[choice] + increments[choice];
 				setProperties(properties);
 				showProperty(choice);
@@ -259,16 +257,19 @@ public class Robbot
 			{
 				setProperties(properties);
 				Delay.msDelay(100);
-				return;
+				return isDirty;
 			}
 			if(button == Keys.ID_ESCAPE)
 			{
-				TextLCD.clear();
-				TextLCD.drawString("Back to old", 0, 2);
-				TextLCD.drawString("settings", 0, 3);
-				Delay.msDelay(1000);
-				setProperties(oldProps);
-				return;
+				if (isDirty) 
+				{
+					TextLCD.clear();
+					TextLCD.drawString("Back to old", 0, 2);
+					TextLCD.drawString("settings", 0, 3);
+					Delay.msDelay(1000);
+					setProperties(oldProps);
+				}
+				return isDirty;
 			}
 		}
 	}
@@ -335,17 +336,17 @@ public class Robbot
 	{
 		this.name = robotName;
 	}
-	public void setWheelDiameter(String string)
+	void setWheelDiameter(String string)
 	{
 		int diameter = Integer.parseInt(string);
 		this.wheelDiameter = diameter;
 	}
-	private void setWheelBase(String string)
+	void setWheelBase(String string)
 	{
 		int base = Integer.parseInt(string);
 		this.wheelBase = base;
 	}
-	private void setWheelDrift(String string)
+	void setWheelDrift(String string)
 	{
 		int drift = Integer.parseInt(string);
 		this.wheelDrift = drift;
