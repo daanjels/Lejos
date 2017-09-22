@@ -132,7 +132,7 @@ public class Robbot
 
 	public void showProperties()
 	{
-		// different from leJOS
+		// different from leJOS: in leJOS we use LCD
 		TextLCD.clear();
 		TextLCD.drawString("Name: " + this.name, 0, 0);
 		TextLCD.drawString(" Wheel:   ", 0, 1);
