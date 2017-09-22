@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
 import java.util.Scanner;
 
 import lejos.hardware.BrickFinder;
@@ -11,7 +12,8 @@ import lejos.hardware.Keys;
 import lejos.hardware.lcd.LCD;
 import lejos.utility.Delay;
 
-public class Robot {
+public class Robot 
+{
 	private String name;
 	private int wheelDiameter;
 	private int wheelBase;
@@ -22,7 +24,8 @@ public class Robot {
 	private int acceleration;
 	static Keys buttons = BrickFinder.getDefault().getKeys();
 	
-	public Robot() {
+	public Robot() 
+	{
 		this.name = "EV3";
 		this.wheelDiameter = 4240;
 		this.wheelBase = 8300;
@@ -33,86 +36,102 @@ public class Robot {
 		this.acceleration = 3000;
 	}
 	
-	public double getWheelDiameter() {
+	public String getName()
+	{
+		return this.name;
+	}
+	public double getWheelDiameter() 
+	{
 		double diameter = (double)wheelDiameter / 100;
 		return diameter;
 	}
-	public double getWheelRight() {
+	public double getWheelRight() 
+	{
 		double wheelRight = (double)wheelDiameter;
 		double drift = (double)wheelDrift / 1000;
 		wheelRight = wheelRight * 2 / (1/drift + 1);
 		wheelRight = wheelRight / 1000;
 		return wheelRight;
 	}
-	public double getWheelLeft() {
+	public double getWheelLeft() 
+	{
 		double wheelLeft = (double)wheelDiameter;
 		double drift = (double)wheelDrift / 1000;
 		wheelLeft = wheelLeft * 2 / (drift + 1);
 		wheelLeft = wheelLeft / 1000;
 		return wheelLeft;
 	}
-	public double getWheelBase() {
+	public double getWheelBase() 
+	{
 		double base = (double)wheelBase / 100;
 		return base;
 	}
-	public double getWheelOffset() {
+	public double getWheelOffset() 
+	{
 		double wheelOffset = getWheelBase() / 20;
 		return wheelOffset;
 	}
-	public double getWheelDrift() {
+	public double getWheelDrift() 
+	{
 		double drift= (double)wheelDrift / 1000;
 		return drift;
 	}
-	public boolean getReverseRight() {
+	public boolean getReverseRight() 
+	{
 		boolean reverseRight = false;
 		int power = this.wheelReverse;
 		if (power == 2 || power == 3) reverseRight = true;
 		return reverseRight;
 	}
-	public boolean getReverseLeft() {
+	public boolean getReverseLeft() 
+	{
 		boolean reverseLeft = false;
 		int power = this.wheelReverse;
 		if (power == 1 || power == 3) reverseLeft = true;
 		return reverseLeft;
 	}
-	public double getLinearSpeed() {
+	public double getLinearSpeed() 
+	{
 		double speed = (double)linearSpeed / 1000;
 		return speed;
 	}
-	public double getAngularSpeed() {
+	public double getAngularSpeed() 
+	{
 		double speed = (double)angularSpeed / 100;
 		return speed;
 	}
-	public double getAcceleration() {
+	public double getAcceleration() 
+	{
 		double accel = (double)acceleration / 1000;
 		return accel;
 	}
-	private String showWheelDiameter() {
-		String diameter = "" + getWheelDiameter() + " mm";
-		return diameter;
+	private String showWheelDiameter()
+	{
+		return String.format(Locale.CANADA, "%1$,.2f mm", getWheelDiameter());
 	}
-	private String showWheelBase() {
-		String diameter = "" + getWheelBase() + " mm";
-		return diameter;
+	private String showWheelBase()
+	{
+		return String.format(Locale.CANADA, "%1$,.2f mm", getWheelBase());
 	}
-	private String showWheelDrift() {
-		String diameter = "" + getWheelDrift() + "";
-		return diameter;
+	private String showWheelDrift()
+	{
+		return String.format(Locale.CANADA, "%1$,.3f", getWheelDrift());
 	}
-	private String showLinearSpeed() {
-		String diameter = "" + getLinearSpeed() + " cm/s";
-		return diameter;
+	private String showLinearSpeed()
+	{
+		return String.format(Locale.CANADA, "%1$,.1f cm/s", getLinearSpeed());
 	}
-	private String showAngularSpeed() {
-		String diameter = "" + getAngularSpeed() + " d/s";
-		return diameter;
+	private String showAngularSpeed()
+	{
+		return String.format(Locale.CANADA, "%1$,.1f d/s", getAngularSpeed());
 	}
-	private String showAcceleration() {
-		String diameter = "" + getAcceleration() + " cm/s/s";
-		return diameter;
+	private String showAcceleration()
+	{
+		return String.format(Locale.CANADA, "%1$,.1f cm/s/s", getAcceleration());
 	}
 
-	public void showProperties() {
+	public void showProperties() 
+	{
 		LCD.clear();
 		LCD.drawString("Name: " + this.name, 0, 0);
 		LCD.drawString(" Wheel:   ", 0, 1);
@@ -131,8 +150,10 @@ public class Robot {
 		return;
 	}
 	
-	private void showProperty(int i) {
-		switch (i) {
+	private void showProperty(int i) 
+	{
+		switch (i) 
+		{
 			case 0: 
 				LCD.drawString("         ", 9, 1);
 				LCD.drawString(showWheelDiameter(), 9, 1);
@@ -160,7 +181,8 @@ public class Robot {
 		}
 	}
 
-	private int[] getProperties() {
+	private int[] getProperties() 
+	{
 		int[] props = new int[6];
 		props[0] = this.wheelDiameter;
 		props[1] = this.wheelBase;
@@ -171,7 +193,8 @@ public class Robot {
 		return props;
 	}
 
-	private void setProperties(int[] props) {
+	private void setProperties(int[] props) 
+	{
 		this.wheelDiameter = props[0];
 		this.wheelBase = props[1];
 		this.wheelDrift = props[2];
@@ -180,50 +203,114 @@ public class Robot {
 		this.acceleration = props[5];
 	}
 
-	public void editProperties() {
+	public boolean editProperties() 
+	{
+		boolean isDirty = false;
 		int choice = 0;
 		int[] oldProps = getProperties();
 		int[] properties = getProperties();
 		int[] increments = {5, 5, 1, 500, 500, 100};
 		showProperties();
-		Delay.msDelay(500);
-		while (buttons.getButtons() != Keys.ID_ESCAPE) {
+//		Delay.msDelay(500);
+//		while (buttons.getButtons() != Keys.ID_ESCAPE) {
+//			LCD.drawString(">", 0, choice+1);
+//			if (buttons.getButtons() == Keys.ID_UP) {
+//				setProperties(properties);
+//				showProperty(choice);
+//				LCD.drawString(" ", 0, choice+1);
+//				choice--;
+//				if (choice < 0) choice = 5;
+//				LCD.drawString(">", 0, choice+1);
+//			} else if (buttons.getButtons() == Keys.ID_DOWN) {
+//				setProperties(properties);
+//				showProperty(choice);
+//				LCD.drawString(" ", 0, choice+1);
+//				choice++;
+//				if (choice > 5) choice = 0;
+//				LCD.drawString(">", 0, choice+1);
+//			} else if (buttons.getButtons() == Keys.ID_LEFT) {
+//				properties[choice] = properties[choice] - increments[choice];
+//				setProperties(properties);
+//				showProperty(choice);
+//			} else if (buttons.getButtons() == Keys.ID_RIGHT) {
+//				properties[choice] = properties[choice] + increments[choice];
+//				setProperties(properties);
+//				showProperty(choice);
+//			} else if (buttons.getButtons() == Keys.ID_ENTER) {
+//				setProperties(properties);
+//				Delay.msDelay(200);
+//				return;
+//			}
+//			Delay.msDelay(200);
+//		}
+//		Delay.msDelay(200);
+//		setProperties(oldProps);
+//		return;
+		while(true) // this construct works better than what I did before
+		{
+			int button;
 			LCD.drawString(">", 0, choice+1);
-			if (buttons.getButtons() == Keys.ID_UP) {
+			do
+			{
+				button = buttons.getButtons();
+			}
+			while (button == 0);
+			LCD.drawString(">", 0, choice+1);
+			if (button == Keys.ID_UP)
+			{
 				setProperties(properties);
 				showProperty(choice);
 				LCD.drawString(" ", 0, choice+1);
 				choice--;
 				if (choice < 0) choice = 5;
 				LCD.drawString(">", 0, choice+1);
-			} else if (buttons.getButtons() == Keys.ID_DOWN) {
+			}
+			if (button == Keys.ID_DOWN)
+			{
 				setProperties(properties);
 				showProperty(choice);
 				LCD.drawString(" ", 0, choice+1);
 				choice++;
 				if (choice > 5) choice = 0;
 				LCD.drawString(">", 0, choice+1);
-			} else if (buttons.getButtons() == Keys.ID_LEFT) {
+			}
+			if (button == Keys.ID_LEFT)
+			{
+				isDirty = true;
 				properties[choice] = properties[choice] - increments[choice];
 				setProperties(properties);
 				showProperty(choice);
-			} else if (buttons.getButtons() == Keys.ID_RIGHT) {
+			}
+			if (button == Keys.ID_RIGHT)
+			{
+				isDirty = true;
 				properties[choice] = properties[choice] + increments[choice];
 				setProperties(properties);
 				showProperty(choice);
-			} else if (buttons.getButtons() == Keys.ID_ENTER) {
-				setProperties(properties);
-				Delay.msDelay(200);
-				return;
 			}
-			Delay.msDelay(200);
+			if (button == Keys.ID_ENTER) 
+			{
+				setProperties(properties);
+				Delay.msDelay(100);
+				return isDirty;
+			}
+			if(button == Keys.ID_ESCAPE)
+			{
+				if (isDirty) 
+				{
+					LCD.clear();
+					LCD.drawString("Back to old", 0, 2);
+					LCD.drawString("settings", 0, 3);
+					Delay.msDelay(1000);
+					setProperties(oldProps);
+				}
+				return isDirty;
+			}
 		}
-		Delay.msDelay(200);
-		setProperties(oldProps);
-		return;
 	}
 
-	public void storeSettings() {
+	public void storeSettings() 
+	{
 		LCD.clear();
 		LCD.drawString("Store settings", 0, 1);
 		try {
@@ -247,7 +334,7 @@ public class Robot {
 		String line;
 		String[] values;
 		Scanner in = new Scanner(new File("/home/lejos/programs/" + botName + ".txt"));
-		line = in.nextLine();	// "Robot Settings"
+		line = in.nextLine();	// "New robot"
 		line = in.nextLine();
 		values = line.split(" ");
 		this.setName(values[2]);
@@ -283,7 +370,7 @@ public class Robot {
 		int diameter = Integer.parseInt(string);
 		this.wheelDiameter = diameter;
 	}
-	private void setWheelBase(String string) {
+	public void setWheelBase(String string) {
 		int base = Integer.parseInt(string);
 		this.wheelBase = base;
 	}
@@ -309,7 +396,4 @@ public class Robot {
 		this.acceleration = accel;
 	}
 
-	public String getName() {
-		return this.name;
-	}
 }
