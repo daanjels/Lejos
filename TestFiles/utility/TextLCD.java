@@ -10,6 +10,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import lejos.hardware.lcd.LCD;
+
 @SuppressWarnings("serial")
 public class TextLCD extends JPanel {
 
@@ -192,6 +194,7 @@ public class TextLCD extends JPanel {
 			} 
 			if (button == Keys.ID_RIGHT) 
 			{
+//				LCD.drawString(" ", col + pos, row);
 				drawString(" ", col + pos, row-1);
 				col = col + 1;
 				System.out.println("col: " + col + " / limit: " + limit);
@@ -200,6 +203,7 @@ public class TextLCD extends JPanel {
 			} 
 			if (button == Keys.ID_LEFT) 
 			{
+//				LCD.drawString(" ", col + pos, row);
 				drawString(" ", col + pos, row-1);
 				col = col - 1;
 				if (col == digits) col = digits - 1; // skip the decimal point
@@ -219,7 +223,8 @@ public class TextLCD extends JPanel {
 			{
 				decimalValue = decimalValue.substring(col - lead, col - lead + 1);
 			}
-			drawString(decimalValue, col + pos, row-1);
+//			LCD.drawString(decimalValue, col + pos, row, true);
+			drawString(decimalValue, col + pos, row-1); // remove -1 for real EV3
 			Delay.msDelay(200);
 			if (button == Keys.ID_ENTER) 
 			{
