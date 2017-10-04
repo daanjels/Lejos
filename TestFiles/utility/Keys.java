@@ -97,6 +97,7 @@ public class Keys extends JPanel implements ActionListener
 		{
 			System.out.print("");
 		}
+		System.out.print(keyPressed);
 		key = keyPressed;
 		Delay.msDelay(interval);
 		return key;
@@ -114,12 +115,16 @@ public class Keys extends JPanel implements ActionListener
 
 	public int waitForAnyPress()
 	{
+		int key = 0;
 		while (keyPressed == 0) 
 		{
-			Delay.msDelay(10);
+			System.out.print("");
+//			Delay.msDelay(10);
 		};
-		Delay.msDelay(50);
-		return 1;
+		System.out.print("wait: " + keyPressed);
+		key = keyPressed;
+		Delay.msDelay(10);
+		return key;
 	}
 
 	public int waitForAnyPress(int timeout) {
