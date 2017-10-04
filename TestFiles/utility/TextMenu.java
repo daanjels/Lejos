@@ -171,6 +171,12 @@ public class TextMenu {
 			_topIndex = selectedIndex;
 		if (_topIndex > _length - _height)
 			_topIndex = _length - _height;
+//		corrected a bug: having a selected index > screen height will scroll the window
+		if(selectedIndex >= _topIndex + _height)
+		{
+			_topIndex = selectedIndex - _height + 1;
+		}
+		
 		display(selectedIndex, _topIndex);
 		while(true)
 		{
@@ -189,6 +195,13 @@ public class TextMenu {
 				return selectedIndex;
 			if(button == Keys.ID_ESCAPE)
 				return -1; //Escape
+//			option with left and right keys
+			if(button == Keys.ID_LEFT)
+				return 100 + selectedIndex;
+			if(button == Keys.ID_RIGHT)
+				return 200 + selectedIndex;
+//			option with left and right keys
+
 			if(button == Keys.ID_DOWN)//scroll forward
 			{
 				selectedIndex++;
