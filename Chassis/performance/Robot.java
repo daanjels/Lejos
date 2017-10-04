@@ -252,7 +252,7 @@ public class Robot
 			LCD.drawString(">", 0, choice+1);
 			do
 			{
-				button = buttons.getButtons();
+				button = buttons.waitForAnyPress();
 			}
 			while (button == 0);
 			LCD.drawString(">", 0, choice+1);
