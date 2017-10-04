@@ -246,6 +246,7 @@ public class Callibration {
 			TextLCD.drawString("to start", 0, 4);
 			int button = buttons.getButtons();
 			if (button != Keys.ID_ENTER) return;
+			// Travel instructions
 			TextLCD.clear();
 			TextLCD.drawString("Insert the distance:", 0, 4);
 			String input = TextLCD.inputNumber(3, 2, 70.0, 0, 5);
@@ -303,6 +304,7 @@ public class Callibration {
 		TextLCD.drawString("to start", 0, 5);
 		int button = buttons.getButtons();
 		if (button != Keys.ID_ENTER) return;
+		// rotate instructions
 		TextLCD.clear();
 		TextLCD.drawString("Insert the gap", 0, 2);
 		TextLCD.drawString("between the mark", 0, 3);
@@ -358,6 +360,7 @@ public class Callibration {
 		TextLCD.drawString("to start", 0, 5);
 		int button = buttons.getButtons();
 		if (button != Keys.ID_ENTER) return;
+		// drift instructions
 		TextLCD.clear();
 		TextLCD.drawString("Insert the gap", 0, 2);
 		TextLCD.drawString("between the mark", 0, 3);
