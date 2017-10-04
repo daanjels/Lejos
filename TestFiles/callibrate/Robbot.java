@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.util.Locale;
 import java.util.Scanner;
 
+import utility.Brick;
 import utility.Delay;
 import utility.Keys;
 import utility.TextLCD;
@@ -21,7 +22,7 @@ public class Robbot
 	private int linearSpeed;
 	private int angularSpeed;
 	private int acceleration;
-	public static Keys buttons = new Keys();
+	static Keys buttons = Brick.getKeys();
 
 	public Robbot()
 	{
@@ -217,7 +218,7 @@ public class Robbot
 			TextLCD.drawString(">", 0, choice+1);
 			do
 			{
-				button = buttons.getButtons(10);
+				button = buttons.waitForAnyPress();
 			}
 			while (button == 0);
 			TextLCD.drawString(">", 0, choice+1);
