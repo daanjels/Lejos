@@ -448,7 +448,6 @@ public class Calibration
 			int button;
 			do
 			{
-//				button = buttons.getButtons();
 				button = buttons.waitForAnyPress();
 			}
 			
@@ -554,7 +553,6 @@ public class Calibration
 			int button;
 			do
 			{
-//				button = buttons.getButtons();
 				button = buttons.waitForAnyPress();
 			}
 			
