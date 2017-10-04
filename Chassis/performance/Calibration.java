@@ -93,7 +93,7 @@ public class Calibration
 						LCD.drawString("changed", 0, 1);
 						LCD.drawString("ENTER -> discard", 0, 2);
 						LCD.drawString("DOWN -> save", 0, 3);
-						int button = buttons.getButtons();
+						int button = buttons.waitForAnyPress();
 						if (button == Keys.ID_DOWN) 
 						{
 							bot.storeSettings();
@@ -126,7 +126,7 @@ public class Calibration
 		LCD.drawString("Position the robot", 0, 2);
 		LCD.drawString("Press ENTER ", 0, 3);
 		LCD.drawString("to start", 0, 4);
-		int button = buttons.getButtons();
+		int button = buttons.waitForAnyPress();
 		if (button != Keys.ID_ENTER) return;
 		System.out.println(car.getPoseProvider().getPose());
 		car.travel(70.0);
@@ -157,7 +157,7 @@ public class Calibration
 		LCD.drawString(input, 0, 3);
 		LCD.drawString("Press ENTER to", 0, 5);
 		LCD.drawString("apply changes", 0, 6);
-		button = buttons.getButtons();
+		button = buttons.waitForAnyPress();
 		if (button == Keys.ID_ENTER) 
 		{
 			dirty = true;
@@ -185,7 +185,7 @@ public class Calibration
 		LCD.drawString("Mark centerfront", 0, 3);
 		LCD.drawString("Press ENTER", 0, 4);
 		LCD.drawString("to start", 0, 5);
-		int button = buttons.getButtons();
+		int button = buttons.waitForAnyPress();
 		if (button != Keys.ID_ENTER) return;
 		LCD.clear();
 		LCD.drawString("Insert the gap", 0, 2);
@@ -213,7 +213,7 @@ public class Calibration
 		LCD.drawString("Press ENTER to", 0, 5);
 		LCD.drawString("apply changes", 0, 6);
 		
-		button = buttons.getButtons();
+		button = buttons.waitForAnyPress();
 		if (button == Keys.ID_ENTER) 
 		{
 			bot.setWheelBase("" + (int)(base * 100));
@@ -242,7 +242,7 @@ public class Calibration
 		LCD.drawString("Mark centerfront", 0, 3);
 		LCD.drawString("Press ENTER", 0, 4);
 		LCD.drawString("to start", 0, 5);
-		int button = buttons.getButtons();
+		int button = buttons.waitForAnyPress();
 		if (button != Keys.ID_ENTER) return;
 		LCD.clear();
 		LCD.drawString("Insert the gap", 0, 2);
@@ -270,7 +270,7 @@ public class Calibration
 		LCD.drawString("Press ENTER to", 0, 5);
 		LCD.drawString("apply changes", 0, 6);
 		
-		button = buttons.getButtons();
+		button = buttons.waitForAnyPress();
 		if (button == Keys.ID_ENTER) 
 		{
 			bot.setWheelDrift("" + (int)(drift * 1000));
@@ -297,7 +297,7 @@ public class Calibration
 		LCD.drawString("will be created.", 0, 3);
 		LCD.drawString("ENTER > continue...", 0, 5);
 		LCD.drawString("ESCAPE > quit", 0, 6);
-		int button = buttons.getButtons();
+		int button = buttons.waitForAnyPress();
 		if (button == Keys.ID_ESCAPE) shutDown();
 		botNames.add("New robot");
 		createBot();
@@ -448,7 +448,8 @@ public class Calibration
 			int button;
 			do
 			{
-				button = buttons.getButtons();
+//				button = buttons.getButtons();
+				button = buttons.waitForAnyPress();
 			}
 			
 			while (button == 0);
@@ -463,7 +464,7 @@ public class Calibration
 			} 
 			if (button == Keys.ID_RIGHT) 
 			{
-				LCD.drawString(" ", col + pos, row-1);
+				LCD.drawString(" ", col + pos, row);
 				col = col + 1;
 				System.out.println("col: " + col + " / limit: " + limit);
 				if (col == limit) col = lead;
@@ -471,7 +472,7 @@ public class Calibration
 			} 
 			if (button == Keys.ID_LEFT) 
 			{
-				LCD.drawString(" ", col + pos, row-1);
+				LCD.drawString(" ", col + pos, row);
 				col = col - 1;
 				if (col == digits) col = digits - 1; // skip the decimal point
 				if (decimalValue == "_" || col < 0) col = limit - 1; // if at the start, go to the end
@@ -490,7 +491,7 @@ public class Calibration
 			{
 				decimalValue = decimalValue.substring(col - lead, col - lead + 1);
 			}
-			LCD.drawString(decimalValue, col + pos, row-1);
+			LCD.drawString(decimalValue, col + pos, row, true);
 			Delay.msDelay(200);
 			if (button == Keys.ID_ENTER) 
 			{
@@ -553,7 +554,8 @@ public class Calibration
 			int button;
 			do
 			{
-				button = buttons.getButtons();
+//				button = buttons.getButtons();
+				button = buttons.waitForAnyPress();
 			}
 			
 			while (button == 0);
