@@ -10,11 +10,12 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import lejos.hardware.lcd.LCD;
-
-@SuppressWarnings("serial")
 public class TextLCD extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4927024550703654533L;
 	private static JTextArea lcd;
 	private static String[] displayText = {"", "", "", "", "", "", "", ""};
 	private static Keys buttons;
@@ -50,7 +51,7 @@ public class TextLCD extends JPanel {
 		return inName;
 	}
 
-	private static String inputString(boolean type, String name, int row) {
+	public static String inputString(boolean type, String name, int row) {
 		String alpha = " ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-0123456789";
 		if (type == false) alpha = "0123456789.";
 		int chr = 0;
@@ -101,8 +102,9 @@ public class TextLCD extends JPanel {
 				drawString(alpha.substring(chr, chr+1), pos, row, false);
 				pos = pos - 1;
 				if (pos < 0) pos = 13;
+				System.out.println(in[pos]);
 				if (in[pos] != "") chr = alpha.indexOf(in[pos]);
-				LCD.drawString(alpha.substring(chr, chr+1), pos, row, true);
+				drawString(alpha.substring(chr, chr+1), pos, row, true);
 			}
 			if (button == Keys.ID_ENTER) 
 			{
@@ -110,6 +112,7 @@ public class TextLCD extends JPanel {
 				for (int i = 0; i < in.length; i++) {
 					input = input+in[i];
 				}
+				input = input.trim();
 				return input;
 			}
 			if (button == Keys.ID_ESCAPE) return null;
