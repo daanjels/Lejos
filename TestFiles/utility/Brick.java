@@ -20,6 +20,7 @@ public class Brick extends JFrame {
 	private static final long serialVersionUID = 1L;
 	public static Keys buttons = new Keys();
 	public static TextLCD scherm = new TextLCD();
+	public static Leds leds = new Leds();
 	
 	public Brick() {
 		setTitle("EV3 - Virtual Brick");
@@ -37,14 +38,20 @@ public class Brick extends JFrame {
 		Brick walle = BrickFinder.getDefault();
 		walle.setVisible(true);
 		TextLCD.drawString("Hello there!", 0, 0);
-		if (buttons.getButtons() == Keys.ID_ENTER) {
-			TextLCD.drawString("Enter was pressed", 0, 1);
-			Delay.msDelay(1000);
-		};
-		TextLCD.clear();
-		TextLCD.drawString("Bye bye!", 0, 0);
-		Delay.msDelay(1000);
-		buttons.waitForAnyPress();
+//		if (buttons.getButtons() == Keys.ID_ENTER) {
+//			TextLCD.drawString("Enter was pressed", 0, 1);
+//			Delay.msDelay(500);
+//		};
+//		TextLCD.clear();
+//		TextLCD.drawString("Bye bye!", 0, 0);
+//		buttons.waitForAnyPress();
+		
+		for (int i = 0; i < 9; i++)
+		{
+			System.out.println("Pattern " + i);
+			buttons.waitForAnyPress();
+			leds.setPattern(i);
+		}
 		
 		String[] figures = {"Triangle", "Square", "Hexagon", "Octagon", "Exit"};
 		TextMenu menu = new TextMenu(figures, 1, "FigureBot");
@@ -69,7 +76,8 @@ public class Brick extends JFrame {
 		layer.setPreferredSize(new Dimension(340, 512));
 
 		layer.add(new Ev3Backdrop(), JLayeredPane.DEFAULT_LAYER);
-		layer.add(scherm, new Integer(10));
+		layer.add(scherm, new Integer(9));
+		layer.add(leds,  new Integer(10));
 		layer.add(buttons, new Integer(11));
 
 		setContentPane(layer);
@@ -79,9 +87,11 @@ public class Brick extends JFrame {
 		return buttons;
 	}
 	
-//	public static TextLCD getTextLCD() {
 	public static TextLCD getTextLCD() {
 		return scherm;
 	}
 
+	public static Leds getLed() {
+		return leds;
+	}
 }
