@@ -14,6 +14,7 @@ import utility.TextLCD;
 
 public class Robbot
 {
+	private static final String DIR = "home/lejos/wheels/";
 	private String name;
 	private int wheelDiameter;
 	private int wheelBase;
@@ -280,7 +281,7 @@ public class Robbot
 //		System.out.println("Storing settings");
 		try
 		{
-			PrintWriter writer = new PrintWriter(this.name + ".txt", "UTF-8");
+			PrintWriter writer = new PrintWriter(DIR + this.name + ".txt", "UTF-8");
 			writer.println("Robot Settings");
 			writer.println("Robot Name: " + this.name);
 			writer.println("Wheel diameter: " + this.wheelDiameter);
@@ -303,7 +304,7 @@ public class Robbot
 		String line;
 		String[] values;
 //		Scanner in = new Scanner(new File("/home/lejos/programs/" + botName + ".txt"));
-		Scanner in = new Scanner(new File(botName + ".txt"));
+		Scanner in = new Scanner(new File(DIR + botName + ".txt"));
 		line = in.nextLine();	// "Robot Settings"
 		line = in.nextLine();
 		values = line.split(" ");
