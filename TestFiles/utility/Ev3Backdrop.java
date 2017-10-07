@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.GeneralPath;
 import javax.swing.JPanel;
 
 public class Ev3Backdrop extends JPanel
@@ -25,7 +23,6 @@ public class Ev3Backdrop extends JPanel
 
 	public Ev3Backdrop()
 	{
-//		setBackground(new Color(245, 210, 0));
 		setOpaque(false);
 		setBounds(0, 0, 340 + 178*4, 512);	// we need the bounds to position the panel
 	}
@@ -38,7 +35,7 @@ public class Ev3Backdrop extends JPanel
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
-		Graphics2D g2d = (Graphics2D) g;
+//		Graphics2D g2d = (Graphics2D) g;
 		
 		//	draw sidebars shade
 		g.setColor(shade);
@@ -91,19 +88,19 @@ public class Ev3Backdrop extends JPanel
 		g.drawString("LEGO", 257, 437);
 
 		//	draw LED zone
-		g.setColor(black);
-		int xLed[] = {150, 190, 225, 225, 190, 150, 115, 115};
-		int yLed[] = {266, 266, 300, 346, 380, 380, 346, 300};
-		GeneralPath shapeLed = new GeneralPath(GeneralPath.WIND_EVEN_ODD,
-				xLed.length);
-		shapeLed.moveTo(xLed[0], yLed[0]);
-		for (int index = 1; index < xLed.length; index++)
-		{
-			shapeLed.lineTo(xLed[index], yLed[index]);
-		};
-		shapeLed.closePath();
-		g2d.fill(shapeLed);
-		g.fillRoundRect(90, 304, 160, 38, 38, 38);
+//		g.setColor(black);
+//		int xLed[] = {150, 190, 225, 225, 190, 150, 115, 115};
+//		int yLed[] = {266, 266, 300, 346, 380, 380, 346, 300};
+//		GeneralPath shapeLed = new GeneralPath(GeneralPath.WIND_EVEN_ODD,
+//				xLed.length);
+//		shapeLed.moveTo(xLed[0], yLed[0]);
+//		for (int index = 1; index < xLed.length; index++)
+//		{
+//			shapeLed.lineTo(xLed[index], yLed[index]);
+//		};
+//		shapeLed.closePath();
+//		g2d.fill(shapeLed);
+//		g.fillRoundRect(90, 304, 160, 38, 38, 38);
 
 //		//	draw ESCAPE button
 //		g.setColor(buttonGray);
