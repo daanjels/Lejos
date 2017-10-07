@@ -59,7 +59,7 @@ public class TextMenu {
 	 */
 	protected static final int BUTTON_POLL_INTERVAL = 10; // Time to wait for button press
 	
-	protected TextLCD lcd =  Brick.getTextLCD();
+	protected TextLCD scherm =  Brick.getTextLCD();
 	protected Keys btns = Brick.getKeys();
 	// TODO need to figure out how the keys and lcd can be properly used by different classes
 
@@ -166,7 +166,7 @@ public class TextMenu {
 //		if (_length<_size) _size = _length;
 		_quit = false;
 		resetTimeout();
-		TextLCD.clear();
+		scherm.clear();
 		if (_topIndex > selectedIndex)
 			_topIndex = selectedIndex;
 		if (_topIndex > _length - _height)
@@ -247,19 +247,19 @@ public class TextMenu {
 	protected void display(int selectedIndex, int topIndex) {
 		//LCD.asyncRefreshWait();
 		if(_title != null)
-			TextLCD.drawString(_title, 0, _topRow - 1);
+			scherm.drawString(_title, 0, _topRow - 1);
 		int max = _topRow + _height;
 		for (int i = _topRow; i < max; i++)
 		{
-			TextLCD.clear(i);
+			scherm.clear(i);
 			int idx = i - _topRow + topIndex;
 			if (idx >= 0 && idx < _length)
 			{
-				TextLCD.drawChar(idx == selectedIndex ? SEL_CHAR : ' ', 0, i);
-				TextLCD.drawString(_items[idx], 1, i);
+				scherm.drawChar(idx == selectedIndex ? SEL_CHAR : ' ', 0, i);
+				scherm.drawString(_items[idx], 1, i);
 			}
 		}
-		TextLCD.refresh();
+		scherm.refresh();
 	}
 	
 	/**

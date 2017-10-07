@@ -24,6 +24,7 @@ public class Robbot
 	private int angularSpeed;
 	private int acceleration;
 	static Keys buttons = Brick.getKeys();
+	static TextLCD lcd = Brick.getTextLCD();
 
 	public Robbot()
 	{
@@ -135,21 +136,21 @@ public class Robbot
 	public void showProperties()
 	{
 		// different from leJOS: in leJOS we use LCD
-		TextLCD.clear();
-		TextLCD.drawString("Name: " + this.name, 0, 0);
-		TextLCD.drawString(" Wheel:   ", 0, 1);
-		TextLCD.drawString(" Base:    ", 0, 2);
-		TextLCD.drawString(" Drift:   ", 0, 3);
-		TextLCD.drawString(" Linear:  ", 0, 4);
-		TextLCD.drawString(" Angular: ", 0, 5);
-		TextLCD.drawString(" Accel.:  ", 0, 6);
+		lcd.clear();
+		lcd.drawString("Name: " + this.name, 0, 0);
+		lcd.drawString(" Wheel:   ", 0, 1);
+		lcd.drawString(" Base:    ", 0, 2);
+		lcd.drawString(" Drift:   ", 0, 3);
+		lcd.drawString(" Linear:  ", 0, 4);
+		lcd.drawString(" Angular: ", 0, 5);
+		lcd.drawString(" Accel.:  ", 0, 6);
 
-		TextLCD.drawString(showWheelDiameter(), 9, 1);
-		TextLCD.drawString(showWheelBase(), 9, 2);
-		TextLCD.drawString(showWheelDrift(), 9, 3);
-		TextLCD.drawString(showLinearSpeed(), 9, 4);
-		TextLCD.drawString(showAngularSpeed(), 9, 5);
-		TextLCD.drawString(showAcceleration(), 9, 6);
+		lcd.drawString(showWheelDiameter(), 9, 1);
+		lcd.drawString(showWheelBase(), 9, 2);
+		lcd.drawString(showWheelDrift(), 9, 3);
+		lcd.drawString(showLinearSpeed(), 9, 4);
+		lcd.drawString(showAngularSpeed(), 9, 5);
+		lcd.drawString(showAcceleration(), 9, 6);
 		return;
 	}
 	
@@ -157,28 +158,28 @@ public class Robbot
 	{
 		switch (i) {
 			case 0: 
-				TextLCD.drawString("         ", 9, 1);
-				TextLCD.drawString(showWheelDiameter(), 9, 1);
+				lcd.drawString("         ", 9, 1);
+				lcd.drawString(showWheelDiameter(), 9, 1);
 				break;
 			case 1: 
-				TextLCD.drawString("         ", 9, 2);
-				TextLCD.drawString(showWheelBase(), 9, 2);
+				lcd.drawString("         ", 9, 2);
+				lcd.drawString(showWheelBase(), 9, 2);
 				break;
 			case 2: 
-				TextLCD.drawString("         ", 9, 3);
-				TextLCD.drawString(showWheelDrift(), 9, 3);
+				lcd.drawString("         ", 9, 3);
+				lcd.drawString(showWheelDrift(), 9, 3);
 				break;
 			case 3: 
-				TextLCD.drawString("         ", 9, 4);
-				TextLCD.drawString(showLinearSpeed(), 9, 4);
+				lcd.drawString("         ", 9, 4);
+				lcd.drawString(showLinearSpeed(), 9, 4);
 				break;
 			case 4: 
-				TextLCD.drawString("         ", 9, 5);
-				TextLCD.drawString(showAngularSpeed(), 9, 5);
+				lcd.drawString("         ", 9, 5);
+				lcd.drawString(showAngularSpeed(), 9, 5);
 				break;
 			case 5: 
-				TextLCD.drawString("         ", 9, 6);
-				TextLCD.drawString(showAcceleration(), 9, 6);
+				lcd.drawString("         ", 9, 6);
+				lcd.drawString(showAcceleration(), 9, 6);
 				break;
 		}
 	}
@@ -216,30 +217,30 @@ public class Robbot
 		while(true) // this construct works better than what I did before
 		{
 			int button;
-			TextLCD.drawString(">", 0, choice+1);
+			lcd.drawString(">", 0, choice+1);
 			do
 			{
 				button = buttons.waitForAnyPress();
 			}
 			while (button == 0);
-			TextLCD.drawString(">", 0, choice+1);
+			lcd.drawString(">", 0, choice+1);
 			if (button == Keys.ID_UP)
 			{
 				setProperties(properties);
 				showProperty(choice);
-				TextLCD.drawString(" ", 0, choice+1);
+				lcd.drawString(" ", 0, choice+1);
 				choice--;
 				if (choice < 0) choice = 5;
-				TextLCD.drawString(">", 0, choice+1);
+				lcd.drawString(">", 0, choice+1);
 			}
 			if (button == Keys.ID_DOWN)
 			{
 				setProperties(properties);
 				showProperty(choice);
-				TextLCD.drawString(" ", 0, choice+1);
+				lcd.drawString(" ", 0, choice+1);
 				choice++;
 				if (choice > 5) choice = 0;
-				TextLCD.drawString(">", 0, choice+1);
+				lcd.drawString(">", 0, choice+1);
 			}
 			if (button == Keys.ID_LEFT)
 			{
@@ -265,9 +266,9 @@ public class Robbot
 			{
 				if (isDirty) 
 				{
-					TextLCD.clear();
-					TextLCD.drawString("Back to old", 0, 2);
-					TextLCD.drawString("settings", 0, 3);
+					lcd.clear();
+					lcd.drawString("Back to old", 0, 2);
+					lcd.drawString("settings", 0, 3);
 					Delay.msDelay(1000);
 					setProperties(oldProps);
 				}

@@ -44,23 +44,20 @@ public class Leds extends JPanel
 		if (pattern != 0) 
 		{
 			kleur = pattern % 3;
-			System.out.println("Calculated color: " + kleur);
 			pattern = pattern / 3;
 			if (kleur == 0) 
 			{
 				kleur = 3;
 				pattern = pattern - 1;
 			}
-			System.out.println("Calculated pattern: " + pattern);
 		}
 		if (pattern == PATTERN_ON)
 		{
 			LED = createLed(kleur);
 			this.repaint();
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			LED = createLed(COLOR_NONE);
@@ -68,14 +65,13 @@ public class Leds extends JPanel
 		}
 		if (pattern == PATTERN_BLINK)
 		{
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < 3; i++)
 			{
 				LED = createLed(kleur);
 				this.repaint();
 				try {
 					Thread.sleep(500);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				LED = createLed(COLOR_NONE);
@@ -83,21 +79,19 @@ public class Leds extends JPanel
 				try {
 					Thread.sleep(500);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}
 		if (pattern == PATTERN_HEARTBEAT)
 		{
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < 3; i++)
 			{
 				LED = createLed(kleur);
 				this.repaint();
 				try {
 					Thread.sleep(350);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				LED = createLed(COLOR_NONE);
@@ -105,7 +99,6 @@ public class Leds extends JPanel
 				try {
 					Thread.sleep(250);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				LED = createLed(kleur);
@@ -113,7 +106,6 @@ public class Leds extends JPanel
 				try {
 					Thread.sleep(300);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				LED = createLed(COLOR_NONE);
@@ -121,7 +113,6 @@ public class Leds extends JPanel
 				try {
 					Thread.sleep(850);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

@@ -1,16 +1,12 @@
 package utility;
 
 import java.awt.Color;
-//import java.awt.Color;
 import java.awt.Dimension;
-
-//import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
-//import javax.swing.JPanel;
 
 import utility.Ev3Backdrop;
-import utility.TextMenu;
+//import utility.TextMenu;
 import utility.Keys;
 
 public class Brick extends JFrame {
@@ -27,7 +23,6 @@ public class Brick extends JFrame {
 		setSize(new Dimension(340, 512)); // this way the frame will be centered on the screen
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBackground(new Color(225, 150, 45));
-//		setBackground(new Color(245, 210, 0));
 		setLocationRelativeTo(null); // centers the frame on the screen, if the size is given.
 		createBrick();
 		this.pack();
@@ -37,41 +32,35 @@ public class Brick extends JFrame {
 	public static void main(String[] args) {
 		Brick walle = BrickFinder.getDefault();
 		walle.setVisible(true);
-		TextLCD.drawString("Hello there!", 0, 0);
+		scherm.drawString("Hello there!", 0, 0);
 //		if (buttons.getButtons() == Keys.ID_ENTER) {
-//			TextLCD.drawString("Enter was pressed", 0, 1);
+//			scherm.drawString("Enter was pressed", 0, 1);
 //			Delay.msDelay(500);
 //		};
-//		TextLCD.clear();
-//		TextLCD.drawString("Bye bye!", 0, 0);
-//		buttons.waitForAnyPress();
+//		scherm.clear();
+//		scherm.drawString("Bye bye!", 0, 0);
 		
-		for (int i = 0; i < 9; i++)
+		for (int i = 1; i < 9; i++)
 		{
-			System.out.println("Pattern " + i);
 			buttons.waitForAnyPress();
+			scherm.drawString("Pattern " + i, 0, i-1);
 			leds.setPattern(i);
 		}
 		
-		String[] figures = {"Triangle", "Square", "Hexagon", "Octagon", "Exit"};
-		TextMenu menu = new TextMenu(figures, 1, "FigureBot");
-		int selection;
-		selection = menu.select(3);
-		TextLCD.clear();
-		TextLCD.drawString("selected: " + selection, 0, 4);
+//		String[] figures = {"Triangle", "Square", "Hexagon", "Octagon", "Exit"};
+//		TextMenu menu = new TextMenu(figures, 1, "FigureBot");
+//		int selection;
+//		selection = menu.select(3);
+//		scherm.clear();
+//		scherm.drawString("selected: " + selection, 0, 4);
 		
-//		String name = TextLCD.inputName();
-//		TextLCD.drawString("name is " + name, 0, 2);
+//		String name = scherm.inputName();
+//		scherm.drawString("name is " + name, 0, 2);
 		buttons.waitForAnyPress();
 		System.exit(0);
 	}
 	
 	private void createBrick() {
-//		JPanel inhoud = new JPanel();
-//		inhoud.setBorder(BorderFactory.createEmptyBorder(60, 80, 0, 80)); // top, left, bottom, right
-//		inhoud.add(scherm);
-//		inhoud.add(buttons);
-//		setContentPane(inhoud);
 		JLayeredPane layer = new JLayeredPane();
 		layer.setPreferredSize(new Dimension(340, 512));
 

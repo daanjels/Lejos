@@ -36,7 +36,7 @@ public class TextLCD extends JPanel {
 		buttons = Brick.getKeys();
 	}
 
-	public static String inputName() {
+	public String inputName() {
 		String inName = "ev3";
 		clear();
 		drawString("EV3 calibration", 0, 0);
@@ -51,7 +51,7 @@ public class TextLCD extends JPanel {
 		return inName;
 	}
 
-	public static String inputString(boolean type, String name, int row) {
+	public String inputString(boolean type, String name, int row) {
 		String alpha = " ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-0123456789";
 		if (type == false) alpha = "0123456789.";
 		int chr = 0;
@@ -119,7 +119,7 @@ public class TextLCD extends JPanel {
 		}
 	}
 
-	public static void drawString(String message, int col, int row) {
+	public void drawString(String message, int col, int row) {
 		int max = message.length();
 		String oldMsg = displayText[row];
 		String newMsg = "";
@@ -134,7 +134,7 @@ public class TextLCD extends JPanel {
 		refreshLCD();
 	}
 
-	public static void screenWait(int time, int row) {
+	public void screenWait(int time, int row) {
 		for (int i = 0; i < 9; i++) {
 			drawString("* ", i*2, row);
 			Delay.msDelay(time/9);
@@ -142,14 +142,14 @@ public class TextLCD extends JPanel {
 		System.out.println("");
 	}
 
-	public static void clear() {
+	public void clear() {
 		for (int i = 0; i < 8; i++) {
 			displayText[i] = "                  \n";
 		}
 		refreshLCD();
 	}
 
-	private static void refreshLCD() {
+	private void refreshLCD() {
 		StringBuilder builder = new StringBuilder();
 		for(String s : displayText) {
 			builder.append(s);
@@ -166,7 +166,7 @@ public class TextLCD extends JPanel {
 	* @param row The row to display the value.
 	*/
 	
-	public static String inputNumber(int digits, int floats, double value, int pos, int row) {
+	public String inputNumber(int digits, int floats, double value, int pos, int row) {
 		double[] increments = {100000, 10000, 1000, 100, 10, 1, 0.0, 0.1, 0.01, 0.001, 0.0001, 0.00001};
 		double[] increment = Arrays.copyOfRange(increments, 6-digits, 11);
 		int limit = digits + 1 + floats; // total number of position for the double format
@@ -198,16 +198,16 @@ public class TextLCD extends JPanel {
 			} 
 			if (button == Keys.ID_RIGHT) 
 			{
-//				LCD.drawString(" ", col + pos, row);
+//				lcd.drawString(" ", col + pos, row);
 				drawString(" ", col + pos, row+1);
 				col = col + 1;
-				System.out.println("col: " + col + " / limit: " + limit);
+//				System.out.println("col: " + col + " / limit: " + limit);
 				if (col == limit) col = lead;
 				if (col == digits) col = digits + 1;
 			} 
 			if (button == Keys.ID_LEFT) 
 			{
-//				LCD.drawString(" ", col + pos, row);
+//				lcd.drawString(" ", col + pos, row);
 				drawString(" ", col + pos, row+1);
 				col = col - 1;
 				if (col == digits) col = digits - 1; // skip the decimal point
@@ -238,7 +238,7 @@ public class TextLCD extends JPanel {
 		}
 	}
 
-	public static void drawString(String message, int col, int row, boolean b) {
+	public void drawString(String message, int col, int row, boolean b) {
 		int max = message.length();
 		String oldMsg = displayText[row];
 		String newMsg = "";
@@ -266,7 +266,7 @@ public class TextLCD extends JPanel {
 	 * @param x X location
 	 * @param y Y location
 	 */
-	public static void drawChar(char c, int x, int y) {
+	public void drawChar(char c, int x, int y) {
 		String oldMsg = displayText[y];
 		String newMsg = oldMsg.substring(0,x) + c + oldMsg.substring(x+1);
 		displayText[y] = newMsg + "\n";
@@ -277,12 +277,12 @@ public class TextLCD extends JPanel {
 	 * Clear an LCD display row
 	 * @param y the row to clear
 	 */
-	public static void clear(int i) {
+	public void clear(int i) {
 		displayText[i] = "                  \n";
 		refreshLCD();
 	}
 
-	public static void refresh() {
+	public void refresh() {
 		StringBuilder builder = new StringBuilder();
 		for(String s : displayText) {
 			builder.append(s);
