@@ -15,16 +15,18 @@ import utility.Delay;
 import utility.Brick;
 import utility.BrickFinder;
 import utility.Keys;
+import utility.Leds;
 import utility.TextLCD;
 import utility.TextMenu;
 
 public class Callibration 
 {
-	public static final String DIR = "/";
+	private static final String DIR = "home/lejos/wheels/";
 	static Robbot bot = new Robbot();
 	static int option = 1, choice = 0;
 	static List<String> botNames = new ArrayList<String>();
 	static Keys buttons = Brick.getKeys();
+	static Leds leds = Brick.getLed();
 	private static boolean dirty;
 
 	public static void main(String[] args) 
@@ -32,8 +34,8 @@ public class Callibration
 		Brick callE = BrickFinder.getDefault();
 		callE.setVisible(true);
 		
-		startUp(); // show a startup dialog
-		selectBot(); // select an exisiting bot or create a new one
+		startUp(); // show a startup dialog (if no database available, create a database and add 'new robot')
+		selectBot(); // select an exisiting bot (if only 'new robot' create it)
 		shutDown();
 	}
 
@@ -53,6 +55,8 @@ public class Callibration
 		TextLCD.drawString("Starting up", 0, 1);
 		TextLCD.drawString("Calibration.", 0, 2);
 		TextLCD.screenWait(1000, 4);
+		new File(DIR).mkdirs();
+
 		try 
 		{
 			botNames = loadBots();
@@ -75,36 +79,42 @@ public class Callibration
 		TextLCD.drawString("ESCAPE > quit", 0, 6);
 		int button = buttons.waitForAnyPress();
 		if (button == Keys.ID_ESCAPE) shutDown();
-		botNames.add("New robot");
-		createBot();
-		showMenu();
+		botNames.add("New robot"); // the first robot in the list is the option to create a new robot
 		return;
 	}
 
 	private static void createBot() 
 	{
 		String robotName = TextLCD.inputName();
-		if (robotName == null) return;
+		if (robotName == null) 
+		{
+			selectBot();
+			shutDown();
+		}
 		while (botNames.contains(robotName)) 
 		{
 			TextLCD.clear();
 			TextLCD.drawString("This name already", 0, 1);
 			TextLCD.drawString("exists. Please ", 0, 2);
 			TextLCD.drawString("pick another one.", 0, 3);
-			buttons.waitForAnyPress(3000);
+			buttons.waitForAnyPress(2000);
 			robotName = TextLCD.inputName();
 		}
-		if (robotName == null) return;
-		TextLCD.clear();
-		TextLCD.drawString("Building robot", 0, 1);
-		TextLCD.drawString("with default", 0, 2);
-		TextLCD.drawString("settings.", 0, 3);
+		if (robotName == null) 
+		{
+			selectBot();
+			shutDown();
+		}
+		TextLCD.drawString("Building robot", 0, 5);
+		TextLCD.drawString("with default", 0, 6);
+		TextLCD.drawString("settings.", 0, 7);
 		bot = new Robbot();
 		bot.setName(robotName);
 		addBot(robotName);
 		bot.storeSettings();
 		buttons.waitForAnyPress(2000);
-		bot.editProperties();
+		dirty = bot.editProperties();
+		System.out.println(dirty);
 		return;
 	}
 
@@ -120,7 +130,7 @@ public class Callibration
 		FileWriter fileWriter = null;
 		try 
 		{
-			File file = new File("robotbase");
+			File file = new File(DIR + "robotbase");
 			if (!file.exists()) 
 			{
 				file.createNewFile();
@@ -152,7 +162,7 @@ public class Callibration
 
 	private static List<String> loadBots() throws IOException 
 	{
-		FileReader fileReader = new FileReader(new File("robotbase"));
+		FileReader fileReader = new FileReader(new File(DIR + "robotbase"));
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		List<String> lines = new ArrayList<String>();
 		String line = null;
@@ -166,6 +176,12 @@ public class Callibration
 
 	private static void selectBot() 
 	{
+		if (botNames.size() < 2) 
+		{
+			createBot();
+			showMenu();
+			return;
+		}
 		String[] names = new String[botNames.size()];
 		for (int i = 0; i < botNames.size(); i++)
 		{
@@ -202,6 +218,9 @@ public class Callibration
 					newName = TextLCD.inputName();
 				}
 				if (newName == null) return;
+				System.out.println(DIR + oldName + ".txt");
+				File f = new File(DIR + oldName + ".txt");
+				f.delete();
 //				Need to remove the original settingsfile
 				addBot(newName);
 				try
@@ -228,6 +247,9 @@ public class Callibration
 			if (button == Keys.ID_ENTER)
 			{
 				botNames.remove(option);
+				System.out.println(DIR + names[option] + ".txt");
+				File f = new File(DIR + names[option] + ".txt");
+				f.delete();
 //				Need to remove the settingsfile
 				storeBots();
 				TextLCD.drawString(names[option] + " is removed", 0, 3);
@@ -269,7 +291,6 @@ public class Callibration
 	}
 
 	private static void showMenu() {
-		dirty = false;
 		String[] mainOptions = {"Calibrate wheels", "Calibrate base", "Calibrate drift", "Edit settings", "Store settings", "Main menu"};
 		TextMenu mainMenu = new TextMenu(mainOptions, 1, "*EV3 calibration*");
 		
@@ -291,7 +312,14 @@ public class Callibration
 					Delay.msDelay(100);
 					break;
 				case 3:
-					dirty = bot.editProperties();
+					if (dirty) 
+					{
+						bot.editProperties();
+					}
+					else
+					{
+						dirty = bot.editProperties();
+					}
 					break;
 				case 4:
 					bot.storeSettings();
@@ -308,10 +336,11 @@ public class Callibration
 						TextLCD.clear();
 						TextLCD.drawString("Settings have ", 0, 0);
 						TextLCD.drawString("changed", 0, 1);
-						TextLCD.drawString("ENTER -> discard", 0, 2);
-						TextLCD.drawString("DOWN -> save", 0, 3);
+						TextLCD.drawString("LEFT -> discard", 0, 2);
+						TextLCD.drawString("RIGHT -> save", 0, 3);
 						int button = buttons.waitForAnyPress();
-						if (button == Keys.ID_DOWN) 
+						dirty = false;
+						if (button == Keys.ID_RIGHT) 
 						{
 							bot.storeSettings();
 							dirty = false;
@@ -328,6 +357,29 @@ public class Callibration
 					selectBot();
 					return;
 				case -1:
+					if (dirty) 
+					{
+						TextLCD.clear();
+						TextLCD.drawString("Settings have ", 0, 0);
+						TextLCD.drawString("changed", 0, 1);
+						TextLCD.drawString("LEFT -> discard", 0, 2);
+						TextLCD.drawString("RIGHT -> save", 0, 3);
+						int button = buttons.waitForAnyPress();
+						dirty = false;
+						if (button == Keys.ID_RIGHT) 
+						{
+							bot.storeSettings();
+							dirty = false;
+							TextLCD.drawString("Saving settings", 0, 5);
+							TextLCD.drawString("for " + bot.getName(), 0, 6);
+							TextLCD.screenWait(200, 7);
+							Delay.msDelay(500);
+						}
+						if (button == Keys.ID_ESCAPE) 
+						{
+							break;
+						}
+					}
 					selectBot();
 					return;
 			}
@@ -344,7 +396,10 @@ public class Callibration
 		TextLCD.drawString("to start", 0, 4);
 		int button = buttons.waitForAnyPress();
 		if (button != Keys.ID_ENTER) return;
+		
 			// Travel instructions
+		leds.setPattern(1, 2);
+
 		TextLCD.clear();
 		TextLCD.drawString("Insert the distance:", 0, 4);
 		String input = TextLCD.inputNumber(3, 2, 70.0, 0, 5);
@@ -404,6 +459,8 @@ public class Callibration
 		int button = buttons.waitForAnyPress();
 		if (button != Keys.ID_ENTER) return;
 // rotate instructions
+		leds.setPattern(2, 2);
+
 		TextLCD.clear();
 		TextLCD.drawString("Insert the gap", 0, 2);
 		TextLCD.drawString("between the mark", 0, 3);
@@ -461,6 +518,8 @@ public class Callibration
 		int button = buttons.waitForAnyPress();
 		if (button != Keys.ID_ENTER) return;
 // drift instructions
+		leds.setPattern(3, 2);
+
 		TextLCD.clear();
 		TextLCD.drawString("Insert the gap", 0, 2);
 		TextLCD.drawString("between the mark", 0, 3);
