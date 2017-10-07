@@ -40,13 +40,13 @@ public class TextLCD extends JPanel {
 		String inName = "ev3";
 		clear();
 		drawString("EV3 calibration", 0, 0);
-		drawString("Give your robot", 0, 2);
-		drawString("a name:", 0, 3);
-			inName = inputString(true, "EV3", 4);
+		drawString("Give your robot", 0, 1);
+		drawString("a name:", 0, 2);
+			inName = inputString(true, "EV3", 3);
 		if (inName != null)
 		{
-			drawString("> " + inName, 0, 5);
-			Delay.msDelay(2000);
+			drawString("> " + inName, 0, 4);
+			Delay.msDelay(500);
 		}
 		return inName;
 	}
@@ -92,7 +92,7 @@ public class TextLCD extends JPanel {
 				in[pos] = alpha.substring(chr, chr+1);
 				drawString(alpha.substring(chr, chr+1), pos, row, false);
 				pos = pos + 1;
-				if (pos > 13) pos = 0;
+				if (pos > name.length()-1) pos = 0;
 				if (in[pos] != "") chr = alpha.indexOf(in[pos]);
 				drawString(alpha.substring(chr, chr+1), pos, row, true);
 			}
@@ -101,7 +101,7 @@ public class TextLCD extends JPanel {
 				in[pos] = alpha.substring(chr, chr+1);
 				drawString(alpha.substring(chr, chr+1), pos, row, false);
 				pos = pos - 1;
-				if (pos < 0) pos = 13;
+				if (pos < 0) pos = name.length()-1;
 				System.out.println(in[pos]);
 				if (in[pos] != "") chr = alpha.indexOf(in[pos]);
 				drawString(alpha.substring(chr, chr+1), pos, row, true);
@@ -176,7 +176,8 @@ public class TextLCD extends JPanel {
 	
 		drawString(String.format(Locale.CANADA, "%1$," + limit + "." + floats + "f", value), pos, row);
 		decimalValue = decimalValue.substring(col - lead, col - lead + 1);
-		drawString(decimalValue, col, row-1);
+//		drawString(decimalValue, col, row);
+		drawString("^", col, row+1);
 		while(true)
 		{
 			int button;
@@ -193,12 +194,12 @@ public class TextLCD extends JPanel {
 			if (button == Keys.ID_DOWN) 
 			{
 				value = value - increment[col];
-				if (value < 0) value = value + increment[col];
+//				if (value < 0) value = value + increment[col];
 			} 
 			if (button == Keys.ID_RIGHT) 
 			{
 //				LCD.drawString(" ", col + pos, row);
-				drawString(" ", col + pos, row-1);
+				drawString(" ", col + pos, row+1);
 				col = col + 1;
 				System.out.println("col: " + col + " / limit: " + limit);
 				if (col == limit) col = lead;
@@ -207,7 +208,7 @@ public class TextLCD extends JPanel {
 			if (button == Keys.ID_LEFT) 
 			{
 //				LCD.drawString(" ", col + pos, row);
-				drawString(" ", col + pos, row-1);
+				drawString(" ", col + pos, row+1);
 				col = col - 1;
 				if (col == digits) col = digits - 1; // skip the decimal point
 				if (decimalValue == "_" || col < 0) col = limit - 1; // if at the start, go to the end
@@ -227,7 +228,7 @@ public class TextLCD extends JPanel {
 				decimalValue = decimalValue.substring(col - lead, col - lead + 1);
 			}
 //			LCD.drawString(decimalValue, col + pos, row, true);
-			drawString(decimalValue, col + pos, row-1); // remove -1 for real EV3
+			drawString("^", col + pos, row+1); // remove +1 for real EV3
 			Delay.msDelay(200);
 			if (button == Keys.ID_ENTER) 
 			{
@@ -241,15 +242,21 @@ public class TextLCD extends JPanel {
 		int max = message.length();
 		String oldMsg = displayText[row];
 		String newMsg = "";
+		String oldSel = displayText[row+1].replace('^', ' ');
+		String newSel = "";
 		for (int i = 0; i < 18; i++) {
 			if (i >= col && i < col + max) {
 				newMsg = newMsg + message.substring(i - col, i - col + 1);
+				newSel = newSel + "^";
 			} else {
 				newMsg = newMsg + oldMsg.substring(i, i+1);
+				System.out.println(oldSel.substring(i, i+1));
+				newSel = newSel + oldSel.substring(i, i+1);
 			}
 		}
-		if (b == true) newMsg = newMsg.toUpperCase();
+//		if (b == true) newMsg = newMsg.toUpperCase();
 		displayText[row] = newMsg + "\n";
+		if (b == true) displayText[row+1] = newSel;
 		refreshLCD();
 	}
 
