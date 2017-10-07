@@ -27,8 +27,6 @@ public class Keys extends JPanel implements ActionListener
 
 	public Keys() 
 	{
-//		setPreferredSize(new Dimension(178, 128));
-//		setBackground(new Color(255, 230, 205));
 		this.setOpaque(false);
 		setBounds(45, 245, 250, 165);
 
@@ -80,24 +78,17 @@ public class Keys extends JPanel implements ActionListener
 	}
 
 	public int getButtons()
-	{ // used in TextLCD
+	{
 		return getButtons(10);
-//		int key = 0;
-//		while (keyPressed == 0) 
-//		{
-//			TextLCD.drawString("", 0, 6);
-//		}
-//		key = keyPressed;
-//		return key;
 	}
+
 	public int getButtons(int interval)
-	{ // used in TextLCD
+	{
 		int key = 0;
 		while (keyPressed == 0)
 		{
 			System.out.print("");
 		}
-		System.out.print(keyPressed);
 		key = keyPressed;
 		Delay.msDelay(interval);
 		return key;
@@ -119,9 +110,7 @@ public class Keys extends JPanel implements ActionListener
 		while (keyPressed == 0) 
 		{
 			System.out.print("");
-//			Delay.msDelay(10);
 		};
-		System.out.print("wait: " + keyPressed);
 		key = keyPressed;
 		Delay.msDelay(10);
 		return key;
@@ -159,7 +148,7 @@ public class Keys extends JPanel implements ActionListener
 		if ("keyUp".equals(e.getActionCommand()))
 		{
 			keyPressed = 0x1;
-			System.out.println("UP");
+//			System.out.println("UP");
 			try
 			{
 				Thread.sleep(10);
@@ -172,7 +161,7 @@ public class Keys extends JPanel implements ActionListener
 		if ("keyDown".equals(e.getActionCommand()))
 		{
 			keyPressed = 0x4;
-			System.out.println("DOWN");
+//			System.out.println("DOWN");
 			try
 			{
 				Thread.sleep(10);
@@ -185,7 +174,7 @@ public class Keys extends JPanel implements ActionListener
 		if ("keyLeft".equals(e.getActionCommand()))
 		{
 			keyPressed = 0x10;
-			System.out.println("LEFT");
+//			System.out.println("LEFT");
 			try
 			{
 				Thread.sleep(10);
@@ -198,7 +187,7 @@ public class Keys extends JPanel implements ActionListener
 		if ("keyRight".equals(e.getActionCommand()))
 		{
 			keyPressed = 0x8;
-			System.out.println("RIGHT");
+//			System.out.println("RIGHT");
 			try
 			{
 				Thread.sleep(10);
@@ -211,7 +200,7 @@ public class Keys extends JPanel implements ActionListener
 		if ("keyEnter".equals(e.getActionCommand()))
 		{
 			keyPressed = 0x2;
-			System.out.println("ENTER");
+//			System.out.println("ENTER");
 			try
 			{
 				Thread.sleep(10);
@@ -224,7 +213,7 @@ public class Keys extends JPanel implements ActionListener
 		if ("keyEscape".equals(e.getActionCommand()))
 		{
 			keyPressed = 0x20;
-			System.out.println("ESCAPE");
+//			System.out.println("ESCAPE");
 			try
 			{
 				Thread.sleep(10);
