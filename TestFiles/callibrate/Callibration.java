@@ -197,6 +197,8 @@ public class Callibration
 			option = option - 200;
 			lcd.drawString("Do you want to", 0, 1);
 			lcd.drawString("rename " + names[option] + "?", 0, 2);
+			lcd.drawString("ENTER > yes", 0, 5);
+			lcd.drawString("ESCAPE > no", 0, 6);
 			int button = buttons.waitForAnyPress();
 			if (button == Keys.ID_ENTER)
 			{
@@ -244,6 +246,8 @@ public class Callibration
 			option = option - 100;
 			lcd.drawString("Do you want to", 0, 1);
 			lcd.drawString("remove " + names[option] + "?", 0, 2);
+			lcd.drawString("ENTER > yes", 0, 4);
+			lcd.drawString("ESCAPE > no", 0, 5);
 			int button = buttons.waitForAnyPress();
 			if (button == Keys.ID_ENTER)
 			{
