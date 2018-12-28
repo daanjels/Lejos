@@ -14,7 +14,8 @@ public class Planner {
 		
 		System.out.println(middleEarth);
 		
-		System.out.println("Find a route using a depth first search...");
+		System.out.println("Find a route from Hobbiton to Rivendell using a depth first search...");
+
 		middleEarth.planDeep(middleEarth.cities.get(0), middleEarth.cities.get(middleEarth.cities.size()-2));
 	}
 }
