@@ -7,6 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,8 +30,10 @@ import lejos.utility.Delay;
 import lejos.utility.TextMenu;
 import performance.Robot;
 
+
 public class Calibration 
 {
+	private static final String DIR = "/home/lejos/programs/";
 	static EV3LargeRegulatedMotor RIGHT_MOTOR = new EV3LargeRegulatedMotor(MotorPort.A);
 	static EV3LargeRegulatedMotor LEFT_MOTOR = new EV3LargeRegulatedMotor(MotorPort.B);
 	static Keys buttons;
@@ -37,6 +42,10 @@ public class Calibration
 	static List<String> botNames = new ArrayList<String>();
 	static String title = "EV3 calibration";
 	private static boolean dirty;
+	
+	
+	
+	
 	
 	public static void main(String[] args) 
 	{
@@ -48,19 +57,54 @@ public class Calibration
 		buttons = callE.getKeys();
 
 		startUp(); // show a startup dialog
-		selectBot(); // select an exisiting bot or create a new one
+		selectBot(); // select an existing bot or create a new one
 		shutDown();
 	}
 	
+	private static void startUp() 
+	{
+//		System.out.println("Starting up...");
+		LCD.clear();
+		LCD.drawString(title, 0, 0);
+		LCD.drawString("Loading catalog", 0, 3);
+		showWait(4, 500);
+
+		try 
+		{
+			botNames = loadBots();
+		} 
+		catch (IOException e) 
+		{
+			noDatabase();
+			return;
+		}
+//		return;
+	}
+
+	private static void shutDown() 
+	{
+//		System.out.println("OK, we're closing down...");
+		LCD.clear();
+		LCD.drawString(title, 0, 0);
+		LCD.drawString("Shutting down", 0, 3);
+		showWait(4, 1000);
+		buttons.waitForAnyPress(2000);
+		System.exit(0);
+	}
+
 	private static void showMenu()
 	{
+//		System.out.println("Now show the calibration menu");
 		dirty = false;
-		String[] mainOptions = {"Calibrate wheels", "Calibrate base", "Calibrate drift", "Edit settings", "Store settings", "Main menu"};
+		String[] mainOptions = {"Calibrate wheels", "Calibrate base", "Calibrate drift", 
+				"Edit settings", "Store settings", "Main menu"};
 		TextMenu mainMenu = new TextMenu(mainOptions, 1, "*EV3 calibration*");
 		
-		while (true) {
+		while (true) 
+		{
 			choice = mainMenu.select(choice);
-			switch (choice) {
+			switch (choice) 
+			{
 				case 0:
 					testTravel();
 					Delay.msDelay(100);
@@ -74,16 +118,33 @@ public class Calibration
 					Delay.msDelay(100);
 					break;
 				case 3:
-					dirty = bot.editProperties();
+					if (dirty) 
+					{
+						bot.editProperties();
+					} 
+					else 
+					{
+						dirty = bot.editProperties();
+					}
 					break;
 				case 4:
-					bot.storeSettings();
-					dirty = false;
-					LCD.clear();
-					LCD.drawString("Saving settings", 0, 1);
-					LCD.drawString("for " + bot.getName(), 0, 2);
-					showWait(200, 4);
-					Delay.msDelay(500);
+					if (dirty)
+					{
+						bot.storeSettings();
+						dirty = false;
+						LCD.clear();
+						LCD.drawString("Saving settings", 0, 1);
+						LCD.drawString("for " + bot.getName(), 0, 2);
+						showWait(200, 4);
+						Delay.msDelay(1500);
+					}
+					else
+					{
+						LCD.clear();
+						LCD.drawString("No changes were", 0, 3);
+						LCD.drawString("made to " + bot.getName(), 0, 4);
+						Delay.msDelay(1500);
+					}
 					break;
 				case 5:
 					if (dirty) 
@@ -101,7 +162,7 @@ public class Calibration
 							LCD.drawString("Saving settings", 0, 5);
 							LCD.drawString("for " + bot.getName(), 0, 6);
 							showWait(200, 7);
-							Delay.msDelay(500);
+							Delay.msDelay(1500);
 						}
 						if (button == Keys.ID_ESCAPE) 
 						{
@@ -111,6 +172,27 @@ public class Calibration
 					selectBot();
 					return;
 				case -1:
+					if (dirty) 
+					{
+						LCD.clear();
+						LCD.drawString("Settings have ", 0, 0);
+						LCD.drawString("changed", 0, 1);
+						LCD.drawString("LEFT -> discard", 0, 2);
+						LCD.drawString("RIGHT -> save", 0, 3);
+						int button = buttons.waitForAnyPress();
+						if (button == Keys.ID_RIGHT) 
+						{
+							bot.storeSettings();
+							LCD.drawString("Saving settings", 0, 5);
+							LCD.drawString("for " + bot.getName(), 0, 6);
+							showWait(200, 7);
+							Delay.msDelay(1500);
+						}
+						if (button == Keys.ID_ESCAPE) 
+						{
+							break;
+						}
+					}
 					selectBot();
 					return;
 			}
@@ -118,7 +200,187 @@ public class Calibration
 		}
 	}
 
-	private static void testTravel() {
+	private static void noDatabase() 
+	{
+//		System.out.println("Oops, can't find the database...");
+		LCD.clear();
+		LCD.drawString("Could not locate ", 0, 0);
+		LCD.drawString("the database.", 0, 1);
+		LCD.drawString("A new database", 0, 2);
+		LCD.drawString("will be created.", 0, 3);
+		LCD.drawString("ENTER > continue...", 0, 5);
+		LCD.drawString("ESCAPE > quit", 0, 6);
+		int button = buttons.waitForAnyPress();
+		if (button == Keys.ID_ESCAPE) shutDown();
+		botNames.add("New robot");
+//		createBot();
+//		showMenu();
+		return;
+	}
+
+	private static void createBot() 
+	{
+//		System.out.println("Let's create a robot...");
+		String robotName = inputName();
+		if (robotName == null) return;
+		while (botNames.contains(robotName)) 
+		{
+			LCD.clear();
+			LCD.drawString("This name already", 0, 1);
+			LCD.drawString("exists. Please ", 0, 2);
+			LCD.drawString("pick another one.", 0, 3);
+			buttons.waitForAnyPress(3000);
+			robotName = inputName();
+		}
+		if (robotName == null) return;
+		LCD.clear();
+		LCD.drawString("Building robot", 0, 1);
+		LCD.drawString("with default", 0, 2);
+		LCD.drawString("settings.", 0, 3);
+		bot = new Robot();
+		bot.setName(robotName);
+		addBot(robotName);
+		bot.storeSettings();
+		buttons.waitForAnyPress(2000);
+		dirty = bot.editProperties();
+		if (dirty) bot.storeSettings();		
+		return;
+	}
+
+	private static void addBot(String robotName) 
+	{
+//		System.out.println("Add the robot to the database");
+		botNames.add(robotName);
+		storeBots();
+	}
+	
+	private static void storeBots()
+	{
+//		System.out.println("Updating the robot database");
+		BufferedWriter writer = null;
+		FileWriter fileWriter = null;
+		File map = new File(DIR);
+		if (!map.exists()) {
+			Path pad = Paths.get(DIR);
+			try {
+				System.out.println("Directory does not exist, let's create it");
+				Files.createDirectory(pad);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				shutDown();
+			}
+		}
+		try 
+		{
+			File file = new File(DIR + "robotbase");
+			if (!file.exists()) 
+			{
+				file.createNewFile();
+			}
+			fileWriter = new FileWriter(file, true);
+			writer = new BufferedWriter(fileWriter);
+			for (int i = 0; i < botNames.size(); i++)
+			{
+				writer.write(botNames.get(i) + "\n");
+			}
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		} 
+		finally 
+		{
+			try 
+			{
+				if (writer != null) writer.close();
+				if (fileWriter != null) fileWriter.close();
+			} 
+			catch (IOException ex) 
+			{
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	private static List<String> loadBots() throws IOException 
+	{
+//		System.out.println("Loading the robots...");
+		FileReader fileReader = new FileReader(new File(DIR + "robotbase"));
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		List<String> lines = new ArrayList<String>();
+		String line = null;
+		while ((line = bufferedReader.readLine()) != null) 
+		{
+			lines.add(line);
+		}
+		bufferedReader.close();
+		return lines;
+	}
+
+	private static void selectBot() 
+	{
+//		System.out.println("Show the menu to select a robot");
+		if (botNames.size() < 2) // 'new robot' is the first in the list, so let's create a robot
+		{
+//			System.out.println("Let's create a new robot");
+			createBot();
+			bot.storeSettings();
+			showMenu();
+			return;
+		}
+		String[] names = new String[botNames.size()];
+		for (int i = 0; i < botNames.size(); i++)
+		{
+			names[i] = String.valueOf(botNames.get(i));
+		}
+		LCD.clear();
+		TextMenu bots = new TextMenu(names, 1, "Choose a robot");
+		option = bots.select(option);
+		LCD.clear();
+		if (option > 0) 
+		{
+			try 
+			{
+				bot.loadSettings(names[option]);
+				choice = 0;
+				showMenu();
+				return;
+			} 
+			catch (FileNotFoundException e) 
+			{
+				LCD.clear();
+				LCD.drawString("No settings found", 0, 1);
+				LCD.drawString("for " + names[option] + ".", 0, 2);
+				LCD.drawString("Using default", 0, 3);
+				LCD.drawString("settings.", 0, 4);
+				buttons.waitForAnyPress(3000);
+				bot = new Robot();
+				bot.setName(names[option]);
+				bot.storeSettings();
+				showMenu();
+				return;
+			}
+		}
+		if (option < 0) 
+		{
+			LCD.drawString("Are you sure you", 0, 1);
+			LCD.drawString("want to quit?", 0, 2);
+			LCD.drawString("ESCAPE > yes", 0, 4);
+			LCD.drawString("other > no", 0, 5);
+			int button = buttons.waitForAnyPress();
+			if (button == Keys.ID_ESCAPE) {
+				return;
+			}
+			selectBot();
+		}
+		createBot();
+		showMenu();
+		return;
+	}
+
+	private static void testTravel() 
+	{
 		Chassis car = buildCar();
 		
 		LCD.clear();
@@ -128,7 +390,7 @@ public class Calibration
 		LCD.drawString("to start", 0, 4);
 		int button = buttons.waitForAnyPress();
 		if (button != Keys.ID_ENTER) return;
-		System.out.println(car.getPoseProvider().getPose());
+//		System.out.println(car.getPoseProvider().getPose());
 		car.travel(70.0);
 		car.waitComplete();
 		Delay.msDelay(500);
@@ -187,6 +449,7 @@ public class Calibration
 		LCD.drawString("to start", 0, 5);
 		int button = buttons.waitForAnyPress();
 		if (button != Keys.ID_ENTER) return;
+		
 		LCD.clear();
 		LCD.drawString("Insert the gap", 0, 2);
 		LCD.drawString("between the mark", 0, 3);
@@ -289,102 +552,114 @@ public class Calibration
 		return;
 	}
 
-	private static void noDatabase() {
-		LCD.clear();
-		LCD.drawString("Could not locate ", 0, 0);
-		LCD.drawString("the database.", 0, 1);
-		LCD.drawString("A new database", 0, 2);
-		LCD.drawString("will be created.", 0, 3);
-		LCD.drawString("ENTER > continue...", 0, 5);
-		LCD.drawString("ESCAPE > quit", 0, 6);
-		int button = buttons.waitForAnyPress();
-		if (button == Keys.ID_ESCAPE) shutDown();
-		botNames.add("New robot");
-		createBot();
-		showMenu();
-		return;
-	}
-
-	private static List<String> loadBots() throws IOException {
-		FileReader fileReader = new FileReader(new File("/home/lejos/programs/robotbase"));
-		BufferedReader bufferedReader = new BufferedReader(fileReader);
-		List<String> lines = new ArrayList<String>();
-		String line = null;
-		while ((line = bufferedReader.readLine()) != null) {
-			lines.add(line);
-		}
-		bufferedReader.close();
-		return lines;
-	}
-
-	private static void createBot() {
-		String robotName = inputName();
-		if (robotName == null) return;
-		while (botNames.contains(robotName)) {
-			LCD.clear();
-			LCD.drawString("This name already", 0, 1);
-			LCD.drawString("exists. Please ", 0, 2);
-			LCD.drawString("pick another one.", 0, 3);
-			buttons.waitForAnyPress(3000);
-			robotName = inputName();
-		}
-		if (robotName == null) return;
-		LCD.clear();
-		LCD.drawString("Building robot", 0, 1);
-		LCD.drawString("with default", 0, 2);
-		LCD.drawString("settings.", 0, 3);
-		bot = new Robot();
-		bot.setName(robotName);
-		addBot(robotName);
-		bot.storeSettings();
-		buttons.waitForAnyPress(2000);
-		bot.editProperties();
-		return;
-	}
-	
-	private static void addBot(String robotName) {
-		botNames.add(robotName);
-		BufferedWriter writer = null;
-		FileWriter fileWriter = null;
-		try {
-			File file = new File("/home/lejos/programs/robotbase");
-			if (!file.exists()) {
-				file.createNewFile();
-				robotName = "New robot\n" + robotName;
-			}
-			fileWriter = new FileWriter(file, true);
-			writer = new BufferedWriter(fileWriter);
-			writer.write(robotName + "\n");
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (writer != null) writer.close();
-				if (fileWriter != null) fileWriter.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
+	private static Chassis buildCar() {
+		Wheel rightWheel = WheeledChassis.modelWheel(RIGHT_MOTOR, bot.getWheelRight()).offset(bot.getWheelOffset()).invert(bot.getReverseRight());
+		Wheel leftWheel = WheeledChassis.modelWheel(LEFT_MOTOR, bot.getWheelLeft()).offset(-bot.getWheelOffset()).invert(bot.getReverseLeft());
+		Chassis car = new WheeledChassis(new Wheel[] {rightWheel, leftWheel},WheeledChassis.TYPE_DIFFERENTIAL);
+		car.setLinearSpeed(bot.getLinearSpeed());
+		car.setAngularSpeed(bot.getAngularSpeed());
+		car.setAcceleration(bot.getAcceleration(), bot.getAcceleration()*5);
+		return car;
 	}
 
 	private static String inputName() {
 		String inName = "ev3";
 		LCD.clear();
 		LCD.drawString(title, 0, 0);
-		LCD.drawString("Give your robot", 0, 2);
-		LCD.drawString("a name:", 0, 3);
-//		while (buttons.getButtons() != Keys.ID_ENTER) {
-//			inName = inputString(true, inName, 4);
-//		}
-//		LCD.drawString("> " + inName, 0, 5);
-//		Delay.msDelay(200);
-		inName = inputString(true, "EV3", 4);
+		LCD.drawString("Give your robot", 0, 1);
+		LCD.drawString("a name:", 0, 2);
+		inName = inputString(true, "EV3", 3);
 		if (inName != null)
 		{
-			LCD.drawString("> " + inName, 0, 5);
-			Delay.msDelay(2000);
+			LCD.drawString("> " + inName, 0, 4);
+			Delay.msDelay(1000);
 		}
 		return inName;
+	}
+
+	private static String inputString(boolean type, String name, int row) 
+	{
+		String alpha = " ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-0123456789";
+		if (type == false) alpha = "0123456789.";
+		int chr = 0;
+		int pos = 0;
+		int lngt = name.length();
+		String input = "";
+		String[] in = {"", "", "", "", "", "", "", "", "", "", "", "", "", "", ""};
+		for (int i = 0; i < name.length(); i++) 
+		{
+			in[i] = name.substring(i, i+1);
+			LCD.drawString(in[i], i, row);
+		}
+		chr = alpha.indexOf(in[0]);
+		Delay.msDelay(150);
+		while(true)
+		{
+			int button;
+			do
+			{
+				button = buttons.waitForAnyPress(); //getButtons(10);
+			}
+			
+			while (button == 0);
+			if (button == Keys.ID_UP) 
+			{
+				chr = chr + 1;
+				if (chr>=alpha.length()) chr = 0;
+				LCD.drawString(alpha.substring(chr, chr+1), pos, row, true);
+				in[pos] = alpha.substring(chr, chr+1);
+			}
+			if (button == Keys.ID_DOWN) 
+			{
+				chr = chr - 1;
+				if (chr<0) chr = alpha.length()-1;
+				LCD.drawString(alpha.substring(chr, chr+1), pos, row, true);
+				in[pos] = alpha.substring(chr, chr+1);
+			}
+			if (button == Keys.ID_RIGHT) 
+			{
+				in[pos] = alpha.substring(chr, chr+1);
+				LCD.drawString(alpha.substring(chr, chr+1), pos, row, false);
+				name = ""; // rebuild the name
+				for (int i = 0; i < 15; i++) {
+					name = name + in[i];
+				}
+				name = name.trim(); // remove trailing spaces
+				lngt = name.length();
+								
+				pos = pos + 1;
+				if (pos == lngt) // if the cursor is behind the name
+				{
+					chr = 0; // insert a space
+					lngt++; // and increase the length of the string
+				}
+				if (pos > lngt) // if the cursor is after the trailing space
+				{
+					pos = 0; // move to the start of the string
+				}
+				if (in[pos] != "") chr = alpha.indexOf(in[pos]); // pick up the value of the new position 
+				LCD.drawString(alpha.substring(chr, chr+1), pos, row, true); // write it again with the marker underneath
+			}
+			if (button == Keys.ID_LEFT) 
+			{
+				in[pos] = alpha.substring(chr, chr+1);
+				LCD.drawString(alpha.substring(chr, chr+1), pos, row, false);
+				pos = pos - 1;
+				if (pos < 0) pos = lngt-1;
+				if (in[pos] != "") chr = alpha.indexOf(in[pos]);
+				LCD.drawString(alpha.substring(chr, chr+1), pos, row, true);
+			}
+			if (button == Keys.ID_ENTER) 
+			{
+				in[pos] = alpha.substring(chr, chr+1);
+				for (int i = 0; i < in.length; i++) {
+					input = input+in[i];
+				}
+				input = input.trim();
+				return input;
+			}
+			if (button == Keys.ID_ESCAPE) return null;
+		}
 	}
 
 	/** Take double value input from the EV3 brick.
@@ -406,43 +681,6 @@ public class Calibration
 		LCD.drawString(String.format(Locale.CANADA, "%1$," + limit + "." + floats + "f", value), pos, row);
 		decimalValue = decimalValue.substring(col - lead, col - lead + 1);
 		LCD.drawString(decimalValue, col, row, true);
-//		while (buttons.getButtons() != Keys.ID_ENTER) {
-//			if (buttons.getButtons() == Keys.ID_UP) {
-//				value = value + increment[col];
-//			} else if (buttons.getButtons() == Keys.ID_DOWN) {
-//				value = value - increment[col];
-//				if (value < 0) value = value + increment[col];
-//			} else if (buttons.getButtons() == Keys.ID_RIGHT) {
-////				LCD.drawString(" ", col + pos, row-1);
-//				LCD.drawString(" ", col + pos, row);
-//				col = col + 1;
-//				System.out.println("col: " + col + " / limit: " + limit);
-//				if (col == limit) col = lead;
-//				if (col == digits) col = digits + 1;
-//			} else if (buttons.getButtons() == Keys.ID_LEFT) {
-////				LCD.drawString(" ", col + pos, row-1);
-//				LCD.drawString(" ", col + pos, row);
-//				col = col - 1;
-//				if (col == digits) col = digits - 1; // skip the decimal point
-//				if (decimalValue == "_" || col < 0) col = limit - 1; // if at the start, go to the end
-//			}
-//			decimalValue = String.format("%1." + floats + "f", value);
-//			if (decimalValue.length() > limit) {
-//				value = value - increment[col];
-//				decimalValue = String.format("%1." + floats + "f", value);
-//			}
-//			lead = limit - decimalValue.length();
-//			LCD.drawString(String.format(Locale.CANADA, "%1$" + limit + "." + floats + "f", value), pos, row);
-//			if (col - lead < 0) {
-//				decimalValue = "_";
-//			} else {
-//				decimalValue = decimalValue.substring(col - lead, col - lead + 1);
-//			}
-//			LCD.drawString(decimalValue, col + pos, row, true);
-//			Delay.msDelay(200);
-//		}
-//		buttons.waitForAnyPress();
-//		return String.format(Locale.CANADA, "%1$" + limit + "." + floats + "f", value);
 		while(true)
 		{
 			int button;
@@ -465,7 +703,6 @@ public class Calibration
 			{
 				LCD.drawString(" ", col + pos, row);
 				col = col + 1;
-				System.out.println("col: " + col + " / limit: " + limit);
 				if (col == limit) col = lead;
 				if (col == digits) col = digits + 1;
 			} 
@@ -500,182 +737,11 @@ public class Calibration
 		}
 	}
 	
-	private static String inputString(boolean type, String name, int row) {
-		String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-0123456789";
-		if (type == false) alpha = "0123456789.";
-		int chr = 0;
-		int pos = 0;
-		String input = "";
-		String[] in = {"", "", "", "", "", "", "", "", "", "", "", "", "", "", ""};
-		for (int i = 0; i < name.length(); i++) {
-			in[i] = name.substring(i, i+1);
-			LCD.drawString(in[i], i, row);
-		}
-		chr = alpha.indexOf(in[0]);
-		Delay.msDelay(150);
-//		while(buttons.getButtons() != Keys.ID_ENTER) {
-//			if (buttons.getButtons() == Keys.ID_UP) {
-//				chr = chr + 1;
-//				if (chr>=alpha.length()) chr = 0;
-//				LCD.drawString(alpha.substring(chr, chr+1), pos, row, true);
-//				in[pos] = alpha.substring(chr, chr+1);
-//			} else if (buttons.getButtons() == Keys.ID_DOWN) {
-//				chr = chr - 1;
-//				if (chr<0) chr = alpha.length()-1;
-//				LCD.drawString(alpha.substring(chr, chr+1), pos, row, true);
-//				in[pos] = alpha.substring(chr, chr+1);
-//			} else if (buttons.getButtons() == Keys.ID_RIGHT) {
-//				in[pos] = alpha.substring(chr, chr+1);
-//				LCD.drawString(alpha.substring(chr, chr+1), pos, row, false);
-//				pos = pos + 1;
-//				if (pos > 13) pos = 0;
-//				if (in[pos] != "") chr = alpha.indexOf(in[pos]);
-//				LCD.drawString(alpha.substring(chr, chr+1), pos, row, true);
-//			} else if (buttons.getButtons() == Keys.ID_LEFT) {
-//				in[pos] = alpha.substring(chr, chr+1);
-//				LCD.drawString(alpha.substring(chr, chr+1), pos, row, false);
-//				pos = pos - 1;
-//				if (pos < 0) pos = 13;
-//				if (in[pos] != "") chr = alpha.indexOf(in[pos]);
-//				LCD.drawString(alpha.substring(chr, chr+1), pos, row, true);
-//			}
-//			Delay.msDelay(150);
-//		}
-//		in[pos] = alpha.substring(chr, chr+1);
-//		Delay.msDelay(200);
-//		for (int i = 0; i < in.length; i++) {
-//			input = input+in[i];
-//			System.out.println(input);
-//		}
-//		return input;
-		while(true)
-		{
-			int button;
-			do
-			{
-				button = buttons.waitForAnyPress();
-			}
-			
-			while (button == 0);
-			if (button == Keys.ID_UP) 
-			{
-				chr = chr + 1;
-				if (chr>=alpha.length()) chr = 0;
-				LCD.drawString(alpha.substring(chr, chr+1), pos, row, true);
-				in[pos] = alpha.substring(chr, chr+1);
-			}
-			if (button == Keys.ID_DOWN) 
-			{
-				chr = chr - 1;
-				if (chr<0) chr = alpha.length()-1;
-				LCD.drawString(alpha.substring(chr, chr+1), pos, row, true);
-				in[pos] = alpha.substring(chr, chr+1);
-			}
-			if (button == Keys.ID_RIGHT) 
-			{
-				in[pos] = alpha.substring(chr, chr+1);
-				LCD.drawString(alpha.substring(chr, chr+1), pos, row, false);
-				pos = pos + 1;
-				if (pos > 13) pos = 0;
-				if (in[pos] != "") chr = alpha.indexOf(in[pos]);
-				LCD.drawString(alpha.substring(chr, chr+1), pos, row, true);
-			}
-			if (button == Keys.ID_LEFT) 
-			{
-				in[pos] = alpha.substring(chr, chr+1);
-				LCD.drawString(alpha.substring(chr, chr+1), pos, row, false);
-				pos = pos - 1;
-				if (pos < 0) pos = 13;
-				if (in[pos] != "") chr = alpha.indexOf(in[pos]);
-				LCD.drawString(alpha.substring(chr, chr+1), pos, row, true);
-			}
-			if (button == Keys.ID_ENTER) 
-			{
-				in[pos] = alpha.substring(chr, chr+1);
-				for (int i = 0; i < in.length; i++) {
-					input = input+in[i];
-				}
-				return input;
-			}
-			if (button == Keys.ID_ESCAPE) return null;
-		}
-	}
-
-	private static void startUp() {
-		LCD.clear();
-		LCD.drawString(title, 0, 0);
-		LCD.drawString("Loading catalog", 0, 3);
-		showWait(4, 100);
-		try {
-			botNames = loadBots();
-		} catch (IOException e) {
-			noDatabase();
-			return;
-		}
-		return;
-	}
-
-	private static void shutDown() {
-		LCD.clear();
-		LCD.drawString(title, 0, 0);
-		LCD.drawString("Shutting down", 0, 3);
-		showWait(4, 100);
-		buttons.waitForAnyPress(2000);
-		System.exit(0);
-	}
-
 	private static void showWait(int row, int wait) {
 		for (int i = 0; i < 18; i= i + 2) {
 			LCD.drawString(".", i, row);
 			Delay.msDelay(wait);
 		}
-	}
-
-	private static Chassis buildCar() {
-		Wheel rightWheel = WheeledChassis.modelWheel(RIGHT_MOTOR, bot.getWheelRight()).offset(bot.getWheelOffset()).invert(bot.getReverseRight());
-		Wheel leftWheel = WheeledChassis.modelWheel(LEFT_MOTOR, bot.getWheelLeft()).offset(-bot.getWheelOffset()).invert(bot.getReverseLeft());
-		Chassis car = new WheeledChassis(new Wheel[] {rightWheel, leftWheel},WheeledChassis.TYPE_DIFFERENTIAL);
-		car.setLinearSpeed(bot.getLinearSpeed());
-		car.setAngularSpeed(bot.getAngularSpeed());
-		car.setAcceleration(bot.getAcceleration(), bot.getAcceleration()*5);
-		return car;
-	}
-
-	private static void selectBot() 
-	{
-		String[] names = new String[botNames.size()];
-		for (int i = 0; i < botNames.size(); i++)
-		{
-			names[i] = String.valueOf(botNames.get(i));
-		}
-		LCD.clear();
-		TextMenu bots = new TextMenu(names, 1, "Choose a robot");
-		option = bots.select(option);
-		LCD.clear();
-		if (option > 0) 
-		{
-			try {
-				bot.loadSettings(names[option]);
-				choice = 0;
-				showMenu();
-				return;
-			} catch (FileNotFoundException e) {
-				LCD.clear();
-				LCD.drawString("No settings found", 0, 1);
-				LCD.drawString("for " + names[option] + ".", 0, 2);
-				LCD.drawString("Using default", 0, 3);
-				LCD.drawString("settings.", 0, 4);
-				buttons.waitForAnyPress(5000);
-				return;
-			}
-		}
-		if (option < 0) 
-		{
-			return;
-		}
-		createBot();
-		showMenu();
-		return;
 	}
 
 }
