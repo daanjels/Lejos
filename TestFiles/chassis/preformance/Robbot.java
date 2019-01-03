@@ -1,4 +1,4 @@
-package chassisCallibrate;
+package chassis.preformance;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,7 +14,7 @@ import utility.TextLCD;
 
 public class Robbot
 {
-	private static final String DIR = "home/lejos/wheels/";
+	private static final String DIR = "home/lejos/robots/";
 	private String name;
 	private int wheelDiameter;
 	private int wheelBase;
@@ -25,6 +25,7 @@ public class Robbot
 	private int acceleration;
 	static Keys buttons = Brick.getKeys();
 	static TextLCD lcd = Brick.getTextLCD();
+//	static Keys buttons = BrickFinder.getDefault().getKeys();
 
 	public Robbot()
 	{
@@ -135,8 +136,7 @@ public class Robbot
 
 	public void showProperties()
 	{
-		// different from leJOS: in leJOS we use LCD
-		lcd.clear();
+		lcd.clear(); // different from leJOS: in leJOS we use LCD
 		lcd.drawString("Name: " + this.name, 0, 0);
 		lcd.drawString(" Wheel:   ", 0, 1);
 		lcd.drawString(" Base:    ", 0, 2);
@@ -156,7 +156,8 @@ public class Robbot
 	
 	private void showProperty(int i)
 	{
-		switch (i) {
+		switch (i) 
+		{
 			case 0: 
 				lcd.drawString("         ", 9, 1);
 				lcd.drawString(showWheelDiameter(), 9, 1);
@@ -279,7 +280,8 @@ public class Robbot
 
 	public void storeSettings()
 	{
-//		System.out.println("Storing settings");
+		lcd.clear();
+		lcd.drawString("Store settings", 0, 1);
 		try
 		{
 			PrintWriter writer = new PrintWriter(DIR + this.name + ".txt", "UTF-8");
@@ -306,7 +308,7 @@ public class Robbot
 		String[] values;
 //		Scanner in = new Scanner(new File("/home/lejos/programs/" + botName + ".txt"));
 		Scanner in = new Scanner(new File(DIR + botName + ".txt"));
-		line = in.nextLine();	// "Robot Settings"
+		line = in.nextLine();	// "New robot"
 		line = in.nextLine();
 		values = line.split(" ");
 		this.setName(values[2]);
