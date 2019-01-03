@@ -20,18 +20,19 @@ public class Brick extends JFrame {
 	
 	public Brick() {
 		setTitle("EV3 - Virtual Brick");
-		setSize(new Dimension(340, 512)); // this way the frame will be centered on the screen
+		setSize(new Dimension(340, 512)); // this sets the size of the frame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBackground(new Color(225, 150, 45));
+		setBackground(new Color(225, 150, 45)); // background colour warm yellow
 		setLocationRelativeTo(null); // centers the frame on the screen, if the size is given.
-		createBrick();
-		this.pack();
-		this.setVisible(true);
+		createBrick(); // build a virtual brick
+//		this.pack();
+		this.setVisible(true); // show the frame
 	}
 
 	public static void main(String[] args) {
-		Brick walle = BrickFinder.getDefault();
-		walle.setVisible(true);
+//		main can be used to test the possibilities of the virtual brick
+		Brick walle = BrickFinder.getDefault(); // this makes it compliant to EV3 code
+//		walle.setVisible(true);
 		scherm.drawString("Hello there!", 0, 0);
 //		if (buttons.getButtons() == Keys.ID_ENTER) {
 //			scherm.drawString("Enter was pressed", 0, 1);
@@ -43,6 +44,7 @@ public class Brick extends JFrame {
 		for (int i = 1; i < 9; i++)
 		{
 			buttons.waitForAnyPress();
+			scherm.clear();
 			scherm.drawString("Pattern " + i, 0, i-1);
 			leds.setPattern(i);
 		}
