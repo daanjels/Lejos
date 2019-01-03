@@ -20,15 +20,6 @@ public class LCD extends JPanel {
 	private static String[] displayText = {"", "", "", "", "", "", "", ""};
 	static Keys buttons = new Keys();
 
-	public LCD() {
-		JPanel inhoud = this;
-		inhoud.setBorder(BorderFactory.createEmptyBorder(60, 80, 0, 80)); // top, left, bottom, right
-		JPanel scherm = createScreen();
-		inhoud.add(scherm );
-//		Keys buttons = new Keys();
-		inhoud.add(buttons);
-	}
-	
 	public static void main(String[] args) {
 		showGUI();
 		drawString("Hello", 0, 0);
@@ -38,7 +29,7 @@ public class LCD extends JPanel {
 		drawString("col six", 6, 2);
 		Delay.msDelay(1000);
 		clear();
-		drawString("this is not in capitals", 0, 2, true);
+		drawString("These are capitals", 0, 2, true);
 		String value = inputNumber(3, 2, 70.00, 2, 5);
 		drawString("                  ", 0, 6);
 		drawString(value, 0, 6);
@@ -106,18 +97,7 @@ public class LCD extends JPanel {
 	}
 
 	public static void drawString(String message, int col, int row) {
-		int max = message.length();
-		String oldMsg = displayText[row];
-		String newMsg = "";
-		for (int i = 0; i < 18; i++) {
-			if (i >= col && i < col + max) {
-				newMsg = newMsg + message.substring(i - col, i - col + 1);
-			} else {
-				newMsg = newMsg + oldMsg.substring(i, i+1);
-			}
-		}
-		displayText[row] = newMsg + "\n";
-		refreshLCD();
+		drawString(message, col, row, false);
 	}
 
 	public static void drawString(String message, int col, int row, boolean b) {
@@ -134,14 +114,6 @@ public class LCD extends JPanel {
 		if (b == true) newMsg = newMsg.toUpperCase();
 		displayText[row] = newMsg + "\n";
 		refreshLCD();
-	}
-
-	public static void screenWait(int time, int row) {
-		for (int i = 0; i < 9; i++) {
-			LCD.drawString("* ", i*2, row);
-			Delay.msDelay(time/9);
-		}
-		System.out.println("");
 	}
 
 	public static String inputName() {
@@ -207,15 +179,6 @@ public class LCD extends JPanel {
 		return input;
 	}
 
-	private static void refreshLCD() {
-		StringBuilder builder = new StringBuilder();
-		for(String s : displayText) {
-			builder.append(s);
-		}
-		String text = builder.toString();
-		lcd.setText(text);
-	}
-
 	public static void showGUI() {
 		JFrame venster = new JFrame();
 		venster.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -228,6 +191,14 @@ public class LCD extends JPanel {
 		venster.setVisible(true);
 	}
 
+	public LCD() {
+		JPanel inhoud = this;
+		inhoud.setBorder(BorderFactory.createEmptyBorder(60, 80, 0, 80)); // top, left, bottom, right
+		JPanel scherm = createScreen();
+		inhoud.add(scherm );
+		inhoud.add(buttons);
+	}
+
 	private static JPanel createScreen() {
 		JPanel scherm = new JPanel();
 		scherm.setPreferredSize(new Dimension(178, 158));
@@ -236,6 +207,7 @@ public class LCD extends JPanel {
 		
 		lcd = new JTextArea(10, 19);
 		lcd.setBackground(new Color(240, 243, 237));
+		lcd.setBackground(new Color(190, 210, 170));
 		lcd.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 0));
 		lcd.setLineWrap(true);
 		lcd.setFont(new Font("Monaco", 0, 14));
@@ -245,10 +217,28 @@ public class LCD extends JPanel {
 		return scherm;
 	}
 
+	private static void refreshLCD() {
+		StringBuilder builder = new StringBuilder();
+		for(String s : displayText) {
+			builder.append(s);
+		}
+		String text = builder.toString();
+		lcd.setText(text);
+	}
+
 	public static void clear() {
 		for (int i = 0; i < 8; i++) {
 			displayText[i] = "                  \n";
 		}
 		refreshLCD();
 	}
+
+	public static void screenWait(int time, int row) {
+		for (int i = 0; i < 9; i++) {
+			LCD.drawString("* ", i*2, row);
+			Delay.msDelay(time/9);
+		}
+		System.out.println("");
+	}
+
 }
