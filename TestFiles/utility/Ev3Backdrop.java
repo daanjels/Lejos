@@ -87,6 +87,7 @@ public class Ev3Backdrop extends JPanel
 		g.setFont(new Font("Arial Narrow", Font.BOLD, 10));
 		g.drawString("LEGO", 257, 437);
 
+		// leds are drawn by their own class
 		//	draw LED zone
 //		g.setColor(black);
 //		int xLed[] = {150, 190, 225, 225, 190, 150, 115, 115};
@@ -102,6 +103,7 @@ public class Ev3Backdrop extends JPanel
 //		g2d.fill(shapeLed);
 //		g.fillRoundRect(90, 304, 160, 38, 38, 38);
 
+		// buttons are drawn by their own class
 //		//	draw ESCAPE button
 //		g.setColor(buttonGray);
 //		GeneralPath shapeEscape = new GeneralPath(GeneralPath.WIND_EVEN_ODD, 6);
