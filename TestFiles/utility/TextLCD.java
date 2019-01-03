@@ -42,7 +42,7 @@ public class TextLCD extends JPanel {
 		drawString("EV3 calibration", 0, 0);
 		drawString("Give your robot", 0, 1);
 		drawString("a name:", 0, 2);
-			inName = inputString(true, "EV3", 3);
+		inName = inputString(true, "EV3", 3);
 		if (inName != null)
 		{
 			drawString("> " + inName, 0, 4);
@@ -54,8 +54,9 @@ public class TextLCD extends JPanel {
 	public String inputString(boolean type, String name, int row) {
 		String alpha = " ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-0123456789";
 		if (type == false) alpha = "0123456789.";
-		int chr = 0;
-		int pos = 0;
+		int chr = 0; // characterposition in the alpha string
+		int pos = 0; // position of the character
+		int lngt = name.length();
 		String input = "";
 		String[] in = {"", "", "", "", "", "", "", "", "", "", "", "", "", "", ""};
 		for (int i = 0; i < name.length(); i++) {
@@ -91,18 +92,33 @@ public class TextLCD extends JPanel {
 			{
 				in[pos] = alpha.substring(chr, chr+1);
 				drawString(alpha.substring(chr, chr+1), pos, row, false);
+				name = ""; // rebuild the name
+				for (int i = 0; i < 15; i++) {
+					name = name + in[i];
+				}
+				name = name.trim(); // remove trailing spaces
+				lngt = name.length();
+				System.out.println("naam: " + name + " / lengte: " + lngt);
+								
 				pos = pos + 1;
-				if (pos > name.length()-1) pos = 0;
-				if (in[pos] != "") chr = alpha.indexOf(in[pos]);
-				drawString(alpha.substring(chr, chr+1), pos, row, true);
+				if (pos == lngt) // if the cursor is behind the name
+				{
+					chr = 0; // insert a space
+					lngt++; // and increase the length of the string
+				}
+				if (pos > lngt) // if the cursor is after the trailing space
+				{
+					pos = 0; // move to the start of the string
+				}
+				if (in[pos] != "") chr = alpha.indexOf(in[pos]); // pick up the value of the new position 
+				drawString(alpha.substring(chr, chr+1), pos, row, true); // write it again with the marker underneath
 			}
 			if (button == Keys.ID_LEFT) 
 			{
 				in[pos] = alpha.substring(chr, chr+1);
 				drawString(alpha.substring(chr, chr+1), pos, row, false);
 				pos = pos - 1;
-				if (pos < 0) pos = name.length()-1;
-				System.out.println(in[pos]);
+				if (pos < 0) pos = lngt-1;
 				if (in[pos] != "") chr = alpha.indexOf(in[pos]);
 				drawString(alpha.substring(chr, chr+1), pos, row, true);
 			}
@@ -271,6 +287,10 @@ public class TextLCD extends JPanel {
 		String newMsg = oldMsg.substring(0,x) + c + oldMsg.substring(x+1);
 		displayText[y] = newMsg + "\n";
 		refreshLCD();
+	}
+	
+	public void drawInt(int i, int x, int y) {
+		drawString(""+i, x, y);
 	}
 
 	/**
