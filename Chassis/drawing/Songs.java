@@ -160,69 +160,20 @@ import utility.Delay;
 					// is    to       ride     in       a
 					D5, 160, D5, 160, C5, 160, A4, 160,
 					// one   -horse   o-       pen
-					G4, 480, rest, 160,
-					// sleigh!
-					
-					D4, 160, B4, 160, A4, 160, G4, 160, 
-					// A     day      or       two
-					D4, 480, D4, 80, D4, 80, 
-					// ago.           The      
-					D4, 160, B4, 160, A4, 160, G4, 160,
-					// sto-  ry       I        must
-					E4, 480, rest, 160,
-					// tell
-					E4, 160, C5, 160, B4, 160, A4, 160,
-					// I went out     on       the
-					F4_sharp, 480, rest, 160,
-					// snow,
-					D5, 160, D5, 160, C5, 160, A4, 160,
-					// And on my      back     I
-					G4, 800, 
-					// fell.
-					D4, 160, B4, 160, A4, 160, G4, 160, 
-					// A gent was     ri-      ding
-					D4, 480, rest, 160,
-					// by.
-					D4, 160, B4, 160, A4, 160, G4, 160,
-					// In a  one-     horse    open
-					E4, 480, E4, 160,
-					// sleigh. He
-					E4, 160, C5, 160, B4, 160, A4, 160,
-					// laughed at     me       as
-					D5, 160, D5, 160, D5, 160, D5, 160,
-					// I     there    sprawling laid
-					E5, 160, D5, 160, C5, 160, A4, 160,
-					// but   quickly  drove    a
-					G4, 480, rest, 160,
-					// -way
-					G4, 160, G4, 160, G4, 320,
-					// Jin-  gle      bells,
-					G4, 160, G4, 160, G4, 320,
-					// jin-  gle      bells
-					G4, 160, D5, 160, G4, 240, A4, 80,
-					// Jin-  gle      all      the
-					B4, 480, rest, 160,
-					// way!
-					C5, 160, C5, 160, C5, 240, C5, 80,
-					// Oh    what     fun      it
-					C5, 160, B4, 160, B4, 160, B4, 80, B4, 80,
-					// is    to       ride     in       a
-					D5, 160, D5, 160, C5, 160, A4, 160,
-					// one   -horse   o-       pen
-					G4, 480, rest, 160,
+					G4, 640
 					// sleigh!
 				};
-			Sound.setVolume(50);
+//			Sound.setVolume(10);
 			for (int i = 0; i < wish.length; i += 2) {
 				short w = wish[i + 1];
-					Sound.playTone(wish[i], w);
+					Sound.playTone(wish[i], w, 15);
 					Sound.pause(w);
 			}
 			Delay.msDelay(2000);
 			for (int i = 0; i < jingle.length; i += 2) {
 				short w = jingle[i + 1];
 				if (jingle[i] != rest) {
-					Sound.playTone(jingle[i], w);
+					Sound.playTone(jingle[i], w, 10);
 					Sound.pause(w);
 				} else {
 					Delay.msDelay(w);
