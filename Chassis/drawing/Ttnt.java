@@ -39,7 +39,7 @@ public class Ttnt {
 	// - angular speed				50
 	// - acceleration				3.0
 	private static Songs mt;
-	static boolean muse = false;
+	private static boolean muse = false;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -120,7 +120,7 @@ public class Ttnt {
 
 	private static void draw2019() {
 		LCD.clear();
-		LCD.drawString("Position your",0,0);
+		LCD.drawString("Position your",0,2);
 		LCD.drawString("robot on a large",0,1);
 		LCD.drawString("piece of paper", 0, 2);
 		LCD.drawString("Press ENTER", 0, 3);
@@ -137,32 +137,32 @@ public class Ttnt {
 				System.out.println(car.getPoseProvider().getPose());	// print calculated position to the log
 				Delay.msDelay(500);
 				LCD.clear();
-				LCD.drawString("Coming in",0,0);
+				LCD.drawString("Coming in         ",0,2);
 				car.travel(20); // enter the page
 				car.waitComplete();
 				LCD.clear();
-				LCD.drawString("Start position",0,0);
+				LCD.drawString("Start position    ",0,2);
 				car.rotate(-90);
 				car.waitComplete();
 				Delay.msDelay(1000);
 				lowerArm(); // put arm down
 				if (muse == true) mt.start(); // start playing the music
 				LCD.clear();
-				LCD.drawString("Upper arc",0,0);
+				LCD.drawString("Upper arc         ",0,2);
 //				car.arc(10, 270); // two upper arc / total width = 20
 				car.arc(6, 270); // two upper arc / total width = 12
 				car.waitComplete();
 				LCD.clear();
-				LCD.drawString("Lower arc",0,0);
+				LCD.drawString("Lower arc         ",0,2);
 //				car.arc(-10, 90); // two lower arc / total height = 30
 				car.arc(-6, 90); // two lower arc / total height = 18
 				car.waitComplete();
 				LCD.clear();
-				LCD.drawString("Rotate -90",0,0);
+				LCD.drawString("Rotate -90        ",0,2);
 				car.rotate(-90);
 				car.waitComplete();
 				LCD.clear();
-				LCD.drawString("Travel 20",0,0);
+				LCD.drawString("Travel 20         ",0,2);
 //				car.travel(20); // two baseline
 				car.travel(12); // two baseline
 				car.waitComplete();
@@ -171,90 +171,101 @@ public class Ttnt {
 				liftArm(); // lift arm up
 				Delay.msDelay(1000);
 				LCD.clear();
-				LCD.drawString("Travel 15",0,0);
+				LCD.drawString("Travel 15         ",0,2);
 //				car.travel(15);
 				car.travel(10); // 4 + 6
 				car.waitComplete();
 				Delay.msDelay(500);
 				LCD.clear();
-				LCD.drawString("Lower the pen",0,0);
+				LCD.drawString("Lower the pen     ",0,2);
 				lowerArm(); // put arm down
 				Delay.msDelay(1000);
 
 //				Draw the zero as a circle 
 				LCD.clear();
-				LCD.drawString("Drawing the zero", 0, 0);
+				LCD.drawString("Drawing the zero", 0, 2);
 //				car.arc(-10, 360);
 				car.arc(-7, 360);
 				car.waitComplete();
 				System.out.println(car.getPoseProvider().getPose());	// print calculated position to the log
 				Delay.msDelay(500);
 				LCD.clear();
-				LCD.drawString("Lift the pen",0,0);
+				LCD.drawString("Lift the pen      ",0,2);
 				liftArm(); // lift arm up
 				Delay.msDelay(1000);
 				LCD.clear();
-				LCD.drawString("Travel 15",0,0);
+				LCD.drawString("Travel 15         ",0,2);
 //				car.travel(15);
 				car.travel(10);
 				car.waitComplete();
 				LCD.clear();
-				LCD.drawString("Rotate -90",0,0);
+				LCD.drawString("Rotate -90        ",0,2);
 				car.rotate(-90);
 				car.waitComplete();
 				LCD.clear();
-				LCD.drawString("Lower the pen",0,0);
+				LCD.drawString("Lower the pen     ",0,2);
 				lowerArm(); // put arm down
 				Delay.msDelay(1000);
 				LCD.clear();
-				LCD.drawString("Travel 30",0,0);
+				LCD.drawString("Travel 30         ",0,2);
 //				car.travel(30); // line of 1
 				car.travel(18); // line of 1
 				car.waitComplete();
 				System.out.println(car.getPoseProvider().getPose());	// print calculated position to the log
 				Delay.msDelay(500);
 				LCD.clear();
-				LCD.drawString("Lift the pen",0,0);
+				LCD.drawString("Lift the pen      ",0,2);
 				liftArm(); // lift arm up
 				Delay.msDelay(1000);
 				LCD.clear();
-				LCD.drawString("Rotate -90",0,0);
+				LCD.drawString("Rotate -90        ",0,2);
 				car.rotate(90);
 				car.waitComplete();
 				LCD.clear();
-				LCD.drawString("Travel 15",0,0);
+				LCD.drawString("Travel 15         ",0,2);
 //				car.travel(15);
 				car.travel(10); // 6 + 4
 				car.waitComplete();
 				LCD.clear();
-				LCD.drawString("Set start 9",0,0);
+				LCD.drawString("Set start 9       ",0,2);
 //				car.arc(10, 100); // that's a little bit extra
 				car.arc(6, 95); // that's a little bit extra
 				car.waitComplete();
 				LCD.clear();
-				LCD.drawString("Lower the pen",0,0);
+				LCD.drawString("Lower the pen     ",0,2);
 				lowerArm(); // put arm down
 				Delay.msDelay(1000);
 				LCD.clear();
-				LCD.drawString("Nine circle",0,0);
+				LCD.drawString("Nine circle       ",0,2);
 //				car.arc(10, 360);
 				car.arc(6, 360);
 				car.waitComplete();
 				LCD.clear();
-				LCD.drawString("Nine arc bottom",0,0);
+				LCD.drawString("Nine arc bottom   ",0,2);
 //				car.arc(20, 90);
 				car.arc(13, 90); // that's a little bit extra
 				car.waitComplete();
 				System.out.println(car.getPoseProvider().getPose());	// print calculated position to the log
 				Delay.msDelay(1000);
 				LCD.clear();
-				LCD.drawString("Lift the pen",0,0);
+				LCD.drawString("Lift the pen      ",0,2);
 				liftArm(); // lift arm up
+				LCD.clear();
+				LCD.drawString("Turn away         ",0,2);
 				car.rotate(-90);
 				car.waitComplete();
+				LCD.clear();
+				LCD.drawString("Drive off         ",0,2);
 				car.travel(30);
 				car.waitComplete();
+				LCD.clear();
+				LCD.drawString("    Best wishes    ",0,4);
 				Delay.msDelay(1000);
+				DrawOnDisplay sample = new DrawOnDisplay();
+				sample.draw2019(32, 25);
+				Delay.msDelay(500);
+				sample.bestWishes();
+				buttons.waitForAnyPress();
 				return;
 			}
 		}
