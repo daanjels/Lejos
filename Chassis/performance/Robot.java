@@ -12,9 +12,32 @@ import lejos.hardware.Keys;
 import lejos.hardware.lcd.LCD;
 import lejos.utility.Delay;
 
+/**
+ * <b>Robot</b><br>
+ * A wheeled robot has a number of properties that can be edited and stored in a database.
+ * The database is located in the samples folder.<br/>
+ * Each robot has these properties<br/>
+ * 
+ * <b>wheelDiameter: </b>the diameter of the wheels (mm x 100)<br/>
+ * <b>wheelBase: </b>the distance between the wheels (mm x 100)<br/>
+ * <b>wheelDrift: </b>a parameter that can be used if the construction of the makes it drift to left or right<br/>
+ * <b>wheelReverse: </b>4 values can be used to define which motor is reversed:<br/>
+ * &nbsp;&nbsp;&nbsp;<b>0 </b>both wheels forward<br/>
+ * &nbsp;&nbsp;&nbsp;<b>1 </b>left wheel reverse<br/>
+ * &nbsp;&nbsp;&nbsp;<b>2 </b>right wheel reverse<br/>
+ * &nbsp;&nbsp;&nbsp;<b>3 </b>both wheels reverse<br/>
+ * <b>linearSpeed: </b>the speed of the wheeldchassis in mm/s (mm x 100)<br/>
+ * <b>angularSpeed: </b>the speed of rotation of the wheeldchassis in degrees/s (degree x 100)<br/>
+ * <b>acceleration: </b>the acceleration of the wheeldchassis in mm/s2 (mm x 100)<br/>
+ * 
+
+ * @author arqetype
+ *
+ */
+
 public class Robot 
 {
-	private static final String DIR = "home/lejos/robots/"; // /home/lejos/programs/
+	private static final String DIR = "/home/lejos/samples/"; // /home/lejos/programs/
 	private String name;
 	private int wheelDiameter;
 	private int wheelBase;
@@ -24,8 +47,6 @@ public class Robot
 	private int angularSpeed;
 	private int acceleration;
 	static Keys buttons = BrickFinder.getDefault().getKeys();
-	
-	
 	
 	public Robot() 
 	{
@@ -108,6 +129,11 @@ public class Robot
 		double accel = (double)acceleration / 1000;
 		return accel;
 	}
+	public int getReverse() 
+	{
+		int reverse = wheelReverse;
+		return reverse;
+	}
 	private String showWheelDiameter()
 	{
 		return String.format(Locale.CANADA, "%1$,.2f mm", getWheelDiameter());
@@ -132,6 +158,11 @@ public class Robot
 	{
 		return String.format(Locale.CANADA, "%1$,.1f cm/s/s", getAcceleration());
 	}
+	private String showReverse()
+	{
+//		return String.format(Locale.CANADA, "%1$,.1f cm/s/s", getReverse());
+		return "" + getReverse();
+	}
 
 	public void showProperties() 
 	{
@@ -143,6 +174,7 @@ public class Robot
 		LCD.drawString(" Linear:  ", 0, 4);
 		LCD.drawString(" Angular: ", 0, 5);
 		LCD.drawString(" Accel.:  ", 0, 6);
+		LCD.drawString(" Reverse: ", 0, 7);
 
 		LCD.drawString(showWheelDiameter(), 9, 1);
 		LCD.drawString(showWheelBase(), 9, 2);
@@ -150,6 +182,7 @@ public class Robot
 		LCD.drawString(showLinearSpeed(), 9, 4);
 		LCD.drawString(showAngularSpeed(), 9, 5);
 		LCD.drawString(showAcceleration(), 9, 6);
+		LCD.drawString(showReverse(), 9, 7);
 		return;
 	}
 	
@@ -181,18 +214,23 @@ public class Robot
 				LCD.drawString("         ", 9, 6);
 				LCD.drawString(showAcceleration(), 9, 6);
 				break;
+			case 6: 
+				LCD.drawString("         ", 9, 7);
+				LCD.drawString(showReverse(), 9, 7);
+				break;
 		}
 	}
 
 	private int[] getProperties() 
 	{
-		int[] props = new int[6];
+		int[] props = new int[7];
 		props[0] = this.wheelDiameter;
 		props[1] = this.wheelBase;
 		props[2] = this.wheelDrift;
 		props[3] = this.linearSpeed;
 		props[4] = this.angularSpeed;
 		props[5] = this.acceleration;
+		props[6] = this.wheelReverse;
 		return props;
 	}
 
@@ -204,6 +242,7 @@ public class Robot
 		this.linearSpeed = props[3];
 		this.angularSpeed = props[4];
 		this.acceleration = props[5];
+		this.wheelReverse = props[6];
 	}
 
 	public boolean editProperties() 
@@ -212,7 +251,7 @@ public class Robot
 		int choice = 0;
 		int[] oldProps = getProperties();
 		int[] properties = getProperties();
-		int[] increments = {5, 5, 1, 500, 500, 100};
+		int[] increments = {5, 5, 1, 500, 500, 100, 1};
 		showProperties();
 		while(true) // this construct works better than what I did before
 		{
@@ -230,7 +269,7 @@ public class Robot
 				showProperty(choice);
 				LCD.drawString(" ", 0, choice+1);
 				choice--;
-				if (choice < 0) choice = 5;
+				if (choice < 0) choice = 6;
 				LCD.drawString(">", 0, choice+1);
 			}
 			if (button == Keys.ID_DOWN)
@@ -239,7 +278,7 @@ public class Robot
 				showProperty(choice);
 				LCD.drawString(" ", 0, choice+1);
 				choice++;
-				if (choice > 5) choice = 0;
+				if (choice > 6) choice = 0;
 				LCD.drawString(">", 0, choice+1);
 			}
 			if (button == Keys.ID_LEFT)
@@ -260,6 +299,7 @@ public class Robot
 			{
 				setProperties(properties);
 				Delay.msDelay(100);
+				LCD.clear();
 				return isDirty;
 			}
 			if(button == Keys.ID_ESCAPE)
@@ -272,6 +312,7 @@ public class Robot
 					Delay.msDelay(1500);
 					setProperties(oldProps);
 				}
+				LCD.clear();
 				return isDirty;
 			}
 		}
@@ -293,6 +334,7 @@ public class Robot
 			writer.println("Linear speed: " + this.linearSpeed);
 			writer.println("Angular speed: " + this.angularSpeed);
 			writer.println("Default acceleration: " + this.acceleration);
+			writer.println("Wheel reverse: " + this.wheelReverse);
 			writer.close();
 		} 
 		catch (IOException e) 
@@ -331,20 +373,28 @@ public class Robot
 		line = in.nextLine();
 		values = line.split(" ");
 		this.setAcceleration(values[2]);
+		try {
+			line = in.nextLine();
+			values = line.split(" ");
+			this.setWheelReverse(values[2]);
+		}
+		catch (Exception e) {
+			this.setWheelReverse("0");
+		}
 		
 		in.close();
 	}
 
-	public void setName(String robotName) 
+	void setName(String robotName) 
 	{
 		this.name = robotName;
 	}
-	public void setWheelDiameter(String string) 
+	void setWheelDiameter(String string) 
 	{
 		int diameter = Integer.parseInt(string);
 		this.wheelDiameter = diameter;
 	}
-	public void setWheelBase(String string) 
+	void setWheelBase(String string) 
 	{
 		int base = Integer.parseInt(string);
 		this.wheelBase = base;
@@ -354,23 +404,22 @@ public class Robot
 		int drift = Integer.parseInt(string);
 		this.wheelDrift = drift;
 	}
-	private void setWheelReverse(String string) 
+	void setWheelReverse(String string) 
 	{
 		int reverse = Integer.parseInt(string);
 		this.wheelReverse = reverse;
 	}
-
-	private void setLinearSpeed(String string) 
+	void setLinearSpeed(String string) 
 	{
 		int speed = Integer.parseInt(string);
 		this.linearSpeed = speed;
 	}
-	private void setAngularSpeed(String string) 
+	void setAngularSpeed(String string) 
 	{
 		int speed = Integer.parseInt(string);
 		this.angularSpeed = speed;
 	}
-	private void setAcceleration(String string) 
+	void setAcceleration(String string) 
 	{
 		int accel = Integer.parseInt(string);
 		this.acceleration = accel;
